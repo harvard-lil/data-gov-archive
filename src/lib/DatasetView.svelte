@@ -1,7 +1,9 @@
 <script>
+  import TagList from "./TagList.svelte";
   import Timestamp from "./Timestamp.svelte";
 
   let { dataset } = $props();
+  let tags = dataset.tags ? dataset.tags.split(/, /) : [];
 </script>
 
 <article>
@@ -26,13 +28,7 @@
       <dd>{dataset.bureau_name}</dd>
     {/if}
   </dl>
-  <ul class="tags">
-    {#each dataset.tags.split(/, /) as tag}
-      <li>
-        <a href="/tags/{tag}">{tag}</a>
-      </li>
-    {/each}
-  </ul>
+  <TagList {tags} />
 </article>
 
 <style lang="scss">
@@ -64,20 +60,5 @@
   dd::after {
     content: "";
     display: block;
-  }
-
-  ul.tags {
-    padding: 0;
-    list-style: none;
-    list-style-position: unset;
-
-    li {
-      display: inline-block;
-      border-radius: 0.25em;
-      border: 1px dotted;
-      padding: 0.5em 0.75em;
-      margin: 0 0.25em 0.25em 0;
-      font-family: monospace;
-    }
   }
 </style>
