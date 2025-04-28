@@ -1,6 +1,6 @@
 <script>
-  import dayjs from "dayjs";
-  import sanitizeHtml from "sanitize-html";
+  import DatasetList from "$lib/DatasetList.svelte";
+  import DatasetListItem from "$lib/DatasetListItem.svelte";
 
   let { data } = $props();
 </script>
@@ -17,61 +17,11 @@
   </a> on our blog.
 </p>
 
-<ul>
-  {#each data.datasets.slice(0, 100) as dataset}
-    <li>
-      <h2><a href="datasets/{dataset.name}">{dataset.title}</a></h2>
-      <h3>
-        <a href="organizations/{dataset.organization_name}">{dataset.organization_title}</a>
-      </h3>
-      <p>
-        <i>
-          {sanitizeHtml(dataset.notes.slice(0, 320), {
-            allowedTags: [],
-          })}{#if dataset.notes.length > 320}…{/if}
-        </i>
-      </p>
-      <p>
-        <b>Updated:</b>
-        <time datetime={dataset.metadata_modified}>
-          <!-- This will display the date in the user's local time zone -->
-          {dayjs(dataset.metadata_modified).format("MMMM D, YYYY [at] h:mm a")}
-        </time>
-      </p>
-    </li>
-  {/each}
-</ul>
+<DatasetList datasets={data.datasets} />
 
 <style lang="scss">
   h1 {
     font-weight: 100;
     font-size: 3em;
-  }
-
-  h2 {
-    font-weight: 700;
-  }
-
-  h3 {
-    font-weight: inherit;
-  }
-
-  ul {
-    padding: 0;
-    list-style: none;
-    list-style-position: unset;
-
-    li {
-      margin: 1em 0;
-      border-top: 1px dotted;
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    }
   }
 </style>
