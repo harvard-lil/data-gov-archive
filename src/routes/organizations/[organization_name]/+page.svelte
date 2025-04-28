@@ -9,5 +9,5 @@
   <title>Archive of Data.gov: {data.organization_title}</title>
 </svelte:head>
 
-<h1>{data.organization_title}</h1>
+<h2>Organization: {data.organization_title}</h2>
 <DatasetList datasets={data.datasets} showOrganization={false} />

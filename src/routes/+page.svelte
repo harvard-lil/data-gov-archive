@@ -9,7 +9,6 @@
   <title>Archive of Data.gov</title>
 </svelte:head>
 
-<h1>Archive of Data.gov</h1>
 <p>
   This is the Harvard University Library Innovation Lab's archive of <a href="https://data.gov">
     Data.gov
@@ -22,10 +21,3 @@
 </p>
 
 <DatasetList datasets={data.datasets} />
-
-<style lang="scss">
-  h1 {
-    font-weight: 100;
-    font-size: 3em;
-  }
-</style>
