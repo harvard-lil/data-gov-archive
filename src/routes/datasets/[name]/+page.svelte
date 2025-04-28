@@ -2,6 +2,10 @@
   let { data } = $props();
 </script>
 
+<svelte:head>
+  <title>Archive of Data.gov: {data.dataset.title}</title>
+</svelte:head>
+
 <article>
   <h1>{data.dataset.title}</h1>
   <h2>{data.dataset.organization_title}</h2>
