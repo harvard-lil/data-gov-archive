@@ -1,6 +1,7 @@
 <script>
-  import dayjs from "dayjs";
   import sanitizeHtml from "sanitize-html";
+
+  import Timestamp from "./Timestamp.svelte";
 
   let { dataset, showOrganization = true } = $props();
 </script>
@@ -21,10 +22,7 @@
   </p>
   <p>
     <b>Updated:</b>
-    <time datetime={dataset.metadata_modified}>
-      <!-- This will display the date in the user's local time zone -->
-      {dayjs(dataset.metadata_modified).format("MMMM D, YYYY [at] h:mm a")}
-    </time>
+    <Timestamp timestamp={dataset.metadata_modified} />
   </p>
 </li>
 
