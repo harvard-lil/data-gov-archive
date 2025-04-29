@@ -21,6 +21,10 @@
     <dd><Timestamp timestamp={dataset.metadata_created} /></dd>
     <dt>Updated:</dt>
     <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
+    {#if dataset.publisher}
+      <dt>Publisher:</dt>
+      <dd>{dataset.publisher}</dd>
+    {/if}
     {#if dataset.bureau_code}
       <dt>Bureau Code:</dt>
       <dd>{dataset.bureau_code}</dd>
