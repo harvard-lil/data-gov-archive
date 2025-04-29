@@ -6,8 +6,18 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.bureau_name} ({data.bureau_code})</title>
+  {#if data.bureau_name}
+    <title>Archive of Data.gov: {data.bureau_name} ({data.bureau_code})</title>
+  {:else}
+    <title>Archive of Data.gov: {data.bureau_code}</title>
+  {/if}
 </svelte:head>
 
-<h2>Bureau: {data.bureau_name} ({data.bureau_code})</h2>
+<h2>
+  {#if data.bureau_name}
+    Bureau: {data.bureau_name} ({data.bureau_code})
+  {:else}
+    Bureau: {data.bureau_code}
+  {/if}
+</h2>
 <DatasetList datasets={data.datasets} />

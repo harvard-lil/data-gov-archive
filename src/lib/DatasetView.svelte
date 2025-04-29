@@ -60,6 +60,8 @@
       <dd>
         <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
       </dd>
+    {/if}
+    {#if dataset.bureau_name}
       <dt>Bureau Name:</dt>
       <dd>
         <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
