@@ -41,7 +41,7 @@
     <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
     {#if dataset.publisher}
       <dt>Publisher:</dt>
-      <dd>{dataset.publisher}</dd>
+      <dd><a href="/publishers/{encodeURIComponent(dataset.publisher)}">{dataset.publisher}</a></dd>
     {/if}
     {#if dataset.bureau_code}
       <dt>Bureau Code:</dt>
