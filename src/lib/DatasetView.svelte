@@ -45,9 +45,13 @@
     {/if}
     {#if dataset.bureau_code}
       <dt>Bureau Code:</dt>
-      <dd>{dataset.bureau_code}</dd>
+      <dd>
+        <a href="/bureaus/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
+      </dd>
       <dt>Bureau Name:</dt>
-      <dd>{dataset.bureau_name}</dd>
+      <dd>
+        <a href="/bureaus/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
+      </dd>
     {/if}
   </dl>
 
