@@ -10,6 +10,12 @@
   <h2>{dataset.title}</h2>
   <h3><a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a></h3>
 
+  <p>
+    {#each dataset.notes.split(/\r\n|\r|\n/) as line}
+      {line}<br />
+    {/each}
+  </p>
+
   <nav>
     <ul>
       <li>
@@ -27,12 +33,6 @@
       </li>
     </ul>
   </nav>
-
-  <p>
-    {#each dataset.notes.split(/\r\n|\r|\n/) as line}
-      {line}<br />
-    {/each}
-  </p>
 
   <dl>
     <dt>Created:</dt>
