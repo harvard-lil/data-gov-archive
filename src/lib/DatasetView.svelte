@@ -9,13 +9,31 @@
 <article>
   <h2>{dataset.title}</h2>
   <h3><a href="/organizations/{dataset.organization_name}">{dataset.organization_title}</a></h3>
+
+  <nav>
+    <ul>
+      <li>
+        <a href="https://source.coop/harvard-lil/gov-data/collections/data_gov/{dataset.name}">
+          View Collection Archive
+        </a>
+      </li>
+      <li>
+        <a href="https://source.coop/harvard-lil/gov-data/metadata/data_gov/{dataset.name}">
+          View Metadata Archive
+        </a>
+      </li>
+      <li>
+        <a href="https://catalog.data.gov/dataset/{dataset.name}">View Source on Data.gov</a>
+      </li>
+    </ul>
+  </nav>
+
   <p>
-    <i>
-      {#each dataset.notes.split(/\r\n|\r|\n/) as line}
-        {line}<br />
-      {/each}
-    </i>
+    {#each dataset.notes.split(/\r\n|\r|\n/) as line}
+      {line}<br />
+    {/each}
   </p>
+
   <dl>
     <dt>Created:</dt>
     <dd><Timestamp timestamp={dataset.metadata_created} /></dd>
@@ -32,6 +50,7 @@
       <dd>{dataset.bureau_name}</dd>
     {/if}
   </dl>
+
   <TagList {tags} />
 </article>
 
@@ -42,6 +61,26 @@
 
   h3 {
     font-weight: inherit;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+    list-style-position: unset;
+
+    li {
+      display: inline-block;
+      margin: 0.125em 0;
+      padding: 0.75em 1em;
+      background-color: #ccc;
+      color: #333;
+      border-radius: 0.25em;
+      border: 1px dotted;
+    }
+  }
+
+  article > p {
+    font-style: italic;
   }
 
   a {
