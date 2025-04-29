@@ -1,4 +1,6 @@
 <script>
+  import "@fontsource/material-icons";
+
   import TagList from "./TagList.svelte";
   import Timestamp from "./Timestamp.svelte";
 
@@ -18,18 +20,26 @@
 
   <nav>
     <ul>
-      <li>
-        <a href="https://source.coop/harvard-lil/gov-data/collections/data_gov/{dataset.name}">
-          View Collection Archive
+      <li id="collection-archive">
+        <a
+          href="https://source.coop/harvard-lil/gov-data/collections/data_gov/{dataset.name}"
+          target="_blank"
+        >
+          Collection Archive
         </a>
       </li>
-      <li>
-        <a href="https://source.coop/harvard-lil/gov-data/metadata/data_gov/{dataset.name}">
-          View Metadata Archive
+      <li id="metadata-archive">
+        <a
+          href="https://source.coop/harvard-lil/gov-data/metadata/data_gov/{dataset.name}"
+          target="_blank"
+        >
+          Metadata Archive
         </a>
       </li>
-      <li>
-        <a href="https://catalog.data.gov/dataset/{dataset.name}">View Source on Data.gov</a>
+      <li id="data-gov-source">
+        <a href="https://catalog.data.gov/dataset/{dataset.name}" target="_blank">
+          Data.gov Source
+        </a>
       </li>
     </ul>
   </nav>
@@ -83,6 +93,23 @@
       border-radius: 0.25em;
       border: 1px dotted;
     }
+  }
+
+  li:before {
+    position: relative;
+    top: 0.15em;
+    right: 0.25em;
+    font-family: "Material Icons";
+    margin-right: 0.2em;
+  }
+  li#collection-archive:before {
+    content: "\eb2c";
+  }
+  li#metadata-archive:before {
+    content: "\f1c8";
+  }
+  li#data-gov-source:before {
+    content: "\f8ef";
   }
 
   article > p {
