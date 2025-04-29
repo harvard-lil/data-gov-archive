@@ -5,7 +5,7 @@
 </script>
 
 <ul>
-  {#each datasets.slice(0, 500) as dataset}
+  {#each datasets as dataset}
     <DatasetListItem {dataset} {showOrganization} />
   {/each}
 </ul>
