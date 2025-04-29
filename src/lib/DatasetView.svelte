@@ -14,12 +14,6 @@
   <h2>{dataset.title}</h2>
   <h3><a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a></h3>
 
-  <p>
-    {#each notes.split(/\r\n|\r|\n/) as line}
-      {line}<br />
-    {/each}
-  </p>
-
   <nav>
     <ul>
       <li id="collection-archive">
@@ -45,6 +39,12 @@
       </li>
     </ul>
   </nav>
+
+  <p>
+    {#each notes.split(/\r\n|\r|\n/) as line}
+      {line}<br />
+    {/each}
+  </p>
 
   <dl>
     <dt>Created:</dt>
