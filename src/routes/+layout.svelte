@@ -12,6 +12,7 @@
     color: #222;
 
     margin: 0 auto;
+    padding: 0 1.5em 1.5em;
     max-width: 40rem;
 
     font-family: "Public Sans Variable", sans-serif;
