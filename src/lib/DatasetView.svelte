@@ -8,7 +8,7 @@
 
 <article>
   <h2>{dataset.title}</h2>
-  <h3><a href="/organizations/{dataset.organization_name}">{dataset.organization_title}</a></h3>
+  <h3><a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a></h3>
 
   <nav>
     <ul>
@@ -41,16 +41,18 @@
     <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
     {#if dataset.publisher}
       <dt>Publisher:</dt>
-      <dd><a href="/publishers/{encodeURIComponent(dataset.publisher)}">{dataset.publisher}</a></dd>
+      <dd>
+        <a href="/publishers/id/{encodeURIComponent(dataset.publisher)}">{dataset.publisher}</a>
+      </dd>
     {/if}
     {#if dataset.bureau_code}
       <dt>Bureau Code:</dt>
       <dd>
-        <a href="/bureaus/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
+        <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
       </dd>
       <dt>Bureau Name:</dt>
       <dd>
-        <a href="/bureaus/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
+        <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
       </dd>
     {/if}
   </dl>

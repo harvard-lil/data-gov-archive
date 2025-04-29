@@ -5,7 +5,7 @@
 <ul>
   {#each tags as tag}
     <li>
-      <a href="/tags/{encodeURIComponent(tag)}" title={tag}>{tag}</a>
+      <a href="/tags/id/{encodeURIComponent(tag)}" title={tag}>{tag}</a>
     </li>
   {/each}
 </ul>

@@ -7,10 +7,10 @@
 </script>
 
 <li>
-  <h2><a href="/datasets/{dataset.name}">{dataset.title}</a></h2>
+  <h2><a href="/datasets/id/{dataset.name}">{dataset.title}</a></h2>
   {#if showOrganization === true}
     <h3>
-      <a href="/organizations/{dataset.organization_name}">{dataset.organization_title}</a>
+      <a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a>
     </h3>
   {/if}
   <p>

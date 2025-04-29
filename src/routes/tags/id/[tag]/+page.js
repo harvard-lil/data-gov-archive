@@ -1,4 +1,4 @@
-import sample from "../../../../data/sample.json";
+import sample from "../../../../../data/sample.json";
 
 export const load = ({ params }) => {
   const datasets = sample.filter((dataset) => {
