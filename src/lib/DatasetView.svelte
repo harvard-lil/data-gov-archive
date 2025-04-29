@@ -1,10 +1,12 @@
 <script>
   import "@fontsource/material-icons";
+  import sanitizeHtml from "sanitize-html";
 
   import TagList from "./TagList.svelte";
   import Timestamp from "./Timestamp.svelte";
 
   let { dataset } = $props();
+  let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
   let tags = dataset.tags ? dataset.tags.split(/, /) : [];
 </script>
 
@@ -13,7 +15,7 @@
   <h3><a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a></h3>
 
   <p>
-    {#each dataset.notes.split(/\r\n|\r|\n/) as line}
+    {#each notes.split(/\r\n|\r|\n/) as line}
       {line}<br />
     {/each}
   </p>

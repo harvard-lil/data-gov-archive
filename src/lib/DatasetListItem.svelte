@@ -14,16 +14,16 @@
     </h3>
   {/if}
   <p>
-    <i>
-      {sanitizeHtml(dataset.notes.slice(0, 320), {
-        allowedTags: [],
-      })}{#if dataset.notes.length > 320}…{/if}
-    </i>
+    {sanitizeHtml(dataset.notes.slice(0, 320), {
+      allowedTags: [],
+    })}{#if dataset.notes.length > 320}&nbsp;…{/if}
   </p>
-  <p>
-    <b>Updated:</b>
-    <Timestamp timestamp={dataset.metadata_modified} />
-  </p>
+  <dl>
+    <dt>Updated:</dt>
+    <dd>
+      <Timestamp timestamp={dataset.metadata_modified} />
+    </dd>
+  </dl>
 </li>
 
 <style lang="scss">
@@ -39,12 +39,30 @@
       font-weight: inherit;
     }
 
+    p {
+      font-style: italic;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
+    }
+
+    dt {
+      font-weight: bold;
+      display: inline;
+    }
+
+    dd {
+      margin-left: 0;
+      display: inline;
+    }
+    dd::after {
+      content: "";
+      display: block;
     }
   }
 </style>
