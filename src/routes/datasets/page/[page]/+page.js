@@ -9,7 +9,17 @@ export const load = ({ params }) => {
   // Use 0-indexed page number for slicing
   const pageNumber = parseInt(params.page) - 1;
   const sliceStart = pageNumber * pageSize;
-  const datasets = sample.slice(sliceStart, sliceStart + pageSize);
+  const datasets = sample
+    .sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+    .slice(sliceStart, sliceStart + pageSize);
 
   if (pageNumber < 0 || pageNumber >= totalPages) {
     error(404, {
