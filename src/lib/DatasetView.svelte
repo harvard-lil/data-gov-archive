@@ -47,10 +47,10 @@
   </p>
 
   <dl>
-    <dt>Created:</dt>
-    <dd><Timestamp timestamp={dataset.metadata_created} /></dd>
     <dt>Updated:</dt>
     <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
+    <dt>Created:</dt>
+    <dd><Timestamp timestamp={dataset.metadata_created} /></dd>
     {#if dataset.publisher}
       <dt>Publisher:</dt>
       <dd>
