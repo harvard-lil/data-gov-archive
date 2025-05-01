@@ -110,7 +110,7 @@
     content: "\eb2c";
   }
   li#metadata-archive:before {
-    content: "\f1c8";
+    content: "\ead3";
   }
   li#data-gov-source:before {
     content: "\f8ef";

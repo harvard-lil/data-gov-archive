@@ -21,3 +21,9 @@
 </p>
 
 <DatasetList datasets={data.datasets} />
+
+<style lang="scss">
+  p {
+    font-size: 1.25em;
+  }
+</style>

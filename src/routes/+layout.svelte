@@ -1,5 +1,6 @@
 <script>
   import "@fontsource-variable/public-sans";
+  import "@fontsource-variable/public-sans/wght-italic";
 </script>
 
 <h1><a href="/">Archive of Data.gov</a></h1>
