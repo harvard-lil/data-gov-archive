@@ -1,7 +1,9 @@
 <script>
+  import TagList from "./TagList.svelte";
   import Timestamp from "./Timestamp.svelte";
 
   let { dataset } = $props();
+  let tags = dataset.tags ? dataset.tags.split(/, /) : [];
 </script>
 
 <dl>
@@ -27,6 +29,10 @@
       <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
     </dd>
   {/if}
+  {#if dataset.tags}
+    <dt>Tags:</dt>
+    <dd><section><TagList {tags} showTagsLink={true} /></section></dd>
+  {/if}
 </dl>
 
 <style lang="scss">
@@ -46,6 +52,10 @@
   dd {
     margin-left: 0;
     display: inline;
+
+    section {
+      margin-top: 0.25em;
+    }
   }
   dd::after {
     content: "";

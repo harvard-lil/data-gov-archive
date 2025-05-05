@@ -7,7 +7,6 @@
 
   let { dataset } = $props();
   let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
-  let tags = dataset.tags ? dataset.tags.split(/, /) : [];
 </script>
 
 <article>
@@ -47,8 +46,6 @@
   </p>
 
   <DatasetMetadata {dataset} />
-
-  <TagList {tags} />
 </article>
 
 <style lang="scss">

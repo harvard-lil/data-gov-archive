@@ -1,5 +1,5 @@
 <script>
-  let { tags } = $props();
+  let { tags, showTagsLink = false } = $props();
 </script>
 
 <ul>
@@ -8,6 +8,9 @@
       <a href="/tags/id/{encodeURIComponent(tag)}" title={tag}>{tag}</a>
     </li>
   {/each}
+  {#if showTagsLink === true}
+    <li><a href="/tags">[all tags]</a></li>
+  {/if}
 </ul>
 
 <style lang="scss">
