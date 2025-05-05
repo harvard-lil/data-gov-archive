@@ -4,6 +4,7 @@
 
   import DatasetMetadata from "./DatasetMetadata.svelte";
   import TagList from "./TagList.svelte";
+  import DatasetLinks from "./DatasetLinks.svelte";
 
   let { dataset } = $props();
   let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
@@ -13,31 +14,7 @@
   <h2>{dataset.title}</h2>
   <h3><a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a></h3>
 
-  <nav>
-    <ul>
-      <li id="collection-archive">
-        <a
-          href="https://source.coop/harvard-lil/gov-data/collections/data_gov/{dataset.name}"
-          target="_blank"
-        >
-          Collection Archive
-        </a>
-      </li>
-      <li id="metadata-archive">
-        <a
-          href="https://source.coop/harvard-lil/gov-data/metadata/data_gov/{dataset.name}"
-          target="_blank"
-        >
-          Metadata Archive
-        </a>
-      </li>
-      <li id="data-gov-source">
-        <a href="https://catalog.data.gov/dataset/{dataset.name}" target="_blank">
-          Data.gov Source
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <DatasetLinks {dataset} />
 
   <p>
     {#each notes.split(/\r\n|\r|\n/) as line}
@@ -55,39 +32,6 @@
 
   h3 {
     font-weight: inherit;
-  }
-
-  ul {
-    padding: 0;
-    list-style: none;
-    list-style-position: unset;
-
-    li {
-      display: inline-block;
-      margin: 0.125em 0;
-      padding: 0.75em 1em;
-      background-color: #ccc;
-      color: #333;
-      border-radius: 0.25em;
-      border: 1px dotted;
-    }
-  }
-
-  li:before {
-    position: relative;
-    top: 0.15em;
-    right: 0.25em;
-    font-family: "Material Icons";
-    margin-right: 0.2em;
-  }
-  li#collection-archive:before {
-    content: "\eb2c";
-  }
-  li#metadata-archive:before {
-    content: "\ead3";
-  }
-  li#data-gov-source:before {
-    content: "\f8ef";
   }
 
   article > p {
