@@ -1,11 +1,16 @@
 <script>
+  import Header from "$lib/Header.svelte";
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
 </script>
 
-<h1><a href="/">Archive of Data.gov</a></h1>
+<Header />
 
-<slot />
+<nav><h2>Filters</h2></nav>
+
+<main>
+  <slot />
+</main>
 
 <style lang="scss">
   :global(body) {
@@ -14,19 +19,26 @@
 
     margin: 0 auto;
     padding: 0 1.5em 1.5em;
-    max-width: 40rem;
+    max-width: 50rem;
 
     font-family: "Public Sans Variable", sans-serif;
     font-weight: 400;
+
+    /* Grid system */
+    display: grid;
+    grid-template-columns: 2fr 5fr;
+    grid-template-rows: max-content 1fr;
+    gap: 0 0;
+    grid-template-areas:
+      "a a"
+      "b c";
   }
 
-  h1 {
-    font-weight: 100;
-    font-size: 3em;
+  nav {
+    grid-area: b;
+  }
 
-    a {
-      color: inherit;
-      text-decoration: inherit;
-    }
+  main {
+    grid-area: c;
   }
 </style>

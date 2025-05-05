@@ -2,8 +2,8 @@
   import "@fontsource/material-icons";
   import sanitizeHtml from "sanitize-html";
 
+  import DatasetMetadata from "./DatasetMetadata.svelte";
   import TagList from "./TagList.svelte";
-  import Timestamp from "./Timestamp.svelte";
 
   let { dataset } = $props();
   let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
@@ -46,30 +46,7 @@
     {/each}
   </p>
 
-  <dl>
-    <dt>Updated:</dt>
-    <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
-    <dt>Created:</dt>
-    <dd><Timestamp timestamp={dataset.metadata_created} /></dd>
-    {#if dataset.publisher}
-      <dt>Publisher:</dt>
-      <dd>
-        <a href="/publishers/id/{encodeURIComponent(dataset.publisher)}">{dataset.publisher}</a>
-      </dd>
-    {/if}
-    {#if dataset.bureau_code}
-      <dt>Bureau Code:</dt>
-      <dd>
-        <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
-      </dd>
-    {/if}
-    {#if dataset.bureau_name}
-      <dt>Bureau Name:</dt>
-      <dd>
-        <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
-      </dd>
-    {/if}
-  </dl>
+  <DatasetMetadata {dataset} />
 
   <TagList {tags} />
 </article>
@@ -126,19 +103,5 @@
   }
   a:hover {
     text-decoration: underline;
-  }
-
-  dt {
-    font-weight: bold;
-    display: inline;
-  }
-
-  dd {
-    margin-left: 0;
-    display: inline;
-  }
-  dd::after {
-    content: "";
-    display: block;
   }
 </style>

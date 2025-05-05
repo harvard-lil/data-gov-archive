@@ -65,4 +65,7 @@
       display: block;
     }
   }
+  li:first-child {
+    border-top: none;
+  }
 </style>
