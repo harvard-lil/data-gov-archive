@@ -9,5 +9,11 @@
   <title>Archive of Data.gov: {data.organization_title}</title>
 </svelte:head>
 
-<h2>Organization: {data.organization_title}</h2>
+<h2><b>Organization:</b> {data.organization_title}</h2>
 <DatasetList datasets={data.datasets} showOrganization={false} />
+
+<style lang="scss">
+  h2 {
+    font-weight: inherit;
+  }
+</style>

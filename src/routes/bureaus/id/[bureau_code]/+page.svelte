@@ -15,9 +15,15 @@
 
 <h2>
   {#if data.bureau_name}
-    Bureau: {data.bureau_name} ({data.bureau_code})
+    <b>Bureau:</b> {data.bureau_name} ({data.bureau_code})
   {:else}
-    Bureau: {data.bureau_code}
+    <b>Bureau:</b> {data.bureau_code}
   {/if}
 </h2>
 <DatasetList datasets={data.datasets} />
+
+<style lang="scss">
+  h2 {
+    font-weight: inherit;
+  }
+</style>
