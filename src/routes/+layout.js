@@ -44,7 +44,7 @@ const getTopNTags = (datasets, n) => {
 export const load = ({ params }) => {
   const datasets = sample;
 
-  const n = 7;
+  const n = 5;
 
   const organizations = getTopN(datasets, n, "organization_name", [
     "organization_name",
@@ -52,7 +52,7 @@ export const load = ({ params }) => {
   ]);
   const publishers = getTopN(datasets, n, "publisher", ["publisher"]);
   const bureaus = getTopN(datasets, n, "bureau_code", ["bureau_code", "bureau_name"]);
-  const tags = getTopNTags(datasets, n);
+  const tags = getTopNTags(datasets, 10);
 
   return { organizations, publishers, bureaus, tags };
 };
