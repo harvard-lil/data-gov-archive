@@ -24,7 +24,7 @@
       border-radius: 0.25em;
       border: 1px dotted;
       padding: 0.5em 0.75em;
-      margin: 0 0.25em 0.25em 0;
+      margin: 0 0.5em 0.25em 0;
       font-family: monospace;
       max-width: 20em;
       text-wrap-mode: nowrap;

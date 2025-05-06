@@ -54,7 +54,7 @@
     display: inline;
 
     section {
-      margin-top: 0.5em;
+      margin-top: 0.25em;
     }
   }
   dd::after {
