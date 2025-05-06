@@ -72,16 +72,23 @@
       list-style-position: unset;
 
       li {
+        display: flex;
+        justify-content: space-between;
+
         border-top: 1px dotted;
         padding: 0.375em 0;
 
         font-size: small;
 
-        text-wrap-mode: nowrap;
-        text-wrap-style: pretty;
-        overflow: hidden;
-        text-overflow: nowrap;
-        text-overflow: ellipsis;
+        a {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        b {
+          margin-left: 0.5em;
+        }
       }
 
       li:first-of-type {
