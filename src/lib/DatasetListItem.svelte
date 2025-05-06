@@ -65,7 +65,7 @@
       display: block;
     }
   }
-  li:first-child {
+  li:first-of-type {
     border-top: none;
   }
 </style>

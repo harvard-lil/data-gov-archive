@@ -1,6 +1,6 @@
 <header>
   <h1><a href="/">Archive of Data.gov</a></h1>
-  <!-- <p>
+  <p>
     This is the Harvard University Library Innovation Lab's archive of <a href="https://data.gov">
       Data.gov
     </a>
@@ -9,7 +9,7 @@
     <a href="https://lil.law.harvard.edu/blog/2025/02/06/announcing-data-gov-archive/">
       project announcement
     </a> on our blog.
-  </p> -->
+  </p>
 </header>
 
 <style lang="scss">
