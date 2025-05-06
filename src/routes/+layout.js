@@ -42,15 +42,7 @@ const getTopNTags = (datasets, n) => {
 };
 
 export const load = ({ params }) => {
-  const datasets = sample.sort((a, b) => {
-    if (a.name < b.name) {
-      return -1;
-    } else if (a.name > b.name) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
+  const datasets = sample;
 
   const n = 7;
 
