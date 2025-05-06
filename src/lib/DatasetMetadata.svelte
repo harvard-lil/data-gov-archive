@@ -31,7 +31,7 @@
   {/if}
   {#if dataset.tags}
     <dt>Tags:</dt>
-    <dd><section><TagList {tags} showTagsLink={true} /></section></dd>
+    <dd><section><TagList {tags} /></section></dd>
   {/if}
 </dl>
 
