@@ -36,7 +36,7 @@
 
     li {
       display: inline-block;
-      margin: 0.125em 0;
+      margin: 0.125em;
       padding: 0.75em 1em;
       background-color: #ccc;
       color: #333;

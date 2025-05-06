@@ -37,9 +37,15 @@
   <ul>
     {#each bureaus as bureau}
       <li>
-        <a href="/bureaus/id/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_name}>
-          {bureau.bureau_name}
-        </a>
+        {#if bureau.bureau_name}
+          <a href="/bureaus/id/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_name}>
+            {bureau.bureau_name}
+          </a>
+        {:else}
+          <a href="/bureaus/id/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_code}>
+            {bureau.bureau_code}
+          </a>
+        {/if}
         <b>{bureau.count}</b>
       </li>
     {/each}
@@ -88,6 +94,7 @@
 
         b {
           margin-left: 0.5em;
+          font-family: monospace;
         }
       }
 

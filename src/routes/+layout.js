@@ -52,13 +52,15 @@ export const load = ({ params }) => {
     }
   });
 
-  const organizations = getTopN(datasets, 7, "organization_name", [
+  const n = 7;
+
+  const organizations = getTopN(datasets, n, "organization_name", [
     "organization_name",
     "organization_title",
   ]);
-  const publishers = getTopN(datasets, 7, "publisher", ["publisher"]);
-  const bureaus = getTopN(datasets, 7, "bureau_code", ["bureau_code", "bureau_name"]);
-  const tags = getTopNTags(datasets, 7);
+  const publishers = getTopN(datasets, n, "publisher", ["publisher"]);
+  const bureaus = getTopN(datasets, n, "bureau_code", ["bureau_code", "bureau_name"]);
+  const tags = getTopNTags(datasets, n);
 
   return { organizations, publishers, bureaus, tags };
 };
