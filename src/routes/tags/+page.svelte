@@ -4,6 +4,9 @@
   let { data } = $props();
 </script>
 
-<h2>Tags</h2>
+<svelte:head>
+  <title>Archive of Data.gov: Tags</title>
+</svelte:head>
 
+<h2>Tags</h2>
 <TagList tags={data.tags} />
