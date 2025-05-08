@@ -1,11 +1,11 @@
 <script>
   import DatasetListItem from "./DatasetListItem.svelte";
 
-  let { datasets, showOrganization } = $props();
+  let { datasets, showOrganization, offset = 0, pageSize = 200 } = $props();
 </script>
 
 <ul>
-  {#each datasets as dataset}
+  {#each datasets.slice(offset, offset + pageSize) as dataset}
     <DatasetListItem {dataset} {showOrganization} />
   {/each}
 </ul>
