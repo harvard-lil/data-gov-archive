@@ -65,7 +65,8 @@
       display: block;
     }
   }
-  li:first-of-type {
-    border-top: none;
+  li:last-of-type {
+    border-bottom: 1px dotted;
+    padding-bottom: 1.5em;
   }
 </style>

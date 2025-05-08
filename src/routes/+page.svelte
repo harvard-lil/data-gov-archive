@@ -11,4 +11,7 @@
 </svelte:head>
 
 <PageNav pageNumber={1} totalItems={data.datasets.length} />
+
 <DatasetList datasets={data.datasets} />
+
+<PageNav pageNumber={1} totalItems={data.datasets.length} />
