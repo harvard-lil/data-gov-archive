@@ -10,8 +10,8 @@
   <title>Archive of Data.gov</title>
 </svelte:head>
 
-<PageNav pageNumber={1} totalItems={data.datasets.length} />
+<PageNav pageNumber={1} totalItems={data.totalItems} />
 
 <DatasetList datasets={data.datasets} />
 
-<PageNav pageNumber={1} totalItems={data.datasets.length} />
+<PageNav pageNumber={1} totalItems={data.totalItems} />
