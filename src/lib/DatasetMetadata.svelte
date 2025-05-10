@@ -7,9 +7,9 @@
 </script>
 
 <dl>
-  <dt>Updated:</dt>
+  <dt>Metadata Modified:</dt>
   <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
-  <dt>Created:</dt>
+  <dt>Metadata Created:</dt>
   <dd><Timestamp timestamp={dataset.metadata_created} /></dd>
   {#if dataset.publisher}
     <dt>Publisher:</dt>

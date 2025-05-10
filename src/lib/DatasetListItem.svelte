@@ -19,7 +19,7 @@
     })}{#if dataset.notes.length > 320}&nbsp;…{/if}
   </p>
   <dl>
-    <dt>Updated:</dt>
+    <dt>Metadata Modified:</dt>
     <dd>
       <Timestamp timestamp={dataset.metadata_modified} />
     </dd>
