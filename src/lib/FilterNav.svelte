@@ -13,7 +13,7 @@
         >
           {organization.organization_title}
         </a>
-        <b>{organization.count}</b>
+        <b>{organization.count.toLocaleString("en-US")}</b>
       </li>
     {/each}
   </ul>
@@ -28,7 +28,7 @@
         >
           {publisher.publisher}
         </a>
-        <b>{publisher.count}</b>
+        <b>{publisher.count.toLocaleString("en-US")}</b>
       </li>
     {/each}
   </ul>
@@ -46,7 +46,7 @@
             {bureau.bureau_code}
           </a>
         {/if}
-        <b>{bureau.count}</b>
+        <b>{bureau.count.toLocaleString("en-US")}</b>
       </li>
     {/each}
   </ul>
@@ -58,7 +58,7 @@
         <a href="/tags/id/{encodeURIComponent(tag.tag)}" title={tag.tag}>
           {tag.tag}
         </a>
-        <b>{tag.count}</b>
+        <b>{tag.count.toLocaleString("en-US")}</b>
       </li>
     {/each}
   </ul>

@@ -1,8 +1,11 @@
 <script>
   let { pageNumber, totalItems, route = "datasets" } = $props();
 
-  let offset = (pageNumber - 1) * 200;
+  let offset = $derived((pageNumber - 1) * 200);
   let totalPages = Math.ceil(totalItems / 200);
+
+  let pageNumberLabel = $derived(pageNumber.toLocaleString("en-US"));
+  let totalPagesLabel = totalPages.toLocaleString("en-US");
 </script>
 
 <nav>
@@ -14,9 +17,11 @@
         <span>Previous</span>
       {/if}
     </li>
-    <li>Showing page {pageNumber} of {totalPages}</li>
+    <li>Showing page {pageNumberLabel} of {totalPagesLabel}</li>
     {#if pageNumber < totalPages}
       <li><a href="/{route}/page/{pageNumber + 1}">Next</a></li>
+    {:else}
+      <span>Next</span>
     {/if}
   </ul>
 </nav>
@@ -41,5 +46,9 @@
   }
   a:hover {
     text-decoration: underline;
+  }
+
+  span {
+    cursor: not-allowed;
   }
 </style>
