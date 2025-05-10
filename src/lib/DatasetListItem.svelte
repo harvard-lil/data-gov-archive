@@ -18,12 +18,6 @@
       allowedTags: [],
     })}{#if dataset.notes.length > 320}&nbsp;…{/if}
   </p>
-  <dl>
-    <dt>Metadata Modified:</dt>
-    <dd>
-      <Timestamp timestamp={dataset.metadata_modified} />
-    </dd>
-  </dl>
 </li>
 
 <style lang="scss">
@@ -49,20 +43,6 @@
     }
     a:hover {
       text-decoration: underline;
-    }
-
-    dt {
-      font-weight: bold;
-      display: inline;
-    }
-
-    dd {
-      margin-left: 0;
-      display: inline;
-    }
-    dd::after {
-      content: "";
-      display: block;
     }
   }
   li:last-of-type {
