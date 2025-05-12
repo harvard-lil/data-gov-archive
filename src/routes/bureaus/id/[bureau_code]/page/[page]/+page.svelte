@@ -11,16 +11,13 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {bureauLabel}</title>
+  <title>Archive of Data.gov: {bureauLabel}, page {data.pageNumber}</title>
 </svelte:head>
 
-<h2>
-  <b>Bureau:</b>
-  {bureauLabel}
-</h2>
+<h2><b>Bureau:</b> {bureauLabel}</h2>
 
 <PageNav
-  pageNumber={1}
+  pageNumber={data.pageNumber}
   totalItems={data.totalItems}
   route="bureaus/id/{encodeURIComponent(data.bureau_code)}"
 />
@@ -28,7 +25,7 @@
 <DatasetList datasets={data.datasets} />
 
 <PageNav
-  pageNumber={1}
+  pageNumber={data.pageNumber}
   totalItems={data.totalItems}
   route="bureaus/id/{encodeURIComponent(data.bureau_code)}"
 />
