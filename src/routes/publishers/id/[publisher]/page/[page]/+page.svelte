@@ -7,13 +7,13 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.publisher}</title>
+  <title>Archive of Data.gov: {data.publisher}, page {data.pageNumber}</title>
 </svelte:head>
 
 <h2><b>Publisher:</b> {data.publisher}</h2>
 
 <PageNav
-  pageNumber={1}
+  pageNumber={data.pageNumber}
   totalItems={data.totalItems}
   route="publishers/id/{encodeURIComponent(data.publisher)}"
 />
@@ -21,7 +21,7 @@
 <DatasetList datasets={data.datasets} />
 
 <PageNav
-  pageNumber={1}
+  pageNumber={data.pageNumber}
   totalItems={data.totalItems}
   route="publishers/id/{encodeURIComponent(data.publisher)}"
 />
