@@ -2,10 +2,10 @@
   let { pageNumber, totalItems, route = "datasets" } = $props();
 
   let offset = $derived((pageNumber - 1) * 200);
-  let totalPages = Math.ceil(totalItems / 200);
+  let totalPages = $derived(Math.ceil(totalItems / 200));
 
   let pageNumberLabel = $derived(pageNumber.toLocaleString("en-US"));
-  let totalPagesLabel = totalPages.toLocaleString("en-US");
+  let totalPagesLabel = $derived(totalPages.toLocaleString("en-US"));
 </script>
 
 <nav>
