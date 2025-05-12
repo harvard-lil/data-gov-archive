@@ -7,21 +7,21 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.organization_title}</title>
+  <title>Archive of Data.gov: {data.organization_title}, page {data.pageNumber}</title>
 </svelte:head>
 
 <h2><b>Organization:</b> {data.organization_title}</h2>
 
 <PageNav
-  pageNumber={1}
+  pageNumber={data.pageNumber}
   totalItems={data.totalItems}
   route="organizations/id/{data.organization_name}"
 />
 
-<DatasetList datasets={data.datasets} showOrganization={false} />
+<DatasetList datasets={data.datasets} />
 
 <PageNav
-  pageNumber={1}
+  pageNumber={data.pageNumber}
   totalItems={data.totalItems}
   route="organizations/id/{data.organization_name}"
 />
