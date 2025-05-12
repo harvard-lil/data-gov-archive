@@ -17,7 +17,9 @@
         <span>Previous</span>
       {/if}
     </li>
-    <li>Showing page {pageNumberLabel} of {totalPagesLabel}</li>
+    <li>
+      Showing page {pageNumberLabel} of <a href="/{route}/page/{totalPages}">{totalPagesLabel}</a>
+    </li>
     {#if pageNumber < totalPages}
       <li><a href="/{route}/page/{pageNumber + 1}">Next</a></li>
     {:else}

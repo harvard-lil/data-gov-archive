@@ -19,7 +19,7 @@ export const load = async ({ params }) => {
     SELECT *
     FROM datasets
     ORDER BY name
-    LIMIT ${200}
+    LIMIT 200
     OFFSET ${offset}
   `);
 
