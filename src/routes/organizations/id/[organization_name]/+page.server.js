@@ -8,7 +8,6 @@ export const load = async ({ params }) => {
       WHERE organization_name = '${params.organization_name}'
     `)
   )[0].count;
-  const totalPages = Math.ceil(datasetsCount / 200);
 
   const datasets = await queryData(`
     SELECT *

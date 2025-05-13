@@ -1,8 +1,8 @@
 <script>
-  let { pageNumber, totalItems, route = "datasets" } = $props();
+  let { pageNumber, totalItems, route = "datasets", pageSize = 200 } = $props();
 
-  let offset = $derived((pageNumber - 1) * 200);
-  let totalPages = $derived(Math.ceil(totalItems / 200));
+  let offset = $derived((pageNumber - 1) * pageSize);
+  let totalPages = $derived(Math.ceil(totalItems / pageSize));
 
   let pageNumberLabel = $derived(pageNumber.toLocaleString("en-US"));
   let totalPagesLabel = $derived(totalPages.toLocaleString("en-US"));

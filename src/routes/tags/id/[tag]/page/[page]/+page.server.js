@@ -1,6 +1,10 @@
+import { error } from "@sveltejs/kit";
+
 import { queryData } from "$lib/db.js";
 
 export const load = async ({ params }) => {
+  const pageNumber = parseInt(params.page);
+
   const datasetsCount = (
     await queryData(`
       SELECT count(*) AS count
@@ -9,6 +13,14 @@ export const load = async ({ params }) => {
       WHERE tags.tag = '${params.tag}'
     `)
   )[0].count;
+  const totalPages = Math.ceil(datasetsCount / 200);
+  const offset = (pageNumber - 1) * 200;
+
+  if (pageNumber <= 0 || pageNumber > totalPages) {
+    error(404, {
+      message: "No tags found for this page",
+    });
+  }
 
   const datasets = await queryData(`
     SELECT
@@ -22,11 +34,13 @@ export const load = async ({ params }) => {
     WHERE tags.tag = '${params.tag}'
     ORDER BY datasets.name
     LIMIT 200
+    OFFSET ${offset}
   `);
 
   return {
     tag: params.tag,
     datasets,
     totalItems: datasetsCount,
+    pageNumber,
   };
 };
