@@ -3,7 +3,7 @@
 </script>
 
 <nav>
-  <h2>Organizations</h2>
+  <h2><a href="/organizations">Organizations</a></h2>
   <ul>
     {#each organizations as organization}
       <li>
@@ -18,7 +18,7 @@
     {/each}
   </ul>
 
-  <h2>Publishers</h2>
+  <h2><a href="/publishers">Publishers</a></h2>
   <ul>
     {#each publishers as publisher}
       <li>
@@ -33,7 +33,7 @@
     {/each}
   </ul>
 
-  <h2>Bureaus</h2>
+  <h2><a href="/bureaus">Bureaus</a></h2>
   <ul>
     {#each bureaus as bureau}
       <li>
