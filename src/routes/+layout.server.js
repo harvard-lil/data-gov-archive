@@ -25,7 +25,13 @@ export const load = async ({ params }) => {
     ORDER BY count DESC
     LIMIT ${topN}
   `);
-  const tags = [];
+  const tags = await queryData(`
+    SELECT tag, count(*) AS count
+    FROM tags
+    GROUP BY tag
+    ORDER BY count DESC
+    LIMIT 20
+  `);
 
   return { organizations, publishers, bureaus, tags };
 };
