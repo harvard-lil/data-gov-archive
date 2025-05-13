@@ -8,4 +8,4 @@
   <title>Archive of Data.gov: {data.dataset.title}</title>
 </svelte:head>
 
-<DatasetView dataset={data.dataset} />
+<DatasetView dataset={data.dataset} tags={data.tags} />

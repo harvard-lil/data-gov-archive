@@ -8,6 +8,9 @@ const db = new sqlJs.Database(buffer);
 
 const zipResults = (results) => {
   const [result] = results;
+  if (!result) {
+    return [];
+  }
   return result.values.map((values) => {
     const record = {};
     result.columns.forEach((column, index) => (record[column] = values[index]));

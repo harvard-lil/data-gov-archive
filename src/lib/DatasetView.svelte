@@ -6,7 +6,7 @@
   import TagList from "./TagList.svelte";
   import DatasetLinks from "./DatasetLinks.svelte";
 
-  let { dataset } = $props();
+  let { dataset, tags } = $props();
   let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
 </script>
 
@@ -22,7 +22,7 @@
     {/each}
   </p>
 
-  <DatasetMetadata {dataset} />
+  <DatasetMetadata {dataset} {tags} />
 </article>
 
 <style lang="scss">

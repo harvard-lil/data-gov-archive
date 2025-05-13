@@ -2,8 +2,7 @@
   import TagList from "./TagList.svelte";
   import Timestamp from "./Timestamp.svelte";
 
-  let { dataset } = $props();
-  let tags = dataset.tags ? dataset.tags.split(/, /) : [];
+  let { dataset, tags } = $props();
 </script>
 
 <dl>
@@ -29,7 +28,7 @@
       <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
     </dd>
   {/if}
-  {#if dataset.tags}
+  {#if tags && tags.length > 0}
     <dt>Tags:</dt>
     <dd><section><TagList {tags} /></section></dd>
   {/if}

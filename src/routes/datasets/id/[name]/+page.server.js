@@ -7,5 +7,18 @@ export const load = async ({ params }) => {
     WHERE name = '${params.name}'
     LIMIT 1
   `);
-  return { dataset: datasets[0] };
+
+  const tags = (
+    await queryData(`
+    SELECT tag
+    FROM tags
+    WHERE name = '${params.name}'
+    ORDER BY tag
+  `)
+  ).map((tag) => tag.tag);
+
+  return {
+    dataset: datasets[0],
+    tags,
+  };
 };
