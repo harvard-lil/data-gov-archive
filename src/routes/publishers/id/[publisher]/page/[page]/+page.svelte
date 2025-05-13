@@ -10,7 +10,10 @@
   <title>Archive of Data.gov: {data.publisher}, page {data.pageNumber}</title>
 </svelte:head>
 
-<h2><b>Publisher:</b> {data.publisher}</h2>
+<h2>
+  <b>Publisher:</b>
+  <a href="/publishers/id/{encodeURIComponent(data.publisher)}">{data.publisher}</a>
+</h2>
 
 <PageNav
   pageNumber={data.pageNumber}
@@ -29,5 +32,13 @@
 <style lang="scss">
   h2 {
     font-weight: inherit;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   }
 </style>

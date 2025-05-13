@@ -18,7 +18,15 @@
       {/if}
     </li>
     <li>
-      Showing page {pageNumberLabel} of <a href="/{route}/page/{totalPages}">{totalPagesLabel}</a>
+      {#if pageNumber < 2}
+        Showing page {pageNumberLabel} of <a href="/{route}/page/{totalPages}">{totalPagesLabel}</a>
+      {:else if pageNumber < totalPages}
+        Showing page <a href="/{route}">{pageNumberLabel}</a> of
+        <a href="/{route}/page/{totalPages}">{totalPagesLabel}</a>
+      {:else}
+        Showing page <a href="/{route}/page/1">{pageNumberLabel}</a> of
+        {totalPagesLabel}
+      {/if}
     </li>
     {#if pageNumber < totalPages}
       <li><a href="/{route}/page/{pageNumber + 1}">Next</a></li>

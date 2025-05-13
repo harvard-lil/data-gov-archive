@@ -10,7 +10,10 @@
   <title>Archive of Data.gov: {data.organization_title}, page {data.pageNumber}</title>
 </svelte:head>
 
-<h2><b>Organization:</b> {data.organization_title}</h2>
+<h2>
+  <b>Organization:</b>
+  <a href="/organizations/id/{data.organization_name}">{data.organization_title}</a>
+</h2>
 
 <PageNav
   pageNumber={data.pageNumber}
@@ -29,5 +32,13 @@
 <style lang="scss">
   h2 {
     font-weight: inherit;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   }
 </style>

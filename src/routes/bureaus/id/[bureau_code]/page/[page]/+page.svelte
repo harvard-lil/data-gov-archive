@@ -14,7 +14,9 @@
   <title>Archive of Data.gov: {bureauLabel}, page {data.pageNumber}</title>
 </svelte:head>
 
-<h2><b>Bureau:</b> {bureauLabel}</h2>
+<h2>
+  <b>Bureau:</b> <a href="/bureaus/id/{encodeURIComponent(data.bureau_code)}">{bureauLabel}</a>
+</h2>
 
 <PageNav
   pageNumber={data.pageNumber}
@@ -33,5 +35,13 @@
 <style lang="scss">
   h2 {
     font-weight: inherit;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   }
 </style>
