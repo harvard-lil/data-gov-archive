@@ -11,8 +11,8 @@
 
 <h2>Tags</h2>
 
-<PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="tags" pageSize={1000} />
+<PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="tags" pageSize={500} />
 
 <TagList tags={data.tags} />
 
-<PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="tags" pageSize={1000} />
+<PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="tags" pageSize={500} />

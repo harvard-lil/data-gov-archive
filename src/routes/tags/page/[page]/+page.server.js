@@ -10,8 +10,8 @@ export const load = async ({ params }) => {
       SELECT count(DISTINCT tag) AS count FROM tags
     `)
   )[0].count;
-  const totalPages = Math.ceil(tagsCount / 1000);
-  const offset = (pageNumber - 1) * 1000;
+  const totalPages = Math.ceil(tagsCount / 500);
+  const offset = (pageNumber - 1) * 500;
 
   if (pageNumber <= 0 || pageNumber > totalPages) {
     error(404, {
@@ -24,7 +24,7 @@ export const load = async ({ params }) => {
       SELECT DISTINCT tag
       FROM tags
       ORDER BY tag
-      LIMIT 1000
+      LIMIT 500
       OFFSET ${offset}
   `)
   ).map((tag) => tag.tag);

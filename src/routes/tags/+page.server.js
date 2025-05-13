@@ -14,7 +14,7 @@ export const load = async ({ params }) => {
       SELECT DISTINCT tag
       FROM tags
       ORDER BY tag
-      LIMIT 1000
+      LIMIT 500
   `)
   ).map((tag) => tag.tag);
 
