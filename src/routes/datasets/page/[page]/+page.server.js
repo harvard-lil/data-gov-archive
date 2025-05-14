@@ -15,13 +15,15 @@ export const load = ({ params }) => {
     });
   }
 
-  const datasets = queryData(`
-    SELECT *
-    FROM datasets
-    ORDER BY name
-    LIMIT 200
-    OFFSET ${offset}
-  `);
+  const datasets = queryData(
+    `
+      SELECT *
+      FROM datasets
+      ORDER BY name
+      LIMIT 200
+      OFFSET ${offset}
+    `
+  );
 
   return {
     pageNumber,

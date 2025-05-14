@@ -7,9 +7,12 @@ export const load = ({ params }) => {
   const entity = entities.find((entity) => entity.route == params.entity);
   if (!entity) error(404);
 
-  const count = queryData(`
-      SELECT count(*) AS count FROM datasets WHERE ${entity.identifier} = '${params.identifier}'
-    `)[0].count;
+  const count = queryData(
+    `
+      SELECT count(*) AS count FROM datasets WHERE ${entity.identifier} = $identifier
+    `,
+    { $identifier: params.identifier }
+  )[0].count;
 
   return { entity, count };
 };

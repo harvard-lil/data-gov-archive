@@ -1,19 +1,27 @@
 import { queryData } from "$lib/db.js";
 
 export const load = ({ params }) => {
-  const datasets = queryData(`
-    SELECT *
-    FROM datasets
-    WHERE name = '${params.name}'
-    LIMIT 1
-  `);
+  const sqlParams = { $name: params.name };
 
-  const tags = queryData(`
-    SELECT tag
-    FROM tags
-    WHERE name = '${params.name}'
-    ORDER BY tag
-  `).map((tag) => tag.tag);
+  const datasets = queryData(
+    `
+      SELECT *
+      FROM datasets
+      WHERE name = $name
+      LIMIT 1
+    `,
+    sqlParams
+  );
+
+  const tags = queryData(
+    `
+      SELECT tag
+      FROM tags
+      WHERE name = $name
+      ORDER BY tag
+    `,
+    sqlParams
+  ).map((tag) => tag.tag);
 
   return {
     dataset: datasets[0],

@@ -10,14 +10,17 @@ export const load = ({ params }) => {
   const page = parseInt(params.page);
   const offset = Math.ceil((page - 1) * 200);
 
-  const datasets = queryData(`
-    SELECT *
-    FROM datasets
-    WHERE ${entity.identifier} = '${params.identifier}'
-    ORDER BY name
-    LIMIT 200
-    OFFSET ${offset}
-  `);
+  const datasets = queryData(
+    `
+      SELECT *
+      FROM datasets
+      WHERE ${entity.identifier} = $identifier
+      ORDER BY name
+      LIMIT 200
+      OFFSET ${offset}
+    `,
+    { $identifier: params.identifier }
+  );
 
   return {
     entity,

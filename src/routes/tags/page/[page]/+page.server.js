@@ -17,13 +17,15 @@ export const load = ({ params }) => {
     });
   }
 
-  const tags = queryData(`
+  const tags = queryData(
+    `
       SELECT DISTINCT tag
       FROM tags
       ORDER BY tag
       LIMIT 500
       OFFSET ${offset}
-  `).map((tag) => tag.tag);
+    `
+  ).map((tag) => tag.tag);
 
   return {
     tags,

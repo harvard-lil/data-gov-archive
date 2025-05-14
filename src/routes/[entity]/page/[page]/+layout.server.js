@@ -8,8 +8,8 @@ export const load = ({ params }) => {
   if (!entity) error(404);
 
   const count = queryData(`
-      SELECT count(DISTINCT ${entity.identifier}) AS count FROM datasets
-    `)[0].count;
+    SELECT count(DISTINCT ${entity.identifier}) AS count FROM datasets
+  `)[0].count;
 
   return { entity, count };
 };

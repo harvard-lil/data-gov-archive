@@ -10,19 +10,21 @@ export const load = ({ params }) => {
   const page = parseInt(params.page);
   const offset = Math.ceil((page - 1) * 200);
 
-  const instances = queryData(`
-    SELECT
-      ${entity.identifier},
-      ${entity.label},
-      count(*) AS count,
-      max(metadata_modified) AS last_modified
-    FROM datasets
-    WHERE ${entity.identifier} IS NOT NULL
-    GROUP BY ${entity.identifier}
-    ORDER BY ${entity.identifier}
-    LIMIT 200
-    OFFSET ${offset}
-  `);
+  const instances = queryData(
+    `
+      SELECT
+        ${entity.identifier},
+        ${entity.label},
+        count(*) AS count,
+        max(metadata_modified) AS last_modified
+      FROM datasets
+      WHERE ${entity.identifier} IS NOT NULL
+      GROUP BY ${entity.identifier}
+      ORDER BY ${entity.identifier}
+      LIMIT 200
+      OFFSET ${offset}
+    `
+  );
 
   return {
     entity,

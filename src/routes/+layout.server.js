@@ -1,13 +1,12 @@
 import { queryData } from "$lib/db.js";
 
 export const load = ({ params }) => {
-  const topN = 10;
   const organizations = queryData(`
     SELECT organization_name, organization_title, count(*) AS count
     FROM datasets
     GROUP BY organization_name
     ORDER BY count DESC
-    LIMIT ${topN}
+    LIMIT 10
   `);
   const publishers = queryData(`
     SELECT publisher, count(*) AS count
@@ -15,7 +14,7 @@ export const load = ({ params }) => {
     WHERE publisher IS NOT NULL
     GROUP BY publisher
     ORDER BY count DESC
-    LIMIT ${topN}
+    LIMIT 10
   `);
   const bureaus = queryData(`
     SELECT bureau_code, bureau_name, count(*) AS count
@@ -23,7 +22,7 @@ export const load = ({ params }) => {
     WHERE bureau_code IS NOT NULL
     GROUP BY bureau_code
     ORDER BY count DESC
-    LIMIT ${topN}
+    LIMIT 10
   `);
   const tags = queryData(`
     SELECT tag, count(*) AS count

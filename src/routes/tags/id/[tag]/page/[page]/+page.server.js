@@ -4,13 +4,17 @@ import { queryData } from "$lib/db.js";
 
 export const load = ({ params }) => {
   const pageNumber = parseInt(params.page);
+  const sqlParams = { $tag: params.tag };
 
-  const datasetsCount = queryData(`
+  const datasetsCount = queryData(
+    `
       SELECT count(*) AS count
       FROM datasets
       INNER JOIN tags ON datasets.name = tags.name
-      WHERE tags.tag = '${params.tag}'
-    `)[0].count;
+      WHERE tags.tag = $tag
+    `,
+    sqlParams
+  )[0].count;
   const totalPages = Math.ceil(datasetsCount / 200);
   const offset = (pageNumber - 1) * 200;
 
@@ -20,20 +24,23 @@ export const load = ({ params }) => {
     });
   }
 
-  const datasets = queryData(`
-    SELECT
-      datasets.name,
-      title,
-      notes,
-      organization_name,
-      organization_title
-    FROM datasets
-    INNER JOIN tags ON datasets.name = tags.name
-    WHERE tags.tag = '${params.tag}'
-    ORDER BY datasets.name
-    LIMIT 200
-    OFFSET ${offset}
-  `);
+  const datasets = queryData(
+    `
+      SELECT
+        datasets.name,
+        title,
+        notes,
+        organization_name,
+        organization_title
+      FROM datasets
+      INNER JOIN tags ON datasets.name = tags.name
+      WHERE tags.tag = $tag
+      ORDER BY datasets.name
+      LIMIT 200
+      OFFSET ${offset}
+    `,
+    sqlParams
+  );
 
   return {
     tag: params.tag,
