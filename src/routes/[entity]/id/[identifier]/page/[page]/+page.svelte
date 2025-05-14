@@ -28,7 +28,7 @@
 <PageNav
   pageNumber={data.page}
   totalItems={data.count}
-  route="{data.entity.route}/id/{identifier}"
+  route="/{data.entity.route}/id/{identifier}"
 />
 
 <DatasetList datasets={data.datasets} showOrganization={!(data.entity.route === "organizations")} />
@@ -36,7 +36,7 @@
 <PageNav
   pageNumber={data.page}
   totalItems={data.count}
-  route="{data.entity.route}/id/{identifier}"
+  route="/{data.entity.route}/id/{identifier}"
 />
 
 <style lang="scss">

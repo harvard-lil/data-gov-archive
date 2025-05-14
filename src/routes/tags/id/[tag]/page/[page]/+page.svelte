@@ -17,7 +17,7 @@
 <PageNav
   pageNumber={data.pageNumber}
   totalItems={data.totalItems}
-  route="tags/id/{encodeURIComponent(data.tag)}"
+  route="/tags/id/{encodeURIComponent(data.tag)}"
 />
 
 <DatasetList datasets={data.datasets} />
@@ -25,7 +25,7 @@
 <PageNav
   pageNumber={data.pageNumber}
   totalItems={data.totalItems}
-  route="tags/id/{encodeURIComponent(data.tag)}"
+  route="/tags/id/{encodeURIComponent(data.tag)}"
 />
 
 <style lang="scss">

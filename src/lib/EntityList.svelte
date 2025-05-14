@@ -48,7 +48,7 @@
     }
     li:last-of-type {
       border-bottom: 1px dotted;
-      padding-bottom: 1.5em;
+      padding-bottom: 0.5em;
     }
   }
 </style>

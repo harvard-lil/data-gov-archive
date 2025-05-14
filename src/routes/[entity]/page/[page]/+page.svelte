@@ -11,8 +11,8 @@
 
 <h2>{data.entity.title}s</h2>
 
-<PageNav pageNumber={data.page} totalItems={data.count} route={data.entity.route} />
+<PageNav pageNumber={data.page} totalItems={data.count} route="/{data.entity.route}" />
 
 <EntityList entity={data.entity} instances={data.instances} />
 
-<PageNav pageNumber={data.page} totalItems={data.count} route={data.entity.route} />
+<PageNav pageNumber={data.page} totalItems={data.count} route="/{data.entity.route}" />
