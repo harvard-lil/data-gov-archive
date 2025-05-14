@@ -19,7 +19,7 @@
     li {
       display: inline-block;
       border-radius: 0.25em;
-      border: 1px dotted;
+      border: 1px dotted #222;
       padding: 0.5em 0.75em;
       margin: 0 0.5em 0.25em 0;
       font-family: monospace;

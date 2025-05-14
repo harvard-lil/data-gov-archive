@@ -81,7 +81,7 @@
         display: flex;
         justify-content: space-between;
 
-        border-top: 1px dotted;
+        border-top: 1px dotted #222;
         padding: 0.375em 0;
 
         font-size: small;

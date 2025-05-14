@@ -41,7 +41,7 @@
       background-color: #ccc;
       color: #333;
       border-radius: 0.25em;
-      border: 1px dotted;
+      border: 1px dotted #222;
 
       a {
         color: inherit;

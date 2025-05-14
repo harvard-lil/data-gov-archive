@@ -33,7 +33,7 @@
     span.tag {
       display: inline-block;
       border-radius: 0.25em;
-      border: 1px dotted;
+      border: 1px dotted #222;
       margin-left: 0.25em;
       padding: 0.5em 0.75em;
 

@@ -23,7 +23,7 @@
 <style lang="scss">
   li {
     margin: 1em 0;
-    border-top: 1px dotted;
+    border-top: 1px dotted #222;
 
     h2 {
       font-weight: 700;
@@ -46,7 +46,7 @@
     }
   }
   li:last-of-type {
-    border-bottom: 1px dotted;
+    border-bottom: 1px dotted #222;
     padding-bottom: 0.5em;
   }
 </style>
