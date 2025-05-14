@@ -1,8 +1,8 @@
 import { queryData } from "$lib/db.js";
 
-export const load = async ({ params }) => {
-  const datasetsCount = (await queryData("SELECT count(*) AS count FROM datasets"))[0].count;
-  const datasets = await queryData(`
+export const load = ({ params }) => {
+  const datasetsCount = queryData("SELECT count(*) AS count FROM datasets")[0].count;
+  const datasets = queryData(`
     SELECT
       name,
       title,

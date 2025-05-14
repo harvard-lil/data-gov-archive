@@ -2,17 +2,15 @@ import { error } from "@sveltejs/kit";
 
 import { queryData } from "$lib/db.js";
 
-export const load = async ({ params }) => {
+export const load = ({ params }) => {
   const pageNumber = parseInt(params.page);
 
-  const datasetsCount = (
-    await queryData(`
+  const datasetsCount = queryData(`
       SELECT count(*) AS count
       FROM datasets
       INNER JOIN tags ON datasets.name = tags.name
       WHERE tags.tag = '${params.tag}'
-    `)
-  )[0].count;
+    `)[0].count;
   const totalPages = Math.ceil(datasetsCount / 200);
   const offset = (pageNumber - 1) * 200;
 
@@ -22,7 +20,7 @@ export const load = async ({ params }) => {
     });
   }
 
-  const datasets = await queryData(`
+  const datasets = queryData(`
     SELECT
       datasets.name,
       title,

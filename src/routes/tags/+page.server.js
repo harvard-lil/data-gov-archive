@@ -2,21 +2,17 @@ import { error } from "@sveltejs/kit";
 
 import { queryData } from "$lib/db.js";
 
-export const load = async ({ params }) => {
-  const tagsCount = (
-    await queryData(`
+export const load = ({ params }) => {
+  const tagsCount = queryData(`
       SELECT count(DISTINCT tag) AS count FROM tags
-    `)
-  )[0].count;
+    `)[0].count;
 
-  const tags = (
-    await queryData(`
+  const tags = queryData(`
       SELECT DISTINCT tag
       FROM tags
       ORDER BY tag
       LIMIT 500
-  `)
-  ).map((tag) => tag.tag);
+  `).map((tag) => tag.tag);
 
   return {
     tags,

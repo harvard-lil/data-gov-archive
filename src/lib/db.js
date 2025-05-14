@@ -18,7 +18,7 @@ const zipResults = (results) => {
   });
 };
 
-export const queryData = async (query) => {
+export const queryData = (query) => {
   const results = db.exec(query);
   return zipResults(results);
 };

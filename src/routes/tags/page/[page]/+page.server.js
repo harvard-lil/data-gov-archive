@@ -2,14 +2,12 @@ import { error } from "@sveltejs/kit";
 
 import { queryData } from "$lib/db.js";
 
-export const load = async ({ params }) => {
+export const load = ({ params }) => {
   const pageNumber = parseInt(params.page);
 
-  const tagsCount = (
-    await queryData(`
+  const tagsCount = queryData(`
       SELECT count(DISTINCT tag) AS count FROM tags
-    `)
-  )[0].count;
+    `)[0].count;
   const totalPages = Math.ceil(tagsCount / 500);
   const offset = (pageNumber - 1) * 500;
 
@@ -19,15 +17,13 @@ export const load = async ({ params }) => {
     });
   }
 
-  const tags = (
-    await queryData(`
+  const tags = queryData(`
       SELECT DISTINCT tag
       FROM tags
       ORDER BY tag
       LIMIT 500
       OFFSET ${offset}
-  `)
-  ).map((tag) => tag.tag);
+  `).map((tag) => tag.tag);
 
   return {
     tags,

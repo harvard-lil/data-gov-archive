@@ -1,16 +1,14 @@
 import { queryData } from "$lib/db.js";
 
-export const load = async ({ params }) => {
-  const datasetsCount = (
-    await queryData(`
+export const load = ({ params }) => {
+  const datasetsCount = queryData(`
       SELECT count(*) AS count
       FROM datasets
       INNER JOIN tags ON datasets.name = tags.name
       WHERE tags.tag = '${params.tag}'
-    `)
-  )[0].count;
+    `)[0].count;
 
-  const datasets = await queryData(`
+  const datasets = queryData(`
     SELECT
       datasets.name,
       title,
