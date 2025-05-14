@@ -1,6 +1,5 @@
 import { redirect, error } from "@sveltejs/kit";
 
-import { queryData } from "$lib/db.js";
 import { entities } from "$lib/entities.js";
 
 export const load = ({ params }) => {
