@@ -7,5 +7,5 @@ export const load = async ({ params }) => {
   const entity = entities.find((entity) => entity.route == params.entity);
   if (!entity) error(404);
 
-  redirect(308, `/${entity.route}/id/${params.identifier}/page/1`);
+  redirect(308, `/${entity.route}/id/${encodeURIComponent(params.identifier)}/page/1`);
 };

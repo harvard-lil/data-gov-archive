@@ -8,9 +8,9 @@
   {#each instances as instance}
     <li>
       <h2>
-        <a href="/{entity.route}/id/{instance[entity.identifier]}"
-          >{instance[entity.label] ? instance[entity.label] : instance[entity.identifier]}</a
-        >
+        <a href="/{entity.route}/id/{encodeURIComponent(instance[entity.identifier])}">
+          {instance[entity.label] ? instance[entity.label] : instance[entity.identifier]}
+        </a>
       </h2>
       <p>
         {instance.count.toLocaleString("en-US")} dataset{#if instance.count != 1}s{/if}, last

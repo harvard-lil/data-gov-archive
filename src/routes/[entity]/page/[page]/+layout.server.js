@@ -9,12 +9,9 @@ export const load = async ({ params }) => {
 
   const count = (
     await queryData(`
-    SELECT count(DISTINCT ${entity.identifier}) AS count FROM datasets
-  `)
+      SELECT count(DISTINCT ${entity.identifier}) AS count FROM datasets
+    `)
   )[0].count;
 
-  return {
-    entity,
-    count,
-  };
+  return { entity, count };
 };

@@ -6,7 +6,7 @@
 
   let { data } = $props();
 
-  let identifier = $derived(data.datasets[0][data.entity.identifier]);
+  let identifier = $derived(encodeURIComponent(data.datasets[0][data.entity.identifier]));
   let label = $derived(
     data.datasets[0][data.entity.label] ? data.datasets[0][data.entity.label] : identifier
   );
