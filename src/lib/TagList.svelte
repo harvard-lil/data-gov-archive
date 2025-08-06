@@ -4,9 +4,11 @@
 
 <ul>
   {#each tags as tag}
-    <li>
-      <a href="/tags/id/{encodeURIComponent(tag)}" title={tag}>{tag}</a>
-    </li>
+    <a href="/tags/id/{encodeURIComponent(tag)}" title={tag}
+      ><li>
+        {tag}
+      </li></a
+    >
   {/each}
 </ul>
 
@@ -15,6 +17,16 @@
     padding: 0;
     list-style: none;
     list-style-position: unset;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      li {
+        text-decoration: underline;
+      }
+    }
 
     li {
       display: inline-block;
@@ -29,13 +41,6 @@
       overflow: hidden;
       text-overflow: nowrap;
       text-overflow: ellipsis;
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
     }
   }
 </style>
