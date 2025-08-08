@@ -46,16 +46,3 @@ export const instantiateDuckDB = async () => {
 
   return db;
 };
-
-export const queryData = async (query, params) => {
-  const db = await instantiateDuckDB();
-  const conn = await db.connect();
-
-  const statement = await conn.prepare(query);
-  const results = await statement.query(...(params || []));
-
-  await statement.close();
-  await conn.close();
-
-  return results;
-};
