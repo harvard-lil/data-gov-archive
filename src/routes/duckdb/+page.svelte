@@ -4,17 +4,9 @@
   import { instantiateDuckDB } from "$lib/duckdb";
   import DatasetList from "$lib/DatasetList.svelte";
 
-  const loadDB = async () => {
-    console.log("Loading DuckDB…");
-
-    const duckdb = await instantiateDuckDB();
-
-    const conn = await duckdb.connect();
-    return conn;
-  };
-
   const queryDuckDB = async () => {
-    const conn = await loadDB();
+    const duckdb = await instantiateDuckDB();
+    const conn = await duckdb.connect();
     const statement = await conn.prepare(
       `
         SELECT name, title, notes, organization_name, organization_title

@@ -52,10 +52,11 @@ export const queryData = async (query, params) => {
   const conn = await db.connect();
 
   const statement = await conn.prepare(query);
-  const results = await statement.query(...(params || []));
+  const arrowResult = await statement.query(...(params || []));
+  const result = arrowResult.toArray().map((row) => row.toJSON());
 
   await statement.close();
   await conn.close();
 
-  return results;
+  return result;
 };
