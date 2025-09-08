@@ -9,6 +9,7 @@ import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 const bucketUrl = "https://gov-data-search.s3.us-west-2.amazonaws.com";
 const datasetsUrl = `${bucketUrl}/datasets.parquet`;
 const tagsUrl = `${bucketUrl}/tags.parquet`;
+const aggregationsUrl = `${bucketUrl}/aggregations.parquet`;
 
 let db = null;
 
@@ -43,6 +44,7 @@ export const instantiateDuckDB = async () => {
   // Register files
   await db.registerFileURL("datasets.parquet", datasetsUrl, DuckDBDataProtocol.HTTP, false);
   await db.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
+  await db.registerFileURL("aggregations.parquet", aggregationsUrl, DuckDBDataProtocol.HTTP, false);
 
   return db;
 };

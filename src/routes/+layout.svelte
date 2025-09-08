@@ -2,20 +2,52 @@
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
 
+  import { queryData } from "$lib/db.js";
   import FilterNav from "$lib/FilterNav.svelte";
   import Header from "$lib/Header.svelte";
 
-  let { data, children } = $props();
+  export const loadData = async () => {
+    const organizations = await queryData(`
+      SELECT identifier AS organization_name, label AS organization_title, count
+      FROM parquet_scan('aggregations.parquet')
+      WHERE aggregation = 'organizations';
+    `);
+    const publishers = await queryData(`
+      SELECT identifier AS publisher, count
+      FROM parquet_scan('aggregations.parquet')
+      WHERE aggregation = 'publishers';
+    `);
+    const bureaus = await queryData(`
+      SELECT identifier AS bureau_code, label AS bureau_name, count
+      FROM parquet_scan('aggregations.parquet')
+      WHERE aggregation = 'bureaus';
+    `);
+    const tags = await queryData(`
+      SELECT identifier AS tag, count
+      FROM parquet_scan('aggregations.parquet')
+      WHERE aggregation = 'tags';
+    `);
+
+    return { organizations, publishers, bureaus, tags };
+  };
+
+  let topNFilters = loadData();
+
+  const { children } = $props();
 </script>
 
 <Header />
 
-<FilterNav
-  organizations={data.organizations}
-  publishers={data.publishers}
-  bureaus={data.bureaus}
-  tags={data.tags}
-/>
+{#await topNFilters}
+  <p>Loading…</p>
+{:then topNFilters}
+  <FilterNav
+    organizations={topNFilters.organizations}
+    publishers={topNFilters.publishers}
+    bureaus={topNFilters.bureaus}
+    tags={topNFilters.tags}
+  />
+{/await}
 
 <main>
   {@render children?.()}
