@@ -8,6 +8,7 @@
   let data = $state({
     entity: null,
     instances: [],
+    totalItems: 0,
     pageNumber: 1,
   });
 
@@ -30,6 +31,13 @@
         return;
       }
 
+      // Get total count first
+      const totalCount = await queryData(`
+        SELECT count(DISTINCT ${entity.identifier}) AS count
+        FROM parquet_scan('datasets.parquet')
+        WHERE ${entity.identifier} IS NOT NULL
+      `);
+
       const instances = await queryData(`
         SELECT
           ${entity.identifier},
@@ -46,6 +54,7 @@
 
       data.entity = entity;
       data.instances = instances;
+      data.totalItems = Number(totalCount[0].count);
       data.pageNumber = pageNumber;
     } catch (error) {
       console.error("Error loading entity data:", error);
@@ -60,10 +69,10 @@
 {#if data.entity}
   <h2>{data.entity.title}s</h2>
 
-  {#if data.instances.length > 0}
+  {#if data.totalItems > 0}
     <PageNav
       pageNumber={data.pageNumber}
-      totalItems={data.instances.length}
+      totalItems={data.totalItems}
       route="/{data.entity.route}"
     />
 
@@ -71,7 +80,7 @@
 
     <PageNav
       pageNumber={data.pageNumber}
-      totalItems={data.instances.length}
+      totalItems={data.totalItems}
       route="/{data.entity.route}"
     />
   {:else}

@@ -8,6 +8,7 @@
   let data = $state({
     entity: null,
     datasets: [],
+    totalItems: 0,
     pageNumber: 1,
     identifier: "",
     label: "",
@@ -27,6 +28,16 @@
         return;
       }
 
+      // Get total count first
+      const totalCount = await queryData(
+        `
+        SELECT count(*) AS count
+        FROM parquet_scan('datasets.parquet')
+        WHERE ${entity.identifier} = $1
+      `,
+        [identifier]
+      );
+
       const datasets = await queryData(
         `
         SELECT *
@@ -41,6 +52,7 @@
 
       data.entity = entity;
       data.datasets = datasets;
+      data.totalItems = Number(totalCount[0].count);
       data.pageNumber = pageNumber;
       data.identifier = encodeURIComponent(identifier);
       data.label = datasets[0]?.[entity.label] || identifier;
@@ -64,10 +76,10 @@
     {/if}
   </h2>
 
-  {#if data.datasets.length > 0}
+  {#if data.totalItems > 0}
     <PageNav
       pageNumber={data.pageNumber}
-      totalItems={data.datasets.length}
+      totalItems={data.totalItems}
       route="/{data.entity.route}/id/{data.identifier}"
     />
 
@@ -78,7 +90,7 @@
 
     <PageNav
       pageNumber={data.pageNumber}
-      totalItems={data.datasets.length}
+      totalItems={data.totalItems}
       route="/{data.entity.route}/id/{data.identifier}"
     />
   {:else}
