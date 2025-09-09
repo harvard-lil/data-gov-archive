@@ -2,9 +2,11 @@
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
 
-  import { queryData } from "$lib/db.js";
+  import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/FilterNav.svelte";
   import Header from "$lib/Header.svelte";
+  import PerformanceMonitor from "$lib/PerformanceMonitor.svelte";
+  import { onDestroy } from "svelte";
 
   export const loadData = async () => {
     const organizations = await queryData(`
@@ -34,6 +36,11 @@
   let topNFilters = loadData();
 
   const { children } = $props();
+
+  // Cleanup database connections when component is destroyed
+  onDestroy(() => {
+    cleanup();
+  });
 </script>
 
 <Header />
@@ -52,6 +59,8 @@
 <main>
   {@render children?.()}
 </main>
+
+<PerformanceMonitor />
 
 <style lang="scss">
   :global(body) {

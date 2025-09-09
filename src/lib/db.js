@@ -11,14 +11,42 @@ const datasetsUrl = `${bucketUrl}/datasets.parquet`;
 const tagsUrl = `${bucketUrl}/tags.parquet`;
 const aggregationsUrl = `${bucketUrl}/aggregations.parquet`;
 
+// Connection pooling state
 let db = null;
+let connection = null;
+let isInitializing = false;
+let initPromise = null;
+let queryCount = 0;
+let totalQueryTime = 0;
 
 export const instantiateDuckDB = async () => {
   if (!browser) {
-    Error("Can only instantiate DuckDB from browser.");
-  } else if (db) {
+    throw new Error("Can only instantiate DuckDB from browser.");
+  }
+
+  // Return existing database if already initialized
+  if (db) {
     return db;
   }
+
+  // If already initializing, wait for the existing promise
+  if (isInitializing && initPromise) {
+    return initPromise;
+  }
+
+  // Start initialization
+  isInitializing = true;
+  initPromise = initializeDuckDB();
+
+  try {
+    const result = await initPromise;
+    return result;
+  } finally {
+    isInitializing = false;
+  }
+};
+
+const initializeDuckDB = async () => {
   const duckdb = await import("@duckdb/duckdb-wasm");
   const bundles = {
     mvp: {
@@ -49,16 +77,144 @@ export const instantiateDuckDB = async () => {
   return db;
 };
 
+// Check if connection is still valid
+const isConnectionValid = async (conn) => {
+  try {
+    // Try a simple query to test the connection
+    const testStatement = await conn.prepare("SELECT 1 AS test");
+    await testStatement.close();
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Get or create a persistent connection
+const getConnection = async () => {
+  if (!connection) {
+    const db = await instantiateDuckDB();
+    connection = await db.connect();
+  } else {
+    // Check if existing connection is still valid
+    const isValid = await isConnectionValid(connection);
+    if (!isValid) {
+      console.log("Connection is stale, creating new connection...");
+      try {
+        await connection.close();
+      } catch (error) {
+        // Ignore close errors
+      }
+      const db = await instantiateDuckDB();
+      connection = await db.connect();
+    }
+  }
+  return connection;
+};
+
+// Close the persistent connection (for cleanup)
+export const closeConnection = async () => {
+  if (connection) {
+    try {
+      await connection.close();
+    } catch (error) {
+      console.error("Error closing database connection:", error);
+    } finally {
+      connection = null;
+    }
+  }
+};
+
+// Reset connection (useful for error recovery)
+export const resetConnection = async () => {
+  await closeConnection();
+  // Connection will be recreated on next query
+};
+
 export const queryData = async (query, params) => {
-  const db = await instantiateDuckDB();
-  const conn = await db.connect();
+  const startTime = performance.now();
+  let conn = null;
+  let statement = null;
 
-  const statement = await conn.prepare(query);
-  const arrowResult = await statement.query(...(params || []));
-  const result = arrowResult.toArray().map((row) => row.toJSON());
+  try {
+    conn = await getConnection();
+    statement = await conn.prepare(query);
+    const arrowResult = await statement.query(...(params || []));
+    const result = arrowResult.toArray().map((row) => row.toJSON());
 
-  await statement.close();
-  await conn.close();
+    // Update performance stats
+    queryCount++;
+    const queryTime = performance.now() - startTime;
+    totalQueryTime += queryTime;
 
-  return result;
+    // Log slow queries in development
+    if (queryTime > 1000) {
+      // Log queries taking more than 1 second
+      console.warn(
+        `Slow query detected (${queryTime.toFixed(2)}ms):`,
+        query.substring(0, 100) + "..."
+      );
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Query error:", error);
+
+    // If connection error, reset and retry once
+    if (
+      error.message.includes("connection") ||
+      error.message.includes("closed") ||
+      error.message.includes("Connection") ||
+      error.message.includes("Invalid connection") ||
+      error.message.includes("Connection is closed")
+    ) {
+      console.log("Connection error detected, resetting connection...");
+      await resetConnection();
+
+      // Retry once with fresh connection
+      try {
+        conn = await getConnection();
+        statement = await conn.prepare(query);
+        const arrowResult = await statement.query(...(params || []));
+        const result = arrowResult.toArray().map((row) => row.toJSON());
+        return result;
+      } catch (retryError) {
+        console.error("Retry failed:", retryError);
+        throw retryError;
+      }
+    }
+
+    throw error;
+  } finally {
+    // Close statement but keep connection alive
+    if (statement) {
+      try {
+        await statement.close();
+      } catch (error) {
+        console.error("Error closing statement:", error);
+      }
+    }
+  }
+};
+
+// Get performance statistics
+export const getPerformanceStats = () => {
+  return {
+    queryCount,
+    totalQueryTime,
+    averageQueryTime: queryCount > 0 ? totalQueryTime / queryCount : 0,
+    isConnected: connection !== null,
+  };
+};
+
+// Reset performance statistics
+export const resetPerformanceStats = () => {
+  queryCount = 0;
+  totalQueryTime = 0;
+};
+
+// Cleanup function for app shutdown
+export const cleanup = async () => {
+  console.log("Cleaning up database connections...");
+  await closeConnection();
+  console.log("Database cleanup complete");
 };

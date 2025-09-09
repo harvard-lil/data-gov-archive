@@ -16,12 +16,12 @@
     try {
       const tag = $page.params.tag;
 
+      // Use aggregations.parquet for count (much faster than JOIN)
       const datasetsCount = await queryData(
         `
-        SELECT count(*) AS count
-        FROM parquet_scan('datasets.parquet') datasets
-        INNER JOIN parquet_scan('tags.parquet') tags ON datasets.name = tags.name
-        WHERE tags.tag = $1
+        SELECT count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = 'tags' AND identifier = $1
       `,
         [tag]
       );
@@ -45,7 +45,7 @@
 
       data.tag = tag;
       data.datasets = datasets;
-      data.totalItems = Number(datasetsCount[0].count);
+      data.totalItems = Number(datasetsCount[0]?.count || 0);
     } catch (error) {
       console.error("Error loading tag data:", error);
     }
