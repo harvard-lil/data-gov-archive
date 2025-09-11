@@ -7,8 +7,14 @@
   import Header from "$lib/Header.svelte";
   import PerformanceMonitor from "$lib/PerformanceMonitor.svelte";
   import { onDestroy } from "svelte";
+  import { browser } from "$app/environment";
 
   export const loadData = async () => {
+    // Only run queries in the browser
+    if (!browser) {
+      return { organizations: [], publishers: [], bureaus: [], tags: [] };
+    }
+
     const organizations = await queryData(`
       SELECT identifier AS organization_name, label AS organization_title, count
       FROM parquet_scan('aggregations.parquet')

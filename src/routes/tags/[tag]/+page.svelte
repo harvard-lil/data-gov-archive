@@ -3,19 +3,25 @@
   import PageNav from "$lib/PageNav.svelte";
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
+  import { browser } from "$app/environment";
 
   let data = $state({
-    tag: "",
     datasets: [],
     totalItems: 0,
     pageNumber: 1,
+    tag: "",
   });
 
   // Load data when tag or page changes
   $effect(async () => {
+    // Only run queries in the browser
+    if (!browser) return;
+
     try {
       const tag = $page.params.tag;
-      const pageNumber = parseInt($page.params.page);
+      const url = new URL($page.url);
+      const pageParam = url.searchParams.get("page");
+      const pageNumber = pageParam ? parseInt(pageParam) : 1;
       const offset = (pageNumber - 1) * 200;
 
       // Use aggregations.parquet for count (much faster than JOIN)
@@ -28,7 +34,7 @@
         [tag]
       );
 
-      const totalPages = Math.ceil(Number(datasetsCount[0].count) / 200);
+      const totalPages = Math.ceil(Number(datasetsCount[0]?.count || 0) / 200);
 
       if (pageNumber <= 0 || pageNumber > totalPages) {
         // Handle invalid page - could redirect or show error
@@ -47,8 +53,7 @@
         INNER JOIN parquet_scan('tags.parquet') tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
-        LIMIT 200
-        OFFSET ${offset}
+        LIMIT 200 OFFSET ${offset}
       `,
         [tag]
       );
@@ -64,20 +69,26 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.tag}, page {data.pageNumber}</title>
+  <title>Archive of Data.gov: {data.tag || "Loading..."}</title>
 </svelte:head>
 
 {#if data.tag}
   <h2>
     <b>Tag:</b>
-    <span class="tag"><a href="/tags/id/{encodeURIComponent(data.tag)}">{data.tag}</a></span>
+    <span class="tag">
+      {#if data.pageNumber > 1}
+        <a href="?page=1">{data.tag}</a>
+      {:else}
+        {data.tag}
+      {/if}
+    </span>
   </h2>
 
   {#if data.totalItems > 0}
     <PageNav
       pageNumber={data.pageNumber}
       totalItems={data.totalItems}
-      route="/tags/id/{encodeURIComponent(data.tag)}"
+      route="/tags/{encodeURIComponent(data.tag)}"
     />
 
     <DatasetList datasets={data.datasets} />
@@ -85,7 +96,7 @@
     <PageNav
       pageNumber={data.pageNumber}
       totalItems={data.totalItems}
-      route="/tags/id/{encodeURIComponent(data.tag)}"
+      route="/tags/{encodeURIComponent(data.tag)}"
     />
   {:else}
     <p>Loading datasets for tag "{data.tag}"...</p>

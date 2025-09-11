@@ -131,6 +131,11 @@ export const resetConnection = async () => {
 };
 
 export const queryData = async (query, params) => {
+  // Check if we're in browser environment
+  if (!browser) {
+    throw new Error("Database queries can only be executed in the browser.");
+  }
+
   const startTime = performance.now();
   let conn = null;
   let statement = null;

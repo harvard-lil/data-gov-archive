@@ -8,7 +8,7 @@
   {#each instances as instance}
     <li>
       <h2>
-        <a href="/{entity.route}/id/{encodeURIComponent(instance[entity.identifier])}">
+        <a href="/{entity.route}/{encodeURIComponent(instance[entity.identifier])}">
           {instance[entity.label] ? instance[entity.label] : instance[entity.identifier]}
         </a>
       </h2>

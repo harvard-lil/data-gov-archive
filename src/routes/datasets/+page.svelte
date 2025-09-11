@@ -1,6 +1,6 @@
 <script>
   import DatasetList from "$lib/DatasetList.svelte";
-  import DatasetListItem from "$lib/DatasetListItem.svelte";
+  import { browser } from "$app/environment";
   import PageNav from "$lib/PageNav.svelte";
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
@@ -13,8 +13,14 @@
 
   // Load data when page changes
   $effect(async () => {
+    // Only run queries in the browser
+    if (!browser) return;
+
     try {
-      const pageNumber = parseInt($page.params.page);
+      const url = new URL($page.url);
+      const pageParam = url.searchParams.get("page");
+
+      const pageNumber = pageParam ? parseInt(pageParam) : 1;
       const offset = (pageNumber - 1) * 200;
 
       const datasetsCount = await queryData(`
@@ -33,8 +39,7 @@
         SELECT *
         FROM parquet_scan('datasets.parquet')
         ORDER BY name
-        LIMIT 200
-        OFFSET ${offset}
+        LIMIT 200 OFFSET ${offset}
       `);
 
       data.datasets = datasets;
@@ -51,11 +56,11 @@
 </svelte:head>
 
 {#if data.totalItems > 0}
-  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
+  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="/datasets" />
 
   <DatasetList datasets={data.datasets} />
 
-  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
+  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="/datasets" />
 {:else}
   <p>Loading datasets...</p>
 {/if}

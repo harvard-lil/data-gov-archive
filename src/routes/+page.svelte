@@ -3,6 +3,7 @@
   import DatasetListItem from "$lib/DatasetListItem.svelte";
   import PageNav from "$lib/PageNav.svelte";
   import { queryData } from "$lib/db.js";
+  import { browser } from "$app/environment";
 
   let data = $state({
     datasets: [],
@@ -11,6 +12,9 @@
 
   // Load data on component mount
   $effect(async () => {
+    // Only run queries in the browser
+    if (!browser) return;
+
     try {
       const datasetsCount = await queryData(
         "SELECT count(*) AS count FROM parquet_scan('datasets.parquet')"

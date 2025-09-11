@@ -1,18 +1,41 @@
 <script>
-  let { pageNumber, totalItems, route = "/datasets", pageSize = 200 } = $props();
+  let {
+    pageNumber,
+    totalItems,
+    route = "/datasets",
+    pageSize = 200,
+    additionalParams = "",
+  } = $props();
 
   let offset = $derived((pageNumber - 1) * pageSize);
   let totalPages = $derived(Math.ceil(totalItems / pageSize));
 
   let pageNumberLabel = $derived(pageNumber.toLocaleString("en-US"));
   let totalPagesLabel = $derived(totalPages.toLocaleString("en-US"));
+
+  // Helper function to build URL with page parameter
+  function buildPageUrl(page) {
+    const baseUrl = route;
+    const params = new URLSearchParams();
+    params.set("page", page.toString());
+
+    // Add any additional parameters
+    if (additionalParams) {
+      const additional = new URLSearchParams(additionalParams);
+      for (const [key, value] of additional) {
+        params.set(key, value);
+      }
+    }
+
+    return `${baseUrl}?${params.toString()}`;
+  }
 </script>
 
 <nav>
   <ul>
     <li>
       {#if pageNumber > 1}
-        <a href="{route}/page/{pageNumber - 1}">Previous</a>
+        <a href={buildPageUrl(pageNumber - 1)}>Previous</a>
       {:else}
         <span>Previous</span>
       {/if}
@@ -21,17 +44,17 @@
       {#if pageNumber === 1 && totalPages === 1}
         Showing page {pageNumberLabel} of {totalPagesLabel}
       {:else if pageNumber < 2}
-        Showing page {pageNumberLabel} of <a href="{route}/page/{totalPages}">{totalPagesLabel}</a>
+        Showing page {pageNumberLabel} of <a href={buildPageUrl(totalPages)}>{totalPagesLabel}</a>
       {:else if pageNumber < totalPages}
-        Showing page <a href="{route}/page/1">{pageNumberLabel}</a> of
-        <a href="{route}/page/{totalPages}">{totalPagesLabel}</a>
+        Showing page <a href={buildPageUrl(1)}>{pageNumberLabel}</a> of
+        <a href={buildPageUrl(totalPages)}>{totalPagesLabel}</a>
       {:else}
-        Showing page <a href="{route}/page/1">{pageNumberLabel}</a> of
+        Showing page <a href={buildPageUrl(1)}>{pageNumberLabel}</a> of
         {totalPagesLabel}
       {/if}
     </li>
     {#if pageNumber < totalPages}
-      <li><a href="{route}/page/{pageNumber + 1}">Next</a></li>
+      <li><a href={buildPageUrl(pageNumber + 1)}>Next</a></li>
     {:else}
       <span>Next</span>
     {/if}

@@ -1,5 +1,6 @@
 <script>
   import DatasetView from "$lib/DatasetView.svelte";
+  import { browser } from "$app/environment";
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
 
@@ -10,6 +11,9 @@
 
   // Load data when dataset name changes
   $effect(async () => {
+    // Only run queries in the browser
+    if (!browser) return;
+
     try {
       const name = $page.params.name;
 
@@ -50,3 +54,4 @@
 {:else}
   <p>Loading dataset...</p>
 {/if}
+

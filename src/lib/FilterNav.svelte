@@ -8,7 +8,7 @@
     {#each organizations as organization}
       <li>
         <a
-          href="/organizations/id/{encodeURIComponent(organization.organization_name)}"
+          href="/organizations/{encodeURIComponent(organization.organization_name)}"
           title={organization.organization_title}
         >
           {organization.organization_title}
@@ -22,10 +22,7 @@
   <ul>
     {#each publishers as publisher}
       <li>
-        <a
-          href="/publishers/id/{encodeURIComponent(publisher.publisher)}"
-          title={publisher.publisher}
-        >
+        <a href="/publishers/{encodeURIComponent(publisher.publisher)}" title={publisher.publisher}>
           {publisher.publisher}
         </a>
         <b>{publisher.count.toLocaleString("en-US")}</b>
@@ -38,11 +35,11 @@
     {#each bureaus as bureau}
       <li>
         {#if bureau.bureau_name}
-          <a href="/bureaus/id/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_name}>
+          <a href="/bureaus/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_name}>
             {bureau.bureau_name}
           </a>
         {:else}
-          <a href="/bureaus/id/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_code}>
+          <a href="/bureaus/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_code}>
             {bureau.bureau_code}
           </a>
         {/if}
@@ -55,7 +52,7 @@
   <ul>
     {#each tags as tag}
       <li>
-        <a href="/tags/id/{encodeURIComponent(tag.tag)}" title={tag.tag}>
+        <a href="/tags/{encodeURIComponent(tag.tag)}" title={tag.tag}>
           {tag.tag}
         </a>
         <b>{tag.count.toLocaleString("en-US")}</b>

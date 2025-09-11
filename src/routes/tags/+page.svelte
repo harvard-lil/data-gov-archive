@@ -1,5 +1,6 @@
 <script>
   import PageNav from "$lib/PageNav.svelte";
+  import { browser } from "$app/environment";
   import TagList from "$lib/TagList.svelte";
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
@@ -12,8 +13,14 @@
 
   // Load data when page changes
   $effect(async () => {
+    // Only run queries in the browser
+    if (!browser) return;
+
     try {
-      const pageNumber = parseInt($page.params.page);
+      const url = new URL($page.url);
+      const pageParam = url.searchParams.get("page");
+
+      const pageNumber = pageParam ? parseInt(pageParam) : 1;
       const offset = (pageNumber - 1) * 500;
 
       const tagsCount = await queryData(`
@@ -29,11 +36,9 @@
       }
 
       const tags = await queryData(`
-        SELECT DISTINCT tag
+        SELECT tag
         FROM parquet_scan('tags.parquet')
-        ORDER BY tag
-        LIMIT 500
-        OFFSET ${offset}
+        LIMIT 500 OFFSET ${offset}
       `);
 
       data.tags = tags.map((tag) => tag.tag);
@@ -60,3 +65,28 @@
 {:else}
   <p>Loading tags...</p>
 {/if}
+
+<style lang="scss">
+  h2 {
+    font-weight: inherit;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    span.tag {
+      display: inline-block;
+      border-radius: 0.25em;
+      border: 1px dotted #222;
+      margin-left: 0.25em;
+      padding: 0.5em 0.75em;
+
+      font-family: monospace;
+      font-weight: 400;
+    }
+  }
+</style>
