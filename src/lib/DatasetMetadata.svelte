@@ -11,19 +11,19 @@
   {#if dataset.publisher}
     <dt>Publisher:</dt>
     <dd>
-      <a href="/publishers/id/{encodeURIComponent(dataset.publisher)}">{dataset.publisher}</a>
+      <a href="/publishers/{encodeURIComponent(dataset.publisher)}">{dataset.publisher}</a>
     </dd>
   {/if}
   {#if dataset.bureau_code}
     <dt>Bureau Code:</dt>
     <dd>
-      <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
+      <a href="/bureaus/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_code}</a>
     </dd>
   {/if}
   {#if dataset.bureau_name}
     <dt>Bureau Name:</dt>
     <dd>
-      <a href="/bureaus/id/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
+      <a href="/bureaus/{encodeURIComponent(dataset.bureau_code)}">{dataset.bureau_name}</a>
     </dd>
   {/if}
   {#if tags && tags.length > 0}

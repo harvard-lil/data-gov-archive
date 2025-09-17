@@ -12,7 +12,7 @@
 
 <article>
   <h2>{dataset.title}</h2>
-  <h3><a href="/organizations/id/{dataset.organization_name}">{dataset.organization_title}</a></h3>
+  <h3><a href="/organizations/{dataset.organization_name}">{dataset.organization_title}</a></h3>
 
   <DatasetLinks {dataset} />
 
