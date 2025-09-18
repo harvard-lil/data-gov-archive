@@ -2,19 +2,16 @@
   <h1><a href="/">Archive of Data.gov</a></h1>
   <p>
     This is an access point to the Harvard University <a href="https://lil.law.harvard.edu">
-      Library Innovation Lab's
-    </a>
-    archive of <a href="https://data.gov">Data.gov</a>
-    datasets. The collection contains 17.9 TB of data across 311,604 datasets harvested, starting in
-    2024, from public data cataloged on Data.gov. For more information, see the About page or the
-    <a href="https://lil.law.harvard.edu/blog/2025/02/06/announcing-data-gov-archive/">
-      project announcement
-    </a> on our blog.
+      Library Innovation Lab
+    </a>'s archive of <a href="https://data.gov">Data.gov</a>
+    datasets. The collection contains 17.9 TB of data across 311,604 datasets harvested, beginning in
+    2024, from public data cataloged on Data.gov. For more information, see the
+    <a href="https://lil.law.harvard.edu/our-work/public-data-project">Public Data Project</a>.
   </p>
   <p>
-    You can also browse the <a href="https://source.coop/repositories/harvard-lil/gov-data"
-      >entire dataset on Source Cooperative</a
-    >.
+    You can also browse the <a href="https://source.coop/repositories/harvard-lil/gov-data">
+      entire dataset on Source Cooperative
+    </a>.
   </p>
 </header>
 
