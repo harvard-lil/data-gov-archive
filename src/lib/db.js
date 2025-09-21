@@ -6,10 +6,10 @@ import eh_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url"
 import { browser } from "$app/environment";
 import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 
-const bucketUrl = "https://gov-data-search.s3.us-west-2.amazonaws.com";
-const datasetsUrl = `${bucketUrl}/datasets.parquet`;
-const tagsUrl = `${bucketUrl}/tags.parquet`;
-const aggregationsUrl = `${bucketUrl}/aggregations.parquet`;
+const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data";
+const datasetsUrl = `${baseUrl}/datasets.parquet`;
+const tagsUrl = `${baseUrl}/tags_by_dataset_name.parquet`;
+const aggregationsUrl = `${baseUrl}/aggregations.parquet`;
 
 // Connection pooling state
 let db = null;
