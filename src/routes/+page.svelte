@@ -53,7 +53,6 @@
       `);
 
       data.datasets = datasets;
-      console.log("datasetsCount", datasetsCount);
       data.totalItems = Number(datasetsCount[0].count);
     } catch (error) {
       console.error("Error loading data:", error);
