@@ -6,7 +6,6 @@
   import FilterNav from "$lib/FilterNav.svelte";
   import Header from "$lib/Header.svelte";
   import SearchBox from "$lib/SearchBox.svelte";
-  import PerformanceMonitor from "$lib/PerformanceMonitor.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
 
@@ -67,8 +66,6 @@
   <SearchBox />
   {@render children?.()}
 </main>
-
-<PerformanceMonitor />
 
 <style lang="scss">
   :global(body) {

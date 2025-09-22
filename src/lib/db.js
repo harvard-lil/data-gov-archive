@@ -16,8 +16,6 @@ let db = null;
 let connection = null;
 let isInitializing = false;
 let initPromise = null;
-let queryCount = 0;
-let totalQueryTime = 0;
 
 export const instantiateDuckDB = async () => {
   if (!browser) {
@@ -136,7 +134,6 @@ export const queryData = async (query, params) => {
     throw new Error("Database queries can only be executed in the browser.");
   }
 
-  const startTime = performance.now();
   let conn = null;
   let statement = null;
 
@@ -145,20 +142,6 @@ export const queryData = async (query, params) => {
     statement = await conn.prepare(query);
     const arrowResult = await statement.query(...(params || []));
     const result = arrowResult.toArray().map((row) => row.toJSON());
-
-    // Update performance stats
-    queryCount++;
-    const queryTime = performance.now() - startTime;
-    totalQueryTime += queryTime;
-
-    // Log slow queries in development
-    if (queryTime > 1000) {
-      // Log queries taking more than 1 second
-      console.warn(
-        `Slow query detected (${queryTime.toFixed(2)}ms):`,
-        query.substring(0, 100) + "..."
-      );
-    }
 
     return result;
   } catch (error) {
@@ -199,22 +182,6 @@ export const queryData = async (query, params) => {
       }
     }
   }
-};
-
-// Get performance statistics
-export const getPerformanceStats = () => {
-  return {
-    queryCount,
-    totalQueryTime,
-    averageQueryTime: queryCount > 0 ? totalQueryTime / queryCount : 0,
-    isConnected: connection !== null,
-  };
-};
-
-// Reset performance statistics
-export const resetPerformanceStats = () => {
-  queryCount = 0;
-  totalQueryTime = 0;
 };
 
 // Cleanup function for app shutdown

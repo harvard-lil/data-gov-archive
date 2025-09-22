@@ -14,15 +14,12 @@ global.performance = {
 process.env.NODE_ENV = "development";
 
 // Import the database module
-import { queryData, getPerformanceStats, resetPerformanceStats, cleanup } from "./src/lib/db.js";
+import { queryData, cleanup } from "./src/lib/db.js";
 
 async function testConnectionPooling() {
   console.log("🧪 Testing Connection Pooling Implementation\n");
 
   try {
-    // Reset stats
-    resetPerformanceStats();
-
     console.log("1. Testing initial connection...");
     const startTime = Date.now();
 
@@ -36,14 +33,6 @@ async function testConnectionPooling() {
     const firstQueryTime = Date.now() - startTime;
     console.log(`   ✅ First query completed in ${firstQueryTime}ms`);
     console.log(`   📊 Result: ${result1[0].count} datasets`);
-
-    // Check stats after first query
-    let stats = getPerformanceStats();
-    console.log(
-      `   📈 Stats: ${stats.queryCount} queries, ${stats.averageQueryTime.toFixed(
-        1
-      )}ms avg, connected: ${stats.isConnected}`
-    );
 
     console.log("\n2. Testing connection reuse...");
     const startTime2 = Date.now();
@@ -59,14 +48,6 @@ async function testConnectionPooling() {
     console.log(`   ✅ Second query completed in ${secondQueryTime}ms`);
     console.log(`   📊 Result: ${result2[0].count} tags`);
 
-    // Check stats after second query
-    stats = getPerformanceStats();
-    console.log(
-      `   📈 Stats: ${stats.queryCount} queries, ${stats.averageQueryTime.toFixed(
-        1
-      )}ms avg, connected: ${stats.isConnected}`
-    );
-
     console.log("\n3. Testing tag route optimization...");
     const startTime3 = Date.now();
 
@@ -81,19 +62,9 @@ async function testConnectionPooling() {
     console.log(`   ✅ Tag count query completed in ${tagQueryTime}ms`);
     console.log(`   📊 Result: ${tagCount[0]?.count || 0} datasets with 'oceans' tag`);
 
-    // Final stats
-    stats = getPerformanceStats();
-    console.log(`\n📊 Final Performance Stats:`);
-    console.log(`   - Total queries: ${stats.queryCount}`);
-    console.log(`   - Average query time: ${stats.averageQueryTime.toFixed(1)}ms`);
-    console.log(`   - Total query time: ${stats.totalQueryTime.toFixed(0)}ms`);
-    console.log(`   - Connection status: ${stats.isConnected ? "Connected" : "Disconnected"}`);
-
     console.log("\n4. Testing cleanup...");
     await cleanup();
-
-    stats = getPerformanceStats();
-    console.log(`   ✅ Cleanup completed, connected: ${stats.isConnected}`);
+    console.log(`   ✅ Cleanup completed`);
 
     console.log("\n🎉 Connection pooling test completed successfully!");
   } catch (error) {
