@@ -4,6 +4,8 @@
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
   import { browser } from "$app/environment";
+  import { error } from "@sveltejs/kit";
+  import { entities } from "$lib/entities.js";
 
   let data = $state({
     datasets: [],
@@ -11,35 +13,42 @@
     pageNumber: 1,
     identifier: "",
     label: "",
+    entity: null,
   });
 
-  // Load data when identifier or page changes
+  // Load data when entity, identifier or page changes
   $effect(async () => {
     // Only run queries in the browser
     if (!browser) return;
 
     try {
+      const entityRoute = $page.params.entity;
       const identifier = $page.params.id;
       const url = new URL($page.url);
       const pageParam = url.searchParams.get("page");
       const pageNumber = pageParam ? parseInt(pageParam) : 1;
       const offset = (pageNumber - 1) * 200;
 
+      // Find the entity configuration
+      const entity = entities.find((entity) => entity.route === entityRoute);
+      if (!entity) {
+        error(404, `Entity not found: ${entityRoute}`);
+      }
+
       // Get total count first
       const totalCount = await queryData(
         `
-        SELECT count
+        SELECT count(*) AS count
         FROM parquet_scan('aggregations.parquet')
-        WHERE aggregation = 'publishers' AND identifier = $1
-      `,
-        [identifier]
+        WHERE aggregation = '${entity.route}' AND identifier = '${identifier}'
+      `
       );
 
       const datasets = await queryData(
         `
         SELECT *
         FROM parquet_scan('datasets.parquet')
-        WHERE publisher = $1
+        WHERE ${entity.identifier} = $1
         ORDER BY name
         LIMIT 200 OFFSET ${offset}
       `,
@@ -50,19 +59,20 @@
       data.totalItems = Number(totalCount[0].count);
       data.pageNumber = pageNumber;
       data.identifier = encodeURIComponent(identifier);
-      data.label = datasets[0]?.publisher || identifier;
+      data.label = datasets[0]?.[entity.label] || identifier;
+      data.entity = entity;
     } catch (error) {
-      console.error("Error loading publisher datasets:", error);
+      error(500, `Error loading ${entityRoute} datasets`);
     }
   });
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.label || "Loading..."}</title>
+  <title>Archive of Data.gov: {data.label || "Loading…"}</title>
 </svelte:head>
 
 <h2>
-  <b>Publisher:</b>
+  <b>{data.entity?.title}:</b>
   {#if data.pageNumber > 1}
     <a href="?page=1">{data.label}</a>
   {:else}
@@ -74,18 +84,18 @@
   <PageNav
     pageNumber={data.pageNumber}
     totalItems={data.totalItems}
-    route="/publishers/{data.identifier}"
+    route="/{data.entity?.route}/{data.identifier}"
   />
 
-  <DatasetList datasets={data.datasets} showOrganization={true} />
+  <DatasetList datasets={data.datasets} showOrganization={data.entity?.showOrganization} />
 
   <PageNav
     pageNumber={data.pageNumber}
     totalItems={data.totalItems}
-    route="/publishers/{data.identifier}"
+    route="/{data.entity?.route}/{data.identifier}"
   />
 {:else}
-  <p>Loading datasets for publisher...</p>
+  <p>Loading datasets…</p>
 {/if}
 
 <style lang="scss">

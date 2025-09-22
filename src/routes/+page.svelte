@@ -66,7 +66,7 @@
 
 {#if searchState.isSearchResults}
   {#if searchState.isSearching}
-    <h2>Loading search results...</h2>
+    <h2>Loading search results…</h2>
   {:else}
     <h2>Search Results for "{searchState.searchQuery}"</h2>
     {#if data.totalItems > 0}
@@ -85,5 +85,5 @@
 
   <PageNav pageNumber={1} totalItems={data.totalItems} />
 {:else}
-  <p>Loading datasets...</p>
+  <p>Loading datasets…</p>
 {/if}

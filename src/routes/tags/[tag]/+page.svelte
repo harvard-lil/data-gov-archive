@@ -69,7 +69,7 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.tag || "Loading..."}</title>
+  <title>Archive of Data.gov: {data.tag || "Loading…"}</title>
 </svelte:head>
 
 {#if data.tag}
@@ -99,10 +99,8 @@
       route="/tags/{encodeURIComponent(data.tag)}"
     />
   {:else}
-    <p>Loading datasets for tag "{data.tag}"...</p>
+    <p>Loading datasets…</p>
   {/if}
-{:else}
-  <p>Loading tag...</p>
 {/if}
 
 <style lang="scss">

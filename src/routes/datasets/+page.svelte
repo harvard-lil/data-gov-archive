@@ -62,5 +62,5 @@
 
   <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} route="/datasets" />
 {:else}
-  <p>Loading datasets...</p>
+  <p>Loading datasets…</p>
 {/if}

@@ -64,7 +64,7 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.entity?.title || "Loading..."}</title>
+  <title>Archive of Data.gov: {data.entity?.title || "Loading…"}</title>
 </svelte:head>
 
 {#if data.entity}
@@ -85,10 +85,8 @@
       route="/{data.entity.route}"
     />
   {:else}
-    <p>Loading {data.entity.title.toLowerCase()}...</p>
+    <p>Loading…</p>
   {/if}
-{:else}
-  <p>Loading...</p>
 {/if}
 
 <style lang="scss">

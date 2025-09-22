@@ -35,11 +35,11 @@
 </script>
 
 <svelte:head>
-  <title>Archive of Data.gov: {data.dataset?.title || "Loading..."}</title>
+  <title>Archive of Data.gov: {data.dataset?.title || "Loading…"}</title>
 </svelte:head>
 
 {#if data.dataset}
   <DatasetView dataset={data.dataset} />
 {:else}
-  <p>Loading dataset...</p>
+  <p>Loading dataset…</p>
 {/if}
