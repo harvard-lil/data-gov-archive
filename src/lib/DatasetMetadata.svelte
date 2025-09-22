@@ -3,7 +3,7 @@
   import TagList from "./TagList.svelte";
   import Timestamp from "./Timestamp.svelte";
 
-  let { dataset, tags } = $props();
+  let { dataset } = $props();
 </script>
 
 <dl>
@@ -32,9 +32,9 @@
       >
     </dd>
   {/if}
-  {#if tags && tags.length > 0}
+  {#if dataset.tags && dataset.tags.length > 0}
     <dt>Tags:</dt>
-    <dd><section><TagList {tags} /></section></dd>
+    <dd><section><TagList tags={dataset.tags} /></section></dd>
   {/if}
 </dl>
 

@@ -27,18 +27,7 @@
         [name]
       );
 
-      const tags = await queryData(
-        `
-        SELECT tag
-        FROM parquet_scan('tags.parquet')
-        WHERE name = $1
-        ORDER BY tag
-      `,
-        [name]
-      );
-
       data.dataset = datasets[0] || null;
-      data.tags = tags.map((tag) => tag.tag);
     } catch (error) {
       console.error("Error loading dataset:", error);
     }
@@ -50,8 +39,7 @@
 </svelte:head>
 
 {#if data.dataset}
-  <DatasetView dataset={data.dataset} tags={data.tags} />
+  <DatasetView dataset={data.dataset} />
 {:else}
   <p>Loading dataset...</p>
 {/if}
-
