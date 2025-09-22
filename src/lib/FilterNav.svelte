@@ -57,18 +57,6 @@
       </li>
     {/each}
   </ul>
-
-  <h2><a href={`${base}/tags`}>Tags</a></h2>
-  <ul>
-    {#each tags as tag}
-      <li>
-        <a href={`${base}/tags/${encodeURIComponent(tag.tag)}`} title={tag.tag}>
-          {tag.tag}
-        </a>
-        <b>{tag.count.toLocaleString("en-US")}</b>
-      </li>
-    {/each}
-  </ul>
 </nav>
 
 <style lang="scss">
@@ -108,13 +96,6 @@
       li:first-of-type {
         border-top: none;
         padding-top: 0;
-      }
-    }
-    ul:last-of-type {
-      li {
-        a {
-          font-family: monospace;
-        }
       }
     }
 

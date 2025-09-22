@@ -1,4 +1,5 @@
 <script>
+  import { error } from "@sveltejs/kit";
   import EntityList from "$lib/EntityList.svelte";
   import { browser } from "$app/environment";
   import PageNav from "$lib/PageNav.svelte";
@@ -18,34 +19,32 @@
     // Only run queries in the browser
     if (!browser) return;
 
-    try {
-      const entityRoute = $page.params.entity;
-      const url = new URL($page.url);
-      const pageParam = url.searchParams.get("page");
+    const entityRoute = $page.params.entity;
+    const url = new URL($page.url);
+    const pageParam = url.searchParams.get("page");
 
-      const pageNumber = pageParam ? parseInt(pageParam) : 1;
+    const pageNumber = pageParam ? parseInt(pageParam) : 1;
 
-      // Check if params are available
-      if (!entityRoute) {
-        return;
-      }
+    // Check if params are available
+    if (!entityRoute) {
+      return;
+    }
 
-      const entity = entities.find((entity) => entity.route == entityRoute);
-      if (!entity) {
-        console.error("Entity not found:", entityRoute);
-        return;
-      }
+    const entity = entities.find((entity) => entity.route == entityRoute);
+    if (!entity) {
+      error(404, `Entity not found: ${entityRoute}`);
+    }
 
-      const offset = (pageNumber - 1) * 200;
+    const offset = (pageNumber - 1) * 200;
 
-      // Get total count first
-      const totalCount = await queryData(`
+    // Get total count first
+    const totalCount = await queryData(`
         SELECT count(*) AS count
         FROM parquet_scan('aggregations.parquet')
         WHERE aggregation = '${entity.route}'
       `);
 
-      const instances = await queryData(`
+    const instances = await queryData(`
         SELECT
           identifier,
           label,
@@ -57,13 +56,10 @@
         LIMIT 200 OFFSET ${offset}
       `);
 
-      data.entity = entity;
-      data.instances = instances;
-      data.totalItems = Number(totalCount[0].count);
-      data.pageNumber = pageNumber;
-    } catch (error) {
-      console.error("Error loading entity data:", error);
-    }
+    data.entity = entity;
+    data.instances = instances;
+    data.totalItems = Number(totalCount[0].count);
+    data.pageNumber = pageNumber;
   });
 </script>
 
