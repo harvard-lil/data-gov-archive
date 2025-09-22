@@ -10,6 +10,9 @@ const config = {
       precompress: false,
       strict: true,
     }),
+    paths: {
+      base: "/harvard-lil/gov-data",
+    },
     prerender: {
       crawl: true,
       entries: [

@@ -1,4 +1,5 @@
 <script>
+  import { base } from "$app/paths";
   let {
     pageNumber,
     totalItems,
@@ -15,7 +16,7 @@
 
   // Helper function to build URL with page parameter
   function buildPageUrl(page) {
-    const baseUrl = route;
+    const baseUrl = `${base}${route}`;
     const params = new URLSearchParams();
     params.set("page", page.toString());
 

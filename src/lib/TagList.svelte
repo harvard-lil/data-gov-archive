@@ -1,10 +1,11 @@
 <script>
+  import { base } from "$app/paths";
   let { tags } = $props();
 </script>
 
 <ul>
   {#each tags as tag}
-    <a href="/tags/{encodeURIComponent(tag)}" title={tag}
+    <a href={`${base}/tags/${encodeURIComponent(tag)}`} title={tag}
       ><li>
         {tag}
       </li></a

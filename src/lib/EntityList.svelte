@@ -1,4 +1,5 @@
 <script>
+  import { base } from "$app/paths";
   import Timestamp from "./Timestamp.svelte";
 
   let { entity, instances } = $props();
@@ -8,7 +9,7 @@
   {#each instances as instance}
     <li>
       <h2>
-        <a href="/{entity.route}/{encodeURIComponent(instance[entity.identifier])}">
+        <a href={`${base}/${entity.route}/${encodeURIComponent(instance[entity.identifier])}`}>
           {instance[entity.label] ? instance[entity.label] : instance[entity.identifier]}
         </a>
       </h2>

@@ -1,5 +1,6 @@
 <script>
   import sanitizeHtml from "sanitize-html";
+  import { base } from "$app/paths";
 
   import Timestamp from "./Timestamp.svelte";
 
@@ -7,10 +8,10 @@
 </script>
 
 <li>
-  <h2><a href="/datasets/{encodeURIComponent(dataset.name)}">{dataset.title}</a></h2>
+  <h2><a href={`${base}/datasets/${encodeURIComponent(dataset.name)}`}>{dataset.title}</a></h2>
   {#if showOrganization === true}
     <h3>
-      <a href="/organizations/{encodeURIComponent(dataset.organization_name)}"
+      <a href={`${base}/organizations/${encodeURIComponent(dataset.organization_name)}`}
         >{dataset.organization_title}</a
       >
     </h3>

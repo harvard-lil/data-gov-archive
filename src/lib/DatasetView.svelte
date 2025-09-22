@@ -1,6 +1,7 @@
 <script>
   import "@fontsource/material-icons";
   import sanitizeHtml from "sanitize-html";
+  import { base } from "$app/paths";
 
   import DatasetMetadata from "./DatasetMetadata.svelte";
   import TagList from "./TagList.svelte";
@@ -12,7 +13,9 @@
 
 <article>
   <h2>{dataset.title}</h2>
-  <h3><a href="/organizations/{dataset.organization_name}">{dataset.organization_title}</a></h3>
+  <h3>
+    <a href={`${base}/organizations/${dataset.organization_name}`}>{dataset.organization_title}</a>
+  </h3>
 
   <DatasetLinks {dataset} />
 

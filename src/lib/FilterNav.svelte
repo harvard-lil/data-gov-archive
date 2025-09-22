@@ -1,14 +1,15 @@
 <script>
+  import { base } from "$app/paths";
   let { organizations, publishers, bureaus, tags } = $props();
 </script>
 
 <nav>
-  <h2><a href="/organizations">Organizations</a></h2>
+  <h2><a href={`${base}/organizations`}>Organizations</a></h2>
   <ul>
     {#each organizations as organization}
       <li>
         <a
-          href="/organizations/{encodeURIComponent(organization.organization_name)}"
+          href={`${base}/organizations/${encodeURIComponent(organization.organization_name)}`}
           title={organization.organization_title}
         >
           {organization.organization_title}
@@ -18,11 +19,14 @@
     {/each}
   </ul>
 
-  <h2><a href="/publishers">Publishers</a></h2>
+  <h2><a href={`${base}/publishers`}>Publishers</a></h2>
   <ul>
     {#each publishers as publisher}
       <li>
-        <a href="/publishers/{encodeURIComponent(publisher.publisher)}" title={publisher.publisher}>
+        <a
+          href={`${base}/publishers/${encodeURIComponent(publisher.publisher)}`}
+          title={publisher.publisher}
+        >
           {publisher.publisher}
         </a>
         <b>{publisher.count.toLocaleString("en-US")}</b>
@@ -30,16 +34,22 @@
     {/each}
   </ul>
 
-  <h2><a href="/bureaus">Bureaus</a></h2>
+  <h2><a href={`${base}/bureaus`}>Bureaus</a></h2>
   <ul>
     {#each bureaus as bureau}
       <li>
         {#if bureau.bureau_name}
-          <a href="/bureaus/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_name}>
+          <a
+            href={`${base}/bureaus/${encodeURIComponent(bureau.bureau_code)}`}
+            title={bureau.bureau_name}
+          >
             {bureau.bureau_name}
           </a>
         {:else}
-          <a href="/bureaus/{encodeURIComponent(bureau.bureau_code)}" title={bureau.bureau_code}>
+          <a
+            href={`${base}/bureaus/${encodeURIComponent(bureau.bureau_code)}`}
+            title={bureau.bureau_code}
+          >
             {bureau.bureau_code}
           </a>
         {/if}
@@ -48,11 +58,11 @@
     {/each}
   </ul>
 
-  <h2><a href="/tags">Tags</a></h2>
+  <h2><a href={`${base}/tags`}>Tags</a></h2>
   <ul>
     {#each tags as tag}
       <li>
-        <a href="/tags/{encodeURIComponent(tag.tag)}" title={tag.tag}>
+        <a href={`${base}/tags/${encodeURIComponent(tag.tag)}`} title={tag.tag}>
           {tag.tag}
         </a>
         <b>{tag.count.toLocaleString("en-US")}</b>
