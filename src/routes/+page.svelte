@@ -64,12 +64,16 @@
 </svelte:head>
 
 {#if searchState.isSearchResults}
-  <h2>Search Results for "{searchState.searchQuery}"</h2>
-  {#if data.totalItems > 0}
-    <p>{data.totalItems} result{data.totalItems === 1 ? "" : "s"} found</p>
-    <DatasetList datasets={data.datasets} />
+  {#if searchState.isSearching}
+    <h2>Loading search results...</h2>
   {:else}
-    <p>No results found for "{searchState.searchQuery}"</p>
+    <h2>Search Results for "{searchState.searchQuery}"</h2>
+    {#if data.totalItems > 0}
+      <p>{data.totalItems} result{data.totalItems === 1 ? "" : "s"} found</p>
+      <DatasetList datasets={data.datasets} />
+    {:else}
+      <p>No results found for "{searchState.searchQuery}"</p>
+    {/if}
   {/if}
 {:else if data.totalItems > 0}
   <PageNav pageNumber={1} totalItems={data.totalItems} />

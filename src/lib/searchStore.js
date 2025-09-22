@@ -15,6 +15,7 @@ export const performSearch = async (query, queryData) => {
     ...store,
     isSearching: true,
     query: query.trim(),
+    isSearchResults: true, // Set this to true when search starts to show loading state
   }));
 
   try {
