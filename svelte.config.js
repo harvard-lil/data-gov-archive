@@ -11,7 +11,7 @@ const config = {
       strict: true,
     }),
     paths: {
-      base: "/harvard-lil/gov-data",
+      base: process.env.NODE_ENV === "production" ? "/harvard-lil/staging-gov-data" : "",
     },
     prerender: {
       crawl: true,
