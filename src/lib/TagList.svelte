@@ -5,11 +5,11 @@
 
 <ul>
   {#each tags as tag}
-    <a href={`${base}/tags/${encodeURIComponent(tag)}`} title={tag}
-      ><li>
+    <li>
+      <a href={`${base}/tags/${encodeURIComponent(tag)}`} title={tag}>
         {tag}
-      </li></a
-    >
+      </a>
+    </li>
   {/each}
 </ul>
 
@@ -19,22 +19,18 @@
     list-style: none;
     list-style-position: unset;
 
+    li {
+      display: inline-block;
+      margin: 0 0.5em 0.25em 0;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
-    }
-    a:hover {
-      li {
-        text-decoration: underline;
-      }
-    }
-
-    li {
       display: inline-block;
       border-radius: 0.25em;
       border: 1px dotted #222;
       padding: 0.5em 0.75em;
-      margin: 0 0.5em 0.25em 0;
       font-family: monospace;
       max-width: 20em;
       text-wrap-mode: nowrap;
@@ -42,6 +38,10 @@
       overflow: hidden;
       text-overflow: nowrap;
       text-overflow: ellipsis;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   }
 </style>
