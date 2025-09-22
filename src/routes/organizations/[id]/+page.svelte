@@ -29,8 +29,8 @@
       const totalCount = await queryData(
         `
         SELECT count(*) AS count
-        FROM parquet_scan('datasets.parquet')
-        WHERE organization_name = $1
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = 'organizations' AND identifier = $1
       `,
         [identifier]
       );

@@ -28,9 +28,9 @@
       // Get total count first
       const totalCount = await queryData(
         `
-        SELECT count(*) AS count
-        FROM parquet_scan('datasets.parquet')
-        WHERE bureau_code = $1
+        SELECT count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = 'bureaus' AND identifier = $1
       `,
         [identifier]
       );

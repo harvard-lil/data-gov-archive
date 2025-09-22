@@ -50,7 +50,7 @@
           organization_name,
           organization_title
         FROM parquet_scan('datasets.parquet') datasets
-        INNER JOIN parquet_scan('tags.parquet') tags ON datasets.name = tags.name
+        INNER JOIN parquet_scan('tags_by_dataset_name.parquet') tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
         LIMIT 200 OFFSET ${offset}

@@ -9,13 +9,13 @@
   {#each instances as instance}
     <li>
       <h2>
-        <a href={`${base}/${entity.route}/${encodeURIComponent(instance[entity.identifier])}`}>
-          {instance[entity.label] ? instance[entity.label] : instance[entity.identifier]}
+        <a href={`${base}/${entity.route}/${encodeURIComponent(instance.identifier)}`}>
+          {instance.label ? instance.label : instance.identifier}
         </a>
       </h2>
       <p>
-        {instance.count.toLocaleString("en-US")} dataset{#if instance.count != 1}s{/if}, last
-        updated <Timestamp timestamp={instance.last_updated} />
+        {Number(instance.count[0]).toLocaleString("en-US")} dataset{#if Number(instance.count[0]) != 1}s{/if},
+        last updated <Timestamp timestamp={instance.last_updated} />
       </p>
     </li>
   {/each}

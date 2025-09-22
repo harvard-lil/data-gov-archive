@@ -24,8 +24,9 @@
       const offset = (pageNumber - 1) * 500;
 
       const tagsCount = await queryData(`
-        SELECT count(DISTINCT tag) AS count
-        FROM parquet_scan('tags.parquet')
+        SELECT count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = 'tags'
       `);
 
       const totalPages = Math.ceil(Number(tagsCount[0].count) / 500);
@@ -36,7 +37,7 @@
       }
 
       const tags = await queryData(`
-        SELECT tag
+        SELECT DISTINCT tag
         FROM parquet_scan('tags.parquet')
         LIMIT 500 OFFSET ${offset}
       `);

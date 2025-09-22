@@ -28,9 +28,9 @@
       // Get total count first
       const totalCount = await queryData(
         `
-        SELECT count(*) AS count
-        FROM parquet_scan('datasets.parquet')
-        WHERE publisher = $1
+        SELECT count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = 'publishers' AND identifier = $1
       `,
         [identifier]
       );
@@ -40,7 +40,7 @@
         SELECT *
         FROM parquet_scan('datasets.parquet')
         WHERE publisher = $1
-        ORDER BY publisher
+        ORDER BY name
         LIMIT 200 OFFSET ${offset}
       `,
         [identifier]

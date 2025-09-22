@@ -9,6 +9,7 @@ import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data";
 const datasetsUrl = `${baseUrl}/datasets.parquet`;
 const tagsUrl = `${baseUrl}/tags_by_dataset_name.parquet`;
+const tagsDistinctUrl = `${baseUrl}/tags.parquet`;
 const aggregationsUrl = `${baseUrl}/aggregations.parquet`;
 
 // Connection pooling state
@@ -69,7 +70,8 @@ const initializeDuckDB = async () => {
 
   // Register files
   await db.registerFileURL("datasets.parquet", datasetsUrl, DuckDBDataProtocol.HTTP, false);
-  await db.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
+  await db.registerFileURL("tags_by_dataset_name.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
+  await db.registerFileURL("tags.parquet", tagsDistinctUrl, DuckDBDataProtocol.HTTP, false);
   await db.registerFileURL("aggregations.parquet", aggregationsUrl, DuckDBDataProtocol.HTTP, false);
 
   return db;

@@ -41,17 +41,19 @@
     if (searchState.isSearchResults) return;
 
     try {
-      const datasetsCount = await queryData(
-        "SELECT count(*) AS count FROM parquet_scan('datasets.parquet')"
-      );
+      const datasetsCount = await queryData(`
+        SELECT count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = 'datasets'
+      `);
       const datasets = await queryData(`
-        SELECT *
+        SELECT name, title, notes, organization_name, organization_title
         FROM parquet_scan('datasets.parquet')
-        ORDER BY name
         LIMIT 200
       `);
 
       data.datasets = datasets;
+      console.log("datasetsCount", datasetsCount);
       data.totalItems = Number(datasetsCount[0].count);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -69,7 +71,9 @@
   {:else}
     <h2>Search Results for "{searchState.searchQuery}"</h2>
     {#if data.totalItems > 0}
-      <p>{data.totalItems} result{data.totalItems === 1 ? "" : "s"} found</p>
+      <p>
+        {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1 ? "" : "s"} found
+      </p>
       <DatasetList datasets={data.datasets} />
     {:else}
       <p>No results found for "{searchState.searchQuery}"</p>

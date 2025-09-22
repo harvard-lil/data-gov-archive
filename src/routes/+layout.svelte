@@ -18,22 +18,30 @@
     const organizations = await queryData(`
       SELECT identifier AS organization_name, label AS organization_title, count
       FROM parquet_scan('aggregations.parquet')
-      WHERE aggregation = 'organizations';
+      WHERE aggregation = 'organizations'
+      ORDER BY count DESC
+      LIMIT 10;
     `);
     const publishers = await queryData(`
       SELECT identifier AS publisher, count
       FROM parquet_scan('aggregations.parquet')
-      WHERE aggregation = 'publishers';
+      WHERE aggregation = 'publishers'
+      ORDER BY count DESC
+      LIMIT 10;
     `);
     const bureaus = await queryData(`
       SELECT identifier AS bureau_code, label AS bureau_name, count
       FROM parquet_scan('aggregations.parquet')
-      WHERE aggregation = 'bureaus';
+      WHERE aggregation = 'bureaus'
+      ORDER BY count DESC
+      LIMIT 10;
     `);
     const tags = await queryData(`
       SELECT identifier AS tag, count
       FROM parquet_scan('aggregations.parquet')
-      WHERE aggregation = 'tags';
+      WHERE aggregation = 'tags'
+      ORDER BY count DESC
+      LIMIT 10;
     `);
 
     return { organizations, publishers, bureaus, tags };

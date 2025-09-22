@@ -40,21 +40,20 @@
 
       // Get total count first
       const totalCount = await queryData(`
-        SELECT count(DISTINCT ${entity.identifier}) AS count
-        FROM parquet_scan('datasets.parquet')
-        WHERE ${entity.identifier} IS NOT NULL
+        SELECT count(*) AS count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = '${entity.route}'
       `);
 
       const instances = await queryData(`
         SELECT
-          ${entity.identifier},
-          ${entity.label},
-          count(*) AS count,
-          max(metadata_modified) AS last_modified
-        FROM parquet_scan('datasets.parquet')
-        WHERE ${entity.identifier} IS NOT NULL
-        GROUP BY ${entity.identifier}, ${entity.label}
-        ORDER BY ${entity.identifier}
+          identifier,
+          label,
+          sum(count) AS count
+        FROM parquet_scan('aggregations.parquet')
+        WHERE aggregation = '${entity.route}'
+        GROUP BY identifier, label
+        ORDER BY label
         LIMIT 200 OFFSET ${offset}
       `);
 
