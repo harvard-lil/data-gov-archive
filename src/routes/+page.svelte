@@ -66,9 +66,9 @@
 
 {#if searchState.isSearchResults}
   {#if searchState.isSearching}
-    <h2>Loading search results…</h2>
+    <p>Loading…</p>
   {:else}
-    <h2>Search Results for "{searchState.searchQuery}"</h2>
+    <h2><b>Search:</b> {searchState.searchQuery}</h2>
     {#if data.totalItems > 0}
       <p>
         {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1 ? "" : "s"} found
@@ -87,3 +87,9 @@
 {:else}
   <p>Loading datasets…</p>
 {/if}
+
+<style lang="scss">
+  h2 {
+    font-weight: inherit;
+  }
+</style>
