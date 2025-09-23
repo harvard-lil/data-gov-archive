@@ -20,7 +20,7 @@
       const datasets = await queryData(
         `
         SELECT *
-        FROM parquet_scan('datasets.parquet')
+        FROM read_parquet('datasets.parquet')
         WHERE name = $1
         LIMIT 1
       `,

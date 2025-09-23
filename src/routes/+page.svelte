@@ -43,12 +43,12 @@
     try {
       const datasetsCount = await queryData(`
         SELECT count
-        FROM parquet_scan('aggregations.parquet')
+        FROM read_parquet('aggregations.parquet')
         WHERE aggregation = 'datasets'
       `);
       const datasets = await queryData(`
         SELECT name, title, notes, organization_name, organization_title
-        FROM parquet_scan('datasets.parquet')
+        FROM read_parquet('datasets.parquet')
         LIMIT 200
       `);
 

@@ -25,7 +25,7 @@
 
       const datasetsCount = await queryData(`
         SELECT count(*) AS count
-        FROM parquet_scan('datasets.parquet')
+        FROM read_parquet('datasets.parquet')
       `);
 
       const totalPages = Math.ceil(Number(datasetsCount[0].count) / 200);
@@ -37,7 +37,7 @@
 
       const datasets = await queryData(`
         SELECT *
-        FROM parquet_scan('datasets.parquet')
+        FROM read_parquet('datasets.parquet')
         ORDER BY name
         LIMIT 200 OFFSET ${offset}
       `);

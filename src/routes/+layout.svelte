@@ -18,28 +18,28 @@
 
     const organizations = await queryData(`
       SELECT identifier AS organization_name, label AS organization_title, count
-      FROM parquet_scan('aggregations.parquet')
+      FROM read_parquet('aggregations.parquet')
       WHERE aggregation = 'organizations'
       ORDER BY count DESC
       LIMIT 10;
     `);
     const publishers = await queryData(`
       SELECT identifier AS publisher, count
-      FROM parquet_scan('aggregations.parquet')
+      FROM read_parquet('aggregations.parquet')
       WHERE aggregation = 'publishers'
       ORDER BY count DESC
       LIMIT 10;
     `);
     const bureaus = await queryData(`
       SELECT identifier AS bureau_code, label AS bureau_name, count
-      FROM parquet_scan('aggregations.parquet')
+      FROM read_parquet('aggregations.parquet')
       WHERE aggregation = 'bureaus'
       ORDER BY count DESC
       LIMIT 10;
     `);
     const tags = await queryData(`
       SELECT identifier AS tag, count
-      FROM parquet_scan('aggregations.parquet')
+      FROM read_parquet('aggregations.parquet')
       WHERE aggregation = 'tags'
       ORDER BY count DESC
       LIMIT 10;
@@ -85,8 +85,8 @@
     padding: 0 1.5em 1.5em;
     max-width: 54em;
 
-    font-family: "Public Sans Variable", sans-serif;
-    font-weight: 400;
+    // font-family: "Public Sans Variable", sans-serif;
+    // font-weight: 400;
 
     /* Grid system */
     display: grid;

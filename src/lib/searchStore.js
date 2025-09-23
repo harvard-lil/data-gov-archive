@@ -23,7 +23,7 @@ export const performSearch = async (query, queryData) => {
     const countResult = await queryData(
       `
       SELECT count(*) AS count
-      FROM parquet_scan('datasets.parquet')
+      FROM read_parquet('datasets.parquet')
       WHERE
         LOWER(title) LIKE LOWER($1) OR
         LOWER(organization_title) LIKE LOWER($1)
@@ -35,7 +35,7 @@ export const performSearch = async (query, queryData) => {
     const results = await queryData(
       `
       SELECT *
-      FROM parquet_scan('datasets.parquet')
+      FROM read_parquet('datasets.parquet')
       WHERE
         LOWER(title) LIKE LOWER($1) OR
         LOWER(organization_title) LIKE LOWER($1)

@@ -40,7 +40,7 @@
     // Get total count first
     const totalCount = await queryData(`
         SELECT count(*) AS count
-        FROM parquet_scan('aggregations.parquet')
+        FROM read_parquet('aggregations.parquet')
         WHERE aggregation = '${entity.route}'
       `);
 
@@ -49,7 +49,7 @@
           identifier,
           label,
           sum(count) AS count
-        FROM parquet_scan('aggregations.parquet')
+        FROM read_parquet('aggregations.parquet')
         WHERE aggregation = '${entity.route}'
         GROUP BY identifier, label
         ORDER BY label

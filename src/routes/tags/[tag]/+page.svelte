@@ -28,7 +28,7 @@
       const datasetsCount = await queryData(
         `
         SELECT count
-        FROM parquet_scan('aggregations.parquet')
+        FROM read_parquet('aggregations.parquet')
         WHERE aggregation = 'tags' AND identifier = $1
       `,
         [tag]
@@ -49,8 +49,8 @@
           notes,
           organization_name,
           organization_title
-        FROM parquet_scan('datasets.parquet') datasets
-        INNER JOIN parquet_scan('tags_by_dataset_name.parquet') tags ON datasets.name = tags.name
+        FROM read_parquet('datasets.parquet') datasets
+        INNER JOIN read_parquet('tags_by_dataset_name.parquet') tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
         LIMIT 200 OFFSET ${offset}

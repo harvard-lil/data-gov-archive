@@ -26,7 +26,7 @@ async function testConnectionPooling() {
     // First query - should create connection
     const result1 = await queryData(`
       SELECT count(*) as count
-      FROM parquet_scan('data/datasets.parquet')
+      FROM read_parquet('data/datasets.parquet')
       LIMIT 1
     `);
 
@@ -40,7 +40,7 @@ async function testConnectionPooling() {
     // Second query - should reuse connection
     const result2 = await queryData(`
       SELECT count(*) as count
-      FROM parquet_scan('data/tags_by_dataset_name.parquet')
+      FROM read_parquet('data/tags_by_dataset_name.parquet')
       LIMIT 1
     `);
 
@@ -54,7 +54,7 @@ async function testConnectionPooling() {
     // Test the optimized tag query
     const tagCount = await queryData(`
       SELECT count
-      FROM parquet_scan('data/aggregations.parquet')
+      FROM read_parquet('data/aggregations.parquet')
       WHERE aggregation = 'tags' AND identifier = 'oceans'
     `);
 

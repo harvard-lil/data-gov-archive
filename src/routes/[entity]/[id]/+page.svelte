@@ -39,7 +39,7 @@
       const totalCount = await queryData(
         `
         SELECT count(*) AS count
-        FROM parquet_scan('aggregations.parquet')
+        FROM read_parquet('aggregations.parquet')
         WHERE aggregation = '${entity.route}' AND identifier = '${identifier}'
       `
       );
@@ -47,7 +47,7 @@
       const datasets = await queryData(
         `
         SELECT *
-        FROM parquet_scan('datasets.parquet')
+        FROM read_parquet('datasets.parquet')
         WHERE ${entity.identifier} = $1
         ORDER BY name
         LIMIT 200 OFFSET ${offset}
