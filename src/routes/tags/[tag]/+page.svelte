@@ -10,12 +10,15 @@
     totalItems: 0,
     pageNumber: 1,
     tag: "",
+    isLoading: true,
   });
 
   // Load data when tag or page changes
   $effect(async () => {
     // Only run queries in the browser
     if (!browser) return;
+
+    data.isLoading = true;
 
     try {
       const tag = $page.params.tag;
@@ -64,6 +67,8 @@
       data.pageNumber = pageNumber;
     } catch (error) {
       console.error("Error loading tag page data:", error);
+    } finally {
+      data.isLoading = false;
     }
   });
 </script>
@@ -72,7 +77,9 @@
   <title>Archive of Data.gov: {data.tag || "Loading…"}</title>
 </svelte:head>
 
-{#if data.tag}
+{#if data.isLoading}
+  <p>Loading…</p>
+{:else if data.tag}
   <h2>
     <b>Tag:</b>
     <span class="tag">
@@ -99,7 +106,7 @@
       route="/tags/{encodeURIComponent(data.tag)}"
     />
   {:else}
-    <p>Loading datasets…</p>
+    <p>No datasets found for this tag.</p>
   {/if}
 {/if}
 
