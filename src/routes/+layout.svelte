@@ -1,6 +1,7 @@
 <script>
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
+  import "../app.css";
 
   import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/FilterNav.svelte";
