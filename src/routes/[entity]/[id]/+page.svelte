@@ -71,14 +71,16 @@
   <title>Archive of Data.gov: {data.label || "Loading…"}</title>
 </svelte:head>
 
-<h2>
-  <b>{data.entity?.title}:</b>
-  {#if data.pageNumber > 1}
-    <a href="?page=1">{data.label}</a>
-  {:else}
-    {data.label}
-  {/if}
-</h2>
+{#if data.entity}
+  <h2>
+    <b>{data.entity.title}:</b>
+    {#if data.pageNumber > 1}
+      <a href="?page=1">{data.label}</a>
+    {:else}
+      {data.label}
+    {/if}
+  </h2>
+{/if}
 
 {#if data.totalItems > 0}
   <PageNav
