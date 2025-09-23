@@ -50,7 +50,7 @@
           organization_name,
           organization_title
         FROM read_parquet('datasets.parquet') datasets
-        INNER JOIN read_parquet('tags_by_dataset_name.parquet') tags ON datasets.name = tags.name
+        INNER JOIN read_parquet('tags.parquet') tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
         LIMIT 200 OFFSET ${offset}

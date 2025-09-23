@@ -22,6 +22,7 @@ const config = {
         "/datasets/[name]",
         "/organizations/[id]",
         "/publishers/[id]",
+        "/tags/[tag]",
       ],
     },
   },

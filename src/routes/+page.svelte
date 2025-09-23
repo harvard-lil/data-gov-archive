@@ -48,7 +48,7 @@
       `);
       const datasets = await queryData(`
         SELECT name, title, notes, organization_name, organization_title
-        FROM read_parquet('datasets.parquet')
+        FROM read_parquet('datasets_page_1.parquet')
         LIMIT 200
       `);
 

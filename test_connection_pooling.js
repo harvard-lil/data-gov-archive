@@ -40,7 +40,7 @@ async function testConnectionPooling() {
     // Second query - should reuse connection
     const result2 = await queryData(`
       SELECT count(*) as count
-      FROM read_parquet('data/tags_by_dataset_name.parquet')
+      FROM read_parquet('data/tags.parquet')
       LIMIT 1
     `);
 

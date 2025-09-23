@@ -8,8 +8,8 @@ import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 
 const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data";
 const datasetsUrl = `${baseUrl}/datasets.parquet`;
-const tagsUrl = `${baseUrl}/tags_by_dataset_name.parquet`;
-const tagsDistinctUrl = `${baseUrl}/tags.parquet`;
+const datasetsPage1Url = `${baseUrl}/datasets_page_1.parquet`;
+const tagsUrl = `${baseUrl}/tags.parquet`;
 const aggregationsUrl = `${baseUrl}/aggregations.parquet`;
 
 // Connection pooling state
@@ -70,8 +70,13 @@ const initializeDuckDB = async () => {
 
   // Register files
   await db.registerFileURL("datasets.parquet", datasetsUrl, DuckDBDataProtocol.HTTP, false);
-  await db.registerFileURL("tags_by_dataset_name.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
-  await db.registerFileURL("tags.parquet", tagsDistinctUrl, DuckDBDataProtocol.HTTP, false);
+  await db.registerFileURL(
+    "datasets_page_1.parquet",
+    datasetsPage1Url,
+    DuckDBDataProtocol.HTTP,
+    false
+  );
+  await db.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
   await db.registerFileURL("aggregations.parquet", aggregationsUrl, DuckDBDataProtocol.HTTP, false);
 
   return db;
@@ -157,7 +162,7 @@ export const queryData = async (query, params) => {
       error.message.includes("Invalid connection") ||
       error.message.includes("Connection is closed")
     ) {
-      console.log("Connection error detected, resetting connection...");
+      console.log("Connection error detected, resetting connection…");
       await resetConnection();
 
       // Retry once with fresh connection
@@ -188,7 +193,7 @@ export const queryData = async (query, params) => {
 
 // Cleanup function for app shutdown
 export const cleanup = async () => {
-  console.log("Cleaning up database connections...");
+  console.log("Cleaning up database connections…");
   await closeConnection();
   console.log("Database cleanup complete");
 };
