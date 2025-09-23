@@ -38,7 +38,7 @@
       // Get total count first
       const totalCount = await queryData(
         `
-        SELECT count(*) AS count
+        SELECT count
         FROM read_parquet('aggregations.parquet')
         WHERE aggregation = '${entity.route}' AND identifier = '${identifier}'
       `
@@ -56,7 +56,7 @@
       );
 
       data.datasets = datasets;
-      data.totalItems = Number(totalCount[0].count);
+      data.totalItems = Number(totalCount[0]?.count || 0);
       data.pageNumber = pageNumber;
       data.identifier = encodeURIComponent(identifier);
       data.label = datasets[0]?.[entity.label] || identifier;
