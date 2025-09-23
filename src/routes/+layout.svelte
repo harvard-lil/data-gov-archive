@@ -1,7 +1,6 @@
 <script>
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
-  import "../app.css";
 
   import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/FilterNav.svelte";
@@ -85,8 +84,8 @@
     padding: 0 1.5em 1.5em;
     max-width: 54em;
 
-    // font-family: "Public Sans Variable", sans-serif;
-    // font-weight: 400;
+    font-family: "Public Sans Variable", sans-serif;
+    font-weight: 400;
 
     /* Grid system */
     display: grid;
