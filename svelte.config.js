@@ -15,7 +15,7 @@ const config = {
     },
     prerender: {
       crawl: true,
-      entries: ["/*"],
+      entries: ["/"],
       handleHttpError: "warn",
     },
   },

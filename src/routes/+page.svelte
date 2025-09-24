@@ -11,11 +11,11 @@
   import { PAGE_SIZE } from "$lib/config.js";
   import { error } from "@sveltejs/kit";
 
-  // Reactive query parameters
-  const type = $derived($page.url.searchParams.get("type"));
-  const id = $derived($page.url.searchParams.get("id"));
-  const pageNumber = $derived(parseInt($page.url.searchParams.get("page") || "1"));
-  const searchQuery = $derived($page.url.searchParams.get("q"));
+  // Reactive query parameters - only available in browser
+  const type = $derived(browser ? $page.url.searchParams.get("type") : null);
+  const id = $derived(browser ? $page.url.searchParams.get("id") : null);
+  const pageNumber = $derived(browser ? parseInt($page.url.searchParams.get("page") || "1") : 1);
+  const searchQuery = $derived(browser ? $page.url.searchParams.get("q") : null);
 
   // Handle 404 for tag list (not supported)
   $effect(() => {
@@ -492,6 +492,7 @@
 
   // Helper function to build URLs
   function buildUrl(params = {}) {
+    if (!browser) return "#";
     const url = new URL($page.url);
     url.search = "";
     Object.entries(params).forEach(([key, value]) => {
