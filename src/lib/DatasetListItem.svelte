@@ -52,8 +52,4 @@
   li:not(:first-child) {
     border-top: 1px dotted #222;
   }
-
-  li:last-of-type {
-    padding-bottom: 10px;
-  }
 </style>
