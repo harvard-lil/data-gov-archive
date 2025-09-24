@@ -49,8 +49,8 @@
 
 <style lang="scss">
   .search-container {
-    margin: 1em 0 2em 0;
-    padding: 1em;
+    margin: 1em 0 2em;
+    padding: 0;
     border-radius: 8px;
     border: 1px solid #ddd;
   }
@@ -58,7 +58,6 @@
   .search-box {
     display: flex;
     gap: 0.5em;
-    margin-bottom: 1em;
     align-items: center;
 
     input {

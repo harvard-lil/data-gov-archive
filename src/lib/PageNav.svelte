@@ -89,4 +89,16 @@
   span {
     cursor: not-allowed;
   }
+
+  nav:first-of-type {
+    border-bottom: 1px dotted #222;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+  }
+
+  nav:last-of-type {
+    border-top: 1px dotted #222;
+    padding-top: 0.5em;
+    margin-top: 1.5em;
+  }
 </style>

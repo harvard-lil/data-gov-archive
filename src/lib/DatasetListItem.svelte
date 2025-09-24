@@ -26,7 +26,6 @@
 <style lang="scss">
   li {
     margin: 1em 0;
-    border-top: 1px dotted #222;
 
     h2 {
       font-weight: 700;
@@ -48,7 +47,11 @@
       text-decoration: underline;
     }
   }
+  li:not(:first-child) {
+    border-top: 1px dotted #222;
+  }
+
   li:last-of-type {
-    padding-bottom: 0.5em;
+    padding-bottom: 10px;
   }
 </style>

@@ -31,6 +31,7 @@
 <style lang="scss">
   ul {
     padding: 0;
+    margin: 1em 0 1.25em;
     list-style: none;
     list-style-position: unset;
 

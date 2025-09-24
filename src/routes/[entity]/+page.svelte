@@ -92,8 +92,6 @@
 
 <style lang="scss">
   h2 {
-    font-weight: inherit;
-
     a {
       color: inherit;
       text-decoration: none;

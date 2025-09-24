@@ -20,9 +20,11 @@
   <DatasetLinks {dataset} />
 
   <p>
-    {#each notes.split(/\r\n|\r|\n/) as line}
-      {line}<br />
-    {/each}
+    {#if notes}
+      {#each notes.split(/\r\n|\r|\n/) as line}
+        {line}<br />
+      {/each}
+    {/if}
   </p>
 
   <DatasetMetadata {dataset} />

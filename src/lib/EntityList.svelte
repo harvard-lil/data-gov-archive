@@ -29,7 +29,6 @@
 
     li {
       margin: 1em 0;
-      border-top: 1px dotted #222;
 
       h2 {
         font-weight: 700;
@@ -47,9 +46,8 @@
         text-decoration: underline;
       }
     }
-    li:last-of-type {
-      border-bottom: 1px dotted #222;
-      padding-bottom: 0.5em;
+    li:not(:first-child) {
+      border-top: 1px dotted #222;
     }
   }
 </style>
