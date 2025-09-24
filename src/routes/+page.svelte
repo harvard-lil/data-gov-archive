@@ -71,7 +71,26 @@
       clearTimeout(loadingTimeout);
     }
 
-    // Update state immediately
+    // Generate unique request ID for this request
+    const requestId = ++currentRequestId;
+
+    // Handle search results (immediate, no debouncing)
+    if (searchQuery) {
+      // For search, clear previous data immediately to prevent flashing
+      data.datasets = [];
+      data.totalItems = 0;
+      data.identifier = "";
+      data.label = "";
+      data.isLoading = true;
+      data.currentType = currentType;
+      data.currentId = currentId;
+      data.pageNumber = currentPage;
+
+      await loadSearchResults(searchQuery, currentPage, requestId);
+      return;
+    }
+
+    // Update state immediately for non-search views
     data.currentType = currentType;
     data.currentId = currentId;
     data.pageNumber = currentPage;
@@ -80,15 +99,6 @@
     const isViewChange = data.currentType !== currentType || data.currentId !== currentId;
     if (data.isInitialLoad || isViewChange) {
       data.isLoading = true;
-    }
-
-    // Generate unique request ID for this request
-    const requestId = ++currentRequestId;
-
-    // Handle search results (immediate, no debouncing)
-    if (searchQuery) {
-      await loadSearchResults(searchQuery, currentPage, requestId);
-      return;
     }
 
     // Handle home page (immediate, no debouncing)
@@ -507,8 +517,10 @@
     <DatasetList datasets={data.datasets} />
 
     <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
-  {:else}
+  {:else if data.identifier}
     <h2><b>Search:</b> {data.identifier} (0 results)</h2>
+  {:else}
+    <p>Searching…</p>
   {/if}
 {:else if view() === "home"}
   {#if data.isLoading}
