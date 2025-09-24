@@ -12,14 +12,15 @@
   {#if dataset.publisher}
     <dt>Publisher:</dt>
     <dd>
-      <a href={`${base}/publishers/${encodeURIComponent(dataset.publisher)}`}>{dataset.publisher}</a
+      <a href={`${base}/?type=publisher&id=${encodeURIComponent(dataset.publisher)}`}
+        >{dataset.publisher}</a
       >
     </dd>
   {/if}
   {#if dataset.bureau_code}
     <dt>Bureau Code:</dt>
     <dd>
-      <a href={`${base}/bureaus/${encodeURIComponent(dataset.bureau_code)}`}
+      <a href={`${base}/?type=bureau&id=${encodeURIComponent(dataset.bureau_code)}`}
         >{dataset.bureau_code}</a
       >
     </dd>
@@ -27,7 +28,7 @@
   {#if dataset.bureau_name}
     <dt>Bureau Name:</dt>
     <dd>
-      <a href={`${base}/bureaus/${encodeURIComponent(dataset.bureau_code)}`}
+      <a href={`${base}/?type=bureau&id=${encodeURIComponent(dataset.bureau_code)}`}
         >{dataset.bureau_name}</a
       >
     </dd>
