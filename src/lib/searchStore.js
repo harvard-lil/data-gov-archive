@@ -19,33 +19,21 @@ export const performSearch = async (query, queryData) => {
   }));
 
   try {
-    // First get the total count
-    const countResult = await queryData(
-      `
-      SELECT count(*) AS count
-      FROM read_parquet('datasets.parquet')
-      WHERE
-        LOWER(title) LIKE LOWER($1) OR
-        LOWER(organization_title) LIKE LOWER($1)
-    `,
-      [`%${query.trim()}%`]
-    );
-
     // Then get the actual results
     const results = await queryData(
       `
       SELECT *
       FROM read_parquet('datasets.parquet')
       WHERE
-        LOWER(title) LIKE LOWER($1) OR
-        LOWER(organization_title) LIKE LOWER($1)
+        lower(title) LIKE lower($1) OR
+        lower(organization_title) LIKE lower($1)
       ORDER BY name
       LIMIT 200
     `,
       [`%${query.trim()}%`]
     );
 
-    const totalResults = Number(countResult[0].count);
+    const totalResults = results.length;
 
     searchStore.update((store) => ({
       ...store,

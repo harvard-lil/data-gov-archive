@@ -71,7 +71,9 @@
     <h2><b>Search:</b> {searchState.searchQuery}</h2>
     {#if data.totalItems > 0}
       <p>
-        {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1 ? "" : "s"} found
+        Displaying {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1
+          ? ""
+          : "s"}
       </p>
       <DatasetList datasets={data.datasets} />
     {:else}
