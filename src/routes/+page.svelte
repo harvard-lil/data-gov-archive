@@ -545,8 +545,8 @@
     <DatasetList datasets={data.datasets} />
 
     <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
-  {:else if data.identifier}
-    <h2><b>Search:</b> {data.identifier} (0 results)</h2>
+  {:else if searchQuery}
+    <h2><b>Search:</b> {searchQuery} (0 results)</h2>
   {:else}
     <p>Searching…</p>
   {/if}

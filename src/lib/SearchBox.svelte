@@ -4,6 +4,7 @@
   import { page } from "$app/stores";
 
   let searchQuery = $state("");
+  let isLoading = $state(false);
 
   // Initialize search query from URL
   $effect(() => {
@@ -13,15 +14,25 @@
     }
   });
 
-  const handleSearch = () => {
-    if (!searchQuery.trim() || !browser) return;
+  const handleSearch = async () => {
+    if (!searchQuery.trim() || !browser || isLoading) return;
 
-    // Navigate to search results with query parameter
-    const url = new URL($page.url);
-    url.search = "";
-    url.searchParams.set("q", searchQuery.trim());
-    url.searchParams.set("page", "1"); // Reset to first page
-    goto(url.toString());
+    // Check if the search query is already the same as the current URL parameter
+    const currentQuery = $page.url.searchParams.get("q");
+    if (currentQuery === searchQuery.trim()) return;
+
+    isLoading = true;
+
+    try {
+      // Navigate to search results with query parameter
+      const url = new URL($page.url);
+      url.search = "";
+      url.searchParams.set("q", searchQuery.trim());
+      url.searchParams.set("page", "1"); // Reset to first page
+      await goto(url.toString());
+    } finally {
+      isLoading = false;
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -29,14 +40,6 @@
       event.preventDefault();
       handleSearch();
     }
-  };
-
-  const handleClearSearch = () => {
-    searchQuery = "";
-    // Navigate back to home page
-    const url = new URL($page.url);
-    url.search = "";
-    goto(url.toString());
   };
 </script>
 
@@ -48,10 +51,14 @@
       onkeydown={handleKeyDown}
       placeholder="Search datasets by title, organization, or notes..."
     />
-    <button onclick={handleSearch} disabled={!searchQuery.trim()}> Search </button>
-    {#if searchQuery.trim()}
-      <button onclick={handleClearSearch} class="clear-button">Clear</button>
-    {/if}
+    <button
+      onclick={handleSearch}
+      disabled={!searchQuery.trim() ||
+        isLoading ||
+        $page.url.searchParams.get("q") === searchQuery.trim()}
+    >
+      {isLoading ? "Searching..." : "Search"}
+    </button>
   </div>
 </div>
 
@@ -70,22 +77,26 @@
     align-items: center;
 
     input {
-      background-color: #ccc;
+      font-family: "Public Sans Variable", sans-serif;
+      background-color: inherit;
+      color: #222;
       flex: 1;
       padding: 0.75em;
-      border: 1px solid #222;
+      border: 1px dotted #222;
       border-radius: 4px;
       font-size: 1em;
 
-      &:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      &:disabled {
+        cursor: not-allowed;
       }
 
-      &:disabled {
-        background-color: #f8f9fa;
-        cursor: not-allowed;
+      &::placeholder {
+        color: #666;
+      }
+
+      &:focus {
+        border: 1px solid #222;
+        outline: 0.125em solid rgba(0, 0, 0, 0.125);
       }
     }
 
@@ -105,16 +116,8 @@
 
       &:disabled {
         background-color: #444;
-        color: #ccc;
+        color: #999;
         cursor: not-allowed;
-      }
-    }
-
-    .clear-button {
-      background-color: #444;
-
-      &:hover:not(:disabled) {
-        background-color: #444;
       }
     }
   }
