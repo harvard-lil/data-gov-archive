@@ -29,9 +29,10 @@
         FROM read_parquet('datasets.parquet')
         WHERE
           lower(title) LIKE lower($1) OR
-          lower(organization_title) LIKE lower($1)
+          lower(organization_title) LIKE lower($1) OR
+          lower(notes) LIKE lower($1)
         ORDER BY name
-        LIMIT 200
+        LIMIT 20
       `,
         [`%${query.trim()}%`]
       );

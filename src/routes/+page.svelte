@@ -58,12 +58,14 @@
     <p>Loading…</p>
   {:else}
     <h2><b>Search:</b> {searchContext.searchState.query}</h2>
-    {#if data.totalItems > 0}
-      <p>
-        Displaying {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1
-          ? ""
-          : "s"}
-      </p>
+    {#if data.totalItems === 20}
+      <p>Displaying top 20 results</p>
+      <DatasetList datasets={data.datasets} />
+    {:else if data.totalItems > 1}
+      <p>Displaying {data.totalItems} results</p>
+      <DatasetList datasets={data.datasets} />
+    {:else if data.totalItems === 1}
+      <p>Displaying {data.totalItems} result</p>
       <DatasetList datasets={data.datasets} />
     {:else}
       <p>No results found for "{searchContext.searchState.query}"</p>
