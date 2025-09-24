@@ -57,10 +57,11 @@
 
 <style lang="scss">
   .search-container {
-    margin: 1em 0 2em;
+    margin: 1.5em 0 0.5em;
     padding: 0;
     border-radius: 8px;
     border: 1px solid #ddd;
+    font-size: 1.25em;
   }
 
   .search-box {
@@ -69,9 +70,10 @@
     align-items: center;
 
     input {
+      background-color: #ccc;
       flex: 1;
       padding: 0.75em;
-      border: 1px solid #ccc;
+      border: 1px solid #222;
       border-radius: 4px;
       font-size: 1em;
 
@@ -89,7 +91,7 @@
 
     button {
       padding: 0.75em 1.5em;
-      background-color: #007bff;
+      background-color: rgb(0, 0, 238);
       color: white;
       border: none;
       border-radius: 4px;
@@ -98,20 +100,21 @@
       transition: background-color 0.2s;
 
       &:hover:not(:disabled) {
-        background-color: #0056b3;
+        background-color: rgb(0, 0, 238);
       }
 
       &:disabled {
-        background-color: #6c757d;
+        background-color: #444;
+        color: #ccc;
         cursor: not-allowed;
       }
     }
 
     .clear-button {
-      background-color: #6c757d;
+      background-color: #444;
 
       &:hover:not(:disabled) {
-        background-color: #545b62;
+        background-color: #444;
       }
     }
   }

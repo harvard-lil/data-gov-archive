@@ -1,5 +1,6 @@
 <script>
   import { base } from "$app/paths";
+  import SearchBox from "./SearchBox.svelte";
 </script>
 
 <header>
@@ -17,6 +18,8 @@
       entire dataset on Source Cooperative
     </a>.
   </p>
+
+  <SearchBox />
 </header>
 
 <style lang="scss">

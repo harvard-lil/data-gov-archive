@@ -71,7 +71,6 @@
 {/await}
 
 <main>
-  <SearchBox />
   {@render children?.()}
 </main>
 
