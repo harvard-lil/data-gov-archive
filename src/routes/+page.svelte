@@ -510,17 +510,17 @@
     let title = "Archive of Data.gov";
     const currentView = view();
     if (currentView === "search" && data.label) {
-      title += ` : ${data.label}, page ${data.pageNumber}`;
+      title += `: ${data.label}, page ${data.pageNumber}`;
     } else if (currentView === "entity-list" && data.entity) {
-      title += ` : ${data.entity.title}s`;
+      title += `: ${data.entity.title}s`;
     } else if (currentView === "entity-detail" && data.label) {
-      title += ` : ${data.label}`;
+      title += `: ${data.label}`;
     } else if (currentView === "dataset-detail" && data.dataset) {
-      title += ` : ${data.dataset.title}`;
+      title += `: ${data.dataset.title}`;
     } else if (currentView === "datasets-list") {
-      title += ` : Datasets, page ${data.pageNumber}`;
+      title += `: Datasets, page ${data.pageNumber}`;
     } else if (currentView === "entity-detail" && data.identifier) {
-      title += ` : ${data.identifier}`;
+      title += `: ${data.identifier}`;
     }
     pageTitle = title;
   });
