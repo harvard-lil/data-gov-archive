@@ -7,7 +7,7 @@ import { browser } from "$app/environment";
 import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 
 // Use remote URLs for all environments
-const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data";
+const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data/data";
 const datasetsUrl = `${baseUrl}/datasets.parquet`;
 const datasetsPage1Url = `${baseUrl}/datasets_page_1.parquet`;
 const tagsUrl = `${baseUrl}/tags.parquet`;
