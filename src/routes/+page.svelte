@@ -586,7 +586,7 @@
   {#if data.isLoading}
     <p>Loading…</p>
   {:else if data.entity}
-    <h2>{data.entity.title}s</h2>
+    <h2><b>{data.entity.title}s</b></h2>
 
     {#if data.totalItems > 0}
       <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type={data.entity.type} />
