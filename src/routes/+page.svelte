@@ -63,7 +63,12 @@
       <p>
         {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1 ? "" : "s"} found
       </p>
+
+      <PageNav pageNumber={1} totalItems={data.totalItems} />
+
       <DatasetList datasets={data.datasets} />
+
+      <PageNav pageNumber={1} totalItems={data.totalItems} />
     {:else}
       <p>No results found</p>
     {/if}

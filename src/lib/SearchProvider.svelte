@@ -23,23 +23,36 @@
     searchState.isSearchResults = true;
 
     try {
+      // First get the total count
+      const countResult = await queryData(
+        `
+          SELECT count(*) AS count
+          FROM read_parquet('datasets.parquet')
+          WHERE
+            lower(title) LIKE lower($1) OR
+            lower(organization_title) LIKE lower($1) OR
+            lower(notes) LIKE lower($1)
+        `,
+        [`%${query.trim()}%`]
+      );
+
       // Then get the actual results
       const results = await queryData(
         `
-        SELECT *
-        FROM read_parquet('datasets.parquet')
-        WHERE
-          lower(title) LIKE lower($1) OR
-          lower(organization_title) LIKE lower($1) OR
-          lower(notes) LIKE lower($1)
-        ORDER BY name
-        LIMIT ${PAGE_SIZE}
-      `,
+          SELECT *
+          FROM read_parquet('datasets.parquet')
+          WHERE
+            lower(title) LIKE lower($1) OR
+            lower(organization_title) LIKE lower($1) OR
+            lower(notes) LIKE lower($1)
+          ORDER BY name
+          LIMIT ${PAGE_SIZE}
+        `,
         [`%${query.trim()}%`]
       );
 
       searchState.results = results;
-      searchState.totalResults = results.length;
+      searchState.totalResults = Number(countResult[0].count);
       searchState.isSearching = false;
     } catch (error) {
       console.error("Search error:", error);
