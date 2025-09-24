@@ -1,33 +1,28 @@
 <script>
   import { queryData } from "$lib/db.js";
   import { browser } from "$app/environment";
-  import { performSearch, clearSearch, searchStore } from "$lib/searchStore.js";
+  import { getSearchContext } from "$lib/search.js";
 
   let searchQuery = $state("");
-  let searchState = $state({ isSearching: false });
 
-  // Subscribe to search store for loading state
-  $effect(() => {
-    const unsubscribe = searchStore.subscribe((store) => {
-      searchState.isSearching = store.isSearching;
-    });
-    return unsubscribe;
-  });
+  // Get search context
+  const searchContext = getSearchContext();
 
   const handleSearch = async () => {
     if (!searchQuery.trim() || !browser) return;
-    await performSearch(searchQuery, queryData);
+    await searchContext.performSearch(searchQuery, queryData);
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyDown = (event) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       handleSearch();
     }
   };
 
   const handleClearSearch = () => {
     searchQuery = "";
-    clearSearch();
+    searchContext.clearSearch();
   };
 </script>
 
@@ -36,12 +31,15 @@
     <input
       type="text"
       bind:value={searchQuery}
-      onkeypress={handleKeyPress}
+      onkeydown={handleKeyDown}
       placeholder="Search datasets by title, organization, or notes..."
-      disabled={searchState.isSearching}
+      disabled={searchContext.searchState.isSearching}
     />
-    <button onclick={handleSearch} disabled={searchState.isSearching || !searchQuery.trim()}>
-      {searchState.isSearching ? "Searching..." : "Search"}
+    <button
+      onclick={handleSearch}
+      disabled={searchContext.searchState.isSearching || !searchQuery.trim()}
+    >
+      {searchContext.searchState.isSearching ? "Searching..." : "Search"}
     </button>
     {#if searchQuery.trim()}
       <button onclick={handleClearSearch} class="clear-button">Clear</button>

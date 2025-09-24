@@ -4,41 +4,30 @@
   import PageNav from "$lib/PageNav.svelte";
   import { queryData } from "$lib/db.js";
   import { browser } from "$app/environment";
-  import { searchStore } from "$lib/searchStore.js";
+  import { getSearchContext } from "$lib/search.js";
 
   let data = $state({
     datasets: [],
     totalItems: 0,
   });
 
-  let searchState = $state({
-    isSearchResults: false,
-    searchQuery: "",
-    isSearching: false,
-  });
+  // Get search context
+  const searchContext = getSearchContext();
 
-  // Subscribe to search store
-  $effect(() => {
-    const unsubscribe = searchStore.subscribe((store) => {
-      searchState.isSearchResults = store.isSearchResults;
-      searchState.searchQuery = store.query;
-      searchState.isSearching = store.isSearching;
-
-      if (store.isSearchResults) {
-        data.datasets = store.results;
-        data.totalItems = store.totalResults;
-      }
-    });
-    return unsubscribe;
-  });
-
-  // Load data on component mount
+  // Load data on component mount and react to search state changes
   $effect(async () => {
     // Only run queries in the browser
     if (!browser) return;
 
+    // Access search state to make this effect reactive to search changes
+    const searchState = searchContext.searchState;
+
     // Don't load default data if we're showing search results
-    if (searchState.isSearchResults) return;
+    if (searchState.isSearchResults) {
+      data.datasets = searchState.results;
+      data.totalItems = searchState.totalResults;
+      return;
+    }
 
     try {
       const datasetsCount = await queryData(`
@@ -64,11 +53,11 @@
   <title>Archive of Data.gov</title>
 </svelte:head>
 
-{#if searchState.isSearchResults}
-  {#if searchState.isSearching}
+{#if searchContext.searchState.isSearchResults}
+  {#if searchContext.searchState.isSearching}
     <p>Loading…</p>
   {:else}
-    <h2><b>Search:</b> {searchState.searchQuery}</h2>
+    <h2><b>Search:</b> {searchContext.searchState.query}</h2>
     {#if data.totalItems > 0}
       <p>
         Displaying {data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1
@@ -77,7 +66,7 @@
       </p>
       <DatasetList datasets={data.datasets} />
     {:else}
-      <p>No results found for "{searchState.searchQuery}"</p>
+      <p>No results found for "{searchContext.searchState.query}"</p>
     {/if}
   {/if}
 {:else if data.totalItems > 0}

@@ -6,6 +6,7 @@
   import FilterNav from "$lib/FilterNav.svelte";
   import Header from "$lib/Header.svelte";
   import SearchBox from "$lib/SearchBox.svelte";
+  import SearchProvider from "$lib/SearchProvider.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
 
@@ -57,23 +58,25 @@
   });
 </script>
 
-<Header />
+<SearchProvider>
+  <Header />
 
-{#await topNFilters}
-  <p>Loading…</p>
-{:then topNFilters}
-  <FilterNav
-    organizations={topNFilters.organizations}
-    publishers={topNFilters.publishers}
-    bureaus={topNFilters.bureaus}
-    tags={topNFilters.tags}
-  />
-{/await}
+  {#await topNFilters}
+    <p>Loading…</p>
+  {:then topNFilters}
+    <FilterNav
+      organizations={topNFilters.organizations}
+      publishers={topNFilters.publishers}
+      bureaus={topNFilters.bureaus}
+      tags={topNFilters.tags}
+    />
+  {/await}
 
-<main>
-  <SearchBox />
-  {@render children?.()}
-</main>
+  <main>
+    <SearchBox />
+    {@render children?.()}
+  </main>
+</SearchProvider>
 
 <style lang="scss">
   :global(body) {
