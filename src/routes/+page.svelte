@@ -20,7 +20,7 @@
   // Handle 404 for tag list (not supported)
   $effect(() => {
     if (type === "tag" && !id) {
-      throw error(404, "Tag list not available");
+      error(404, "Tag list not available");
     }
   });
 
