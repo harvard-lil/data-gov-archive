@@ -17,6 +17,13 @@
   const pageNumber = $derived(parseInt($page.url.searchParams.get("page") || "1"));
   const searchQuery = $derived($page.url.searchParams.get("q"));
 
+  // Handle 404 for tag list (not supported)
+  $effect(() => {
+    if (type === "tag" && !id) {
+      throw error(404, "Tag list not available");
+    }
+  });
+
   // Determine view based on type and search
   const view = $derived(() => {
     const currentType = type;
@@ -32,10 +39,11 @@
     }
     if (currentType === "dataset" && !currentId) return "datasets-list";
     if (currentType === "dataset" && currentId) return "dataset-detail";
-    if (["organization", "bureau", "publisher", "tag"].includes(currentType) && !currentId)
+    if (["organization", "bureau", "publisher"].includes(currentType) && !currentId)
       return "entity-list";
-    if (["organization", "bureau", "publisher", "tag"].includes(currentType) && currentId)
+    if (["organization", "bureau", "publisher"].includes(currentType) && currentId)
       return "entity-detail";
+    if (currentType === "tag" && currentId) return "entity-detail";
     return "home";
   });
 
@@ -99,6 +107,16 @@
     const isViewChange = data.currentType !== currentType || data.currentId !== currentId;
     if (data.isInitialLoad || isViewChange) {
       data.isLoading = true;
+      // Clear previous data when changing views to prevent showing wrong content
+      if (isViewChange) {
+        data.datasets = [];
+        data.entities = [];
+        data.entity = null;
+        data.dataset = null;
+        data.totalItems = 0;
+        data.identifier = "";
+        data.label = "";
+      }
     }
 
     // Handle home page (immediate, no debouncing)
@@ -342,6 +360,17 @@
 
   async function loadTagDatasets(tag, page, requestId) {
     try {
+      const entity = entities.find((e) => e.type === "tag");
+      if (!entity) {
+        error(404, `Entity not found: tag`);
+        return;
+      }
+
+      // Set up entity data immediately to show proper loading state
+      data.entity = entity;
+      data.identifier = tag;
+      data.label = tag;
+
       const offset = (page - 1) * PAGE_SIZE;
 
       // Use aggregations.parquet for count (much faster than JOIN)
@@ -391,9 +420,8 @@
       data.datasets = datasets;
       data.totalItems = Number(datasetsCount[0]?.count || 0);
       data.pageNumber = page;
-      data.identifier = tag;
-      data.label = tag;
       data.isLoading = false;
+      data.isInitialLoad = false;
     } catch (error) {
       console.error("Error loading tag datasets:", error);
       data.isLoading = false;
@@ -567,16 +595,28 @@
 
       <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type={data.entity.type} />
     {:else}
-      <p>Loading…</p>
+      <p>No {data.entity.title.toLowerCase()}s found.</p>
     {/if}
+  {:else}
+    <p>Loading…</p>
   {/if}
 {:else if view() === "entity-detail"}
   {#if data.isLoading}
     <p>Loading…</p>
-  {:else if data.entity}
+  {:else if data.entity && data.identifier}
     <h2>
       <b>{data.entity.title}:</b>
-      {#if data.pageNumber > 1}
+      {#if data.entity.type === "tag"}
+        <span class="tag">
+          {#if data.pageNumber > 1}
+            <a href={buildUrl({ type: data.entity.type, id: data.identifier, page: 1 })}
+              >{data.label}</a
+            >
+          {:else}
+            {data.label}
+          {/if}
+        </span>
+      {:else if data.pageNumber > 1}
         <a href={buildUrl({ type: data.entity.type, id: data.identifier, page: 1 })}>{data.label}</a
         >
       {:else}
@@ -600,45 +640,13 @@
         type={data.entity.type}
         id={data.identifier}
       />
-    {:else}
-      <p>Loading datasets…</p>
-    {/if}
-  {/if}
-{:else if view() === "entity-detail" && data.identifier}
-  <!-- Tag view -->
-  {#if data.isLoading}
-    <p>Loading…</p>
-  {:else if data.identifier}
-    <h2>
-      <b>Tag:</b>
-      <span class="tag">
-        {#if data.pageNumber > 1}
-          <a href={buildUrl({ type: "tag", id: data.identifier, page: 1 })}>{data.label}</a>
-        {:else}
-          {data.label}
-        {/if}
-      </span>
-    </h2>
-
-    {#if data.totalItems > 0}
-      <PageNav
-        pageNumber={data.pageNumber}
-        totalItems={data.totalItems}
-        type="tag"
-        id={data.identifier}
-      />
-
-      <DatasetList datasets={data.datasets} />
-
-      <PageNav
-        pageNumber={data.pageNumber}
-        totalItems={data.totalItems}
-        type="tag"
-        id={data.identifier}
-      />
-    {:else}
+    {:else if data.entity.type === "tag"}
       <p>No datasets found for this tag.</p>
+    {:else}
+      <p>No datasets found.</p>
     {/if}
+  {:else}
+    <p>Loading…</p>
   {/if}
 {/if}
 

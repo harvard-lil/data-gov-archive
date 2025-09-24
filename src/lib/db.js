@@ -40,6 +40,10 @@ export const instantiateDuckDB = async () => {
 
   try {
     const result = await initPromise;
+    // Ensure the global db variable is set
+    if (result && !db) {
+      db = result;
+    }
     return result;
   } finally {
     isInitializing = false;
@@ -66,26 +70,31 @@ const initializeDuckDB = async () => {
     // Instantiate the async version of DuckDB-Wasm
     const worker = new Worker(bundle.mainWorker);
     const logger = new duckdb.ConsoleLogger();
-    db = new duckdb.AsyncDuckDB(logger, worker);
+    const dbInstance = new duckdb.AsyncDuckDB(logger, worker);
 
-    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    await dbInstance.instantiate(bundle.mainModule, bundle.pthreadWorker);
 
     // Wait for the database to be fully instantiated before registering files
-    if (!db) {
+    if (!dbInstance) {
       throw new Error("Database instance is null after instantiation");
     }
 
     // Register files - check if db has the method before calling
-    if (typeof db.registerFileURL === "function") {
-      await db.registerFileURL("datasets.parquet", datasetsUrl, DuckDBDataProtocol.HTTP, false);
-      await db.registerFileURL(
+    if (typeof dbInstance.registerFileURL === "function") {
+      await dbInstance.registerFileURL(
+        "datasets.parquet",
+        datasetsUrl,
+        DuckDBDataProtocol.HTTP,
+        false
+      );
+      await dbInstance.registerFileURL(
         "datasets_page_1.parquet",
         datasetsPage1Url,
         DuckDBDataProtocol.HTTP,
         false
       );
-      await db.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
-      await db.registerFileURL(
+      await dbInstance.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
+      await dbInstance.registerFileURL(
         "aggregations.parquet",
         aggregationsUrl,
         DuckDBDataProtocol.HTTP,
@@ -95,9 +104,15 @@ const initializeDuckDB = async () => {
       throw new Error("Database instance does not have registerFileURL method");
     }
 
-    return db;
+    // Set the global db variable
+    db = dbInstance;
+    return dbInstance;
   } catch (error) {
     console.error("Failed to initialize DuckDB:", error);
+    // Reset global state on error
+    db = null;
+    isInitializing = false;
+    initPromise = null;
     throw error;
   }
 };
@@ -169,6 +184,11 @@ export const queryData = async (query, params) => {
   // Always ensure DuckDB is initialized before running queries
   if (!db) {
     await instantiateDuckDB();
+  }
+
+  // Double-check that db is initialized
+  if (!db) {
+    throw new Error("DuckDB failed to initialize");
   }
 
   let conn = null;
