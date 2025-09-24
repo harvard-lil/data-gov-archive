@@ -1,23 +1,34 @@
 export const entities = [
   {
-    route: "organizations",
+    type: "organization",
+    route: "organizations", // Keep for database queries
     identifier: "organization_name",
     label: "organization_title",
     title: "Organization",
     showOrganization: false,
   },
   {
-    route: "bureaus",
+    type: "bureau",
+    route: "bureaus", // Keep for database queries
     identifier: "bureau_code",
     label: "bureau_name",
     title: "Bureau",
     showOrganization: true,
   },
   {
-    route: "publishers",
+    type: "publisher",
+    route: "publishers", // Keep for database queries
     identifier: "publisher",
     label: "publisher",
     title: "Publisher",
     showOrganization: true,
+  },
+  {
+    type: "tag",
+    route: "tags", // Keep for database queries
+    identifier: "tag",
+    label: "tag",
+    title: "Tag",
+    showOrganization: false,
   },
 ];

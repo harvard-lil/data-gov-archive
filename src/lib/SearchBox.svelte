@@ -1,16 +1,27 @@
 <script>
-  import { queryData } from "$lib/db.js";
   import { browser } from "$app/environment";
-  import { getSearchContext } from "$lib/search.js";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
 
   let searchQuery = $state("");
 
-  // Get search context
-  const searchContext = getSearchContext();
+  // Initialize search query from URL
+  $effect(() => {
+    if (browser) {
+      const urlQuery = $page.url.searchParams.get("q");
+      searchQuery = urlQuery || "";
+    }
+  });
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (!searchQuery.trim() || !browser) return;
-    await searchContext.performSearch(searchQuery, queryData);
+
+    // Navigate to search results with query parameter
+    const url = new URL($page.url);
+    url.search = "";
+    url.searchParams.set("q", searchQuery.trim());
+    url.searchParams.set("page", "1"); // Reset to first page
+    goto(url.toString());
   };
 
   const handleKeyDown = (event) => {
@@ -22,7 +33,10 @@
 
   const handleClearSearch = () => {
     searchQuery = "";
-    searchContext.clearSearch();
+    // Navigate back to home page
+    const url = new URL($page.url);
+    url.search = "";
+    goto(url.toString());
   };
 </script>
 
@@ -33,14 +47,8 @@
       bind:value={searchQuery}
       onkeydown={handleKeyDown}
       placeholder="Search datasets by title, organization, or notes..."
-      disabled={searchContext.searchState.isSearching}
     />
-    <button
-      onclick={handleSearch}
-      disabled={searchContext.searchState.isSearching || !searchQuery.trim()}
-    >
-      {searchContext.searchState.isSearching ? "Searching..." : "Search"}
-    </button>
+    <button onclick={handleSearch} disabled={!searchQuery.trim()}> Search </button>
     {#if searchQuery.trim()}
       <button onclick={handleClearSearch} class="clear-button">Clear</button>
     {/if}

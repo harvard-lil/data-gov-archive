@@ -6,6 +6,7 @@ import eh_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url"
 import { browser } from "$app/environment";
 import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 
+// Use remote URLs for all environments
 const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data";
 const datasetsUrl = `${baseUrl}/datasets.parquet`;
 const datasetsPage1Url = `${baseUrl}/datasets_page_1.parquet`;
@@ -46,40 +47,59 @@ export const instantiateDuckDB = async () => {
 };
 
 const initializeDuckDB = async () => {
-  const duckdb = await import("@duckdb/duckdb-wasm");
-  const bundles = {
-    mvp: {
-      mainModule: duckdb_wasm,
-      mainWorker: mvp_worker,
-    },
-    eh: {
-      mainModule: duckdb_wasm_eh,
-      mainWorker: eh_worker,
-    },
-  };
+  try {
+    const duckdb = await import("@duckdb/duckdb-wasm");
+    const bundles = {
+      mvp: {
+        mainModule: duckdb_wasm,
+        mainWorker: mvp_worker,
+      },
+      eh: {
+        mainModule: duckdb_wasm_eh,
+        mainWorker: eh_worker,
+      },
+    };
 
-  // Select a bundle based on browser checks
-  const bundle = await duckdb.selectBundle(bundles);
+    // Select a bundle based on browser checks
+    const bundle = await duckdb.selectBundle(bundles);
 
-  // Instantiate the async version of DuckDB-Wasm
-  const worker = new Worker(bundle.mainWorker);
-  const logger = new duckdb.ConsoleLogger();
-  db = new duckdb.AsyncDuckDB(logger, worker);
+    // Instantiate the async version of DuckDB-Wasm
+    const worker = new Worker(bundle.mainWorker);
+    const logger = new duckdb.ConsoleLogger();
+    db = new duckdb.AsyncDuckDB(logger, worker);
 
-  await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
 
-  // Register files
-  await db.registerFileURL("datasets.parquet", datasetsUrl, DuckDBDataProtocol.HTTP, false);
-  await db.registerFileURL(
-    "datasets_page_1.parquet",
-    datasetsPage1Url,
-    DuckDBDataProtocol.HTTP,
-    false
-  );
-  await db.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
-  await db.registerFileURL("aggregations.parquet", aggregationsUrl, DuckDBDataProtocol.HTTP, false);
+    // Wait for the database to be fully instantiated before registering files
+    if (!db) {
+      throw new Error("Database instance is null after instantiation");
+    }
 
-  return db;
+    // Register files - check if db has the method before calling
+    if (typeof db.registerFileURL === "function") {
+      await db.registerFileURL("datasets.parquet", datasetsUrl, DuckDBDataProtocol.HTTP, false);
+      await db.registerFileURL(
+        "datasets_page_1.parquet",
+        datasetsPage1Url,
+        DuckDBDataProtocol.HTTP,
+        false
+      );
+      await db.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
+      await db.registerFileURL(
+        "aggregations.parquet",
+        aggregationsUrl,
+        DuckDBDataProtocol.HTTP,
+        false
+      );
+    } else {
+      throw new Error("Database instance does not have registerFileURL method");
+    }
+
+    return db;
+  } catch (error) {
+    console.error("Failed to initialize DuckDB:", error);
+    throw error;
+  }
 };
 
 // Check if connection is still valid
@@ -97,20 +117,25 @@ const isConnectionValid = async (conn) => {
 // Get or create a persistent connection
 const getConnection = async () => {
   if (!connection) {
-    const db = await instantiateDuckDB();
-    connection = await db.connect();
+    const dbInstance = await instantiateDuckDB();
+    if (!dbInstance) {
+      throw new Error("Failed to initialize DuckDB database");
+    }
+    connection = await dbInstance.connect();
   } else {
     // Check if existing connection is still valid
     const isValid = await isConnectionValid(connection);
     if (!isValid) {
-      console.log("Connection is stale, creating new connection...");
       try {
         await connection.close();
       } catch (error) {
         // Ignore close errors
       }
-      const db = await instantiateDuckDB();
-      connection = await db.connect();
+      const dbInstance = await instantiateDuckDB();
+      if (!dbInstance) {
+        throw new Error("Failed to reinitialize DuckDB database");
+      }
+      connection = await dbInstance.connect();
     }
   }
   return connection;
@@ -139,6 +164,11 @@ export const queryData = async (query, params) => {
   // Check if we're in browser environment
   if (!browser) {
     throw new Error("Database queries can only be executed in the browser.");
+  }
+
+  // Always ensure DuckDB is initialized before running queries
+  if (!db) {
+    await instantiateDuckDB();
   }
 
   let conn = null;
@@ -193,7 +223,5 @@ export const queryData = async (query, params) => {
 
 // Cleanup function for app shutdown
 export const cleanup = async () => {
-  console.log("Cleaning up database connections…");
   await closeConnection();
-  console.log("Database cleanup complete");
 };

@@ -1,15 +1,27 @@
 <script>
   import { base } from "$app/paths";
   let { organizations, publishers, bureaus, tags } = $props();
+
+  function buildEntityListUrl(entityType) {
+    return `${base}/?type=${entityType}`;
+  }
+
+  function buildEntityDetailUrl(entityType, id) {
+    return `${base}/?type=${entityType}&id=${encodeURIComponent(id)}`;
+  }
+
+  function buildTagUrl(tag) {
+    return `${base}/?type=tag&id=${encodeURIComponent(tag)}`;
+  }
 </script>
 
 <nav>
-  <h2><a href={`${base}/organizations`}>Organizations</a></h2>
+  <h2><a href={buildEntityListUrl('organization')}>Organizations</a></h2>
   <ul>
     {#each organizations as organization}
       <li>
         <a
-          href={`${base}/organizations/${encodeURIComponent(organization.organization_name)}`}
+          href={buildEntityDetailUrl('organization', organization.organization_name)}
           title={organization.organization_title}
         >
           {organization.organization_title}
@@ -19,12 +31,12 @@
     {/each}
   </ul>
 
-  <h2><a href={`${base}/publishers`}>Publishers</a></h2>
+  <h2><a href={buildEntityListUrl('publisher')}>Publishers</a></h2>
   <ul>
     {#each publishers as publisher}
       <li>
         <a
-          href={`${base}/publishers/${encodeURIComponent(publisher.publisher)}`}
+          href={buildEntityDetailUrl('publisher', publisher.publisher)}
           title={publisher.publisher}
         >
           {publisher.publisher}
@@ -34,20 +46,20 @@
     {/each}
   </ul>
 
-  <h2><a href={`${base}/bureaus`}>Bureaus</a></h2>
+  <h2><a href={buildEntityListUrl('bureau')}>Bureaus</a></h2>
   <ul>
     {#each bureaus as bureau}
       <li>
         {#if bureau.bureau_name}
           <a
-            href={`${base}/bureaus/${encodeURIComponent(bureau.bureau_code)}`}
+            href={buildEntityDetailUrl('bureau', bureau.bureau_code)}
             title={bureau.bureau_name}
           >
             {bureau.bureau_name}
           </a>
         {:else}
           <a
-            href={`${base}/bureaus/${encodeURIComponent(bureau.bureau_code)}`}
+            href={buildEntityDetailUrl('bureau', bureau.bureau_code)}
             title={bureau.bureau_code}
           >
             {bureau.bureau_code}

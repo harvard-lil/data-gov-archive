@@ -1,14 +1,9 @@
 <script>
   import { base } from "$app/paths";
+  import { page } from "$app/stores";
   import { PAGE_SIZE } from "$lib/config.js";
 
-  let {
-    pageNumber,
-    totalItems,
-    route = "/datasets",
-    pageSize = PAGE_SIZE,
-    additionalParams = "",
-  } = $props();
+  let { pageNumber, totalItems, type = null, id = null, pageSize = PAGE_SIZE } = $props();
 
   let offset = $derived((pageNumber - 1) * pageSize);
   let totalPages = $derived(Math.ceil(totalItems / pageSize));
@@ -16,21 +11,32 @@
   let pageNumberLabel = $derived(pageNumber.toLocaleString("en-US"));
   let totalPagesLabel = $derived(totalPages.toLocaleString("en-US"));
 
-  // Helper function to build URL with page parameter
-  function buildPageUrl(page) {
-    const baseUrl = `${base}${route}`;
-    const params = new URLSearchParams();
-    params.set("page", page.toString());
+  // Get current URL at top level
+  const currentUrl = $page.url;
 
-    // Add any additional parameters
-    if (additionalParams) {
-      const additional = new URLSearchParams(additionalParams);
-      for (const [key, value] of additional) {
-        params.set(key, value);
-      }
+  // Helper function to build URL with query parameters
+  function buildPageUrl(page) {
+    const url = new URL(currentUrl);
+    url.search = "";
+
+    // Set page parameter
+    url.searchParams.set("page", page.toString());
+
+    // Add type and id if provided
+    if (type) {
+      url.searchParams.set("type", type);
+    }
+    if (id) {
+      url.searchParams.set("id", id);
     }
 
-    return `${baseUrl}?${params.toString()}`;
+    // Preserve search query if present
+    const searchQuery = currentUrl.searchParams.get("q");
+    if (searchQuery) {
+      url.searchParams.set("q", searchQuery);
+    }
+
+    return url.toString();
   }
 </script>
 

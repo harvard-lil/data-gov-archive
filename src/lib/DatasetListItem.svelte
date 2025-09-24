@@ -8,10 +8,12 @@
 </script>
 
 <li>
-  <h2><a href={`${base}/datasets/${encodeURIComponent(dataset.name)}`}>{dataset.title}</a></h2>
+  <h2>
+    <a href={`${base}/?type=dataset&id=${encodeURIComponent(dataset.name)}`}>{dataset.title}</a>
+  </h2>
   {#if showOrganization === true}
     <h3>
-      <a href={`${base}/organizations/${encodeURIComponent(dataset.organization_name)}`}
+      <a href={`${base}/?type=organization&id=${encodeURIComponent(dataset.organization_name)}`}
         >{dataset.organization_title}</a
       >
     </h3>

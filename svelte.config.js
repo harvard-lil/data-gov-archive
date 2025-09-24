@@ -15,15 +15,7 @@ const config = {
     },
     prerender: {
       crawl: true,
-      entries: [
-        "/*",
-        "/bureaus/[id]",
-        "/datasets",
-        "/datasets/[name]",
-        "/organizations/[id]",
-        "/publishers/[id]",
-        "/tags/[tag]",
-      ],
+      entries: ["/*"],
     },
   },
 };
