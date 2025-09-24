@@ -5,6 +5,7 @@
   import { queryData } from "$lib/db.js";
   import { browser } from "$app/environment";
   import { getSearchContext } from "$lib/search.js";
+  import { PAGE_SIZE } from "$lib/config.js";
 
   let data = $state({
     datasets: [],
@@ -38,7 +39,7 @@
       const datasets = await queryData(`
         SELECT name, title, notes, organization_name, organization_title
         FROM read_parquet('datasets_page_1.parquet')
-        LIMIT 200
+        LIMIT ${PAGE_SIZE}
       `);
 
       data.datasets = datasets;

@@ -1,10 +1,12 @@
 <script>
   import { base } from "$app/paths";
+  import { PAGE_SIZE } from "$lib/config.js";
+
   let {
     pageNumber,
     totalItems,
     route = "/datasets",
-    pageSize = 200,
+    pageSize = PAGE_SIZE,
     additionalParams = "",
   } = $props();
 

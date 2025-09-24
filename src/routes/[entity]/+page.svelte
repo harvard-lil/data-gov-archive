@@ -6,6 +6,7 @@
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
   import { entities } from "$lib/entities.js";
+  import { PAGE_SIZE } from "$lib/config.js";
 
   let data = $state({
     entity: null,
@@ -35,7 +36,7 @@
       error(404, `Entity not found: ${entityRoute}`);
     }
 
-    const offset = (pageNumber - 1) * 200;
+    const offset = (pageNumber - 1) * PAGE_SIZE;
 
     // Get total count first
     const totalCount = await queryData(`
@@ -53,7 +54,7 @@
         WHERE aggregation = '${entity.route}'
         GROUP BY identifier, label
         ORDER BY label
-        LIMIT 200 OFFSET ${offset}
+        LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
 
     data.entity = entity;

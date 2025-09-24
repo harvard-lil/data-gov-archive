@@ -4,6 +4,7 @@
   import PageNav from "$lib/PageNav.svelte";
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
+  import { PAGE_SIZE } from "$lib/config.js";
 
   let data = $state({
     datasets: [],
@@ -21,14 +22,14 @@
       const pageParam = url.searchParams.get("page");
 
       const pageNumber = pageParam ? parseInt(pageParam) : 1;
-      const offset = (pageNumber - 1) * 200;
+      const offset = (pageNumber - 1) * PAGE_SIZE;
 
       const datasetsCount = await queryData(`
         SELECT count(*) AS count
         FROM read_parquet('datasets.parquet')
       `);
 
-      const totalPages = Math.ceil(Number(datasetsCount[0].count) / 200);
+      const totalPages = Math.ceil(Number(datasetsCount[0].count) / PAGE_SIZE);
 
       if (pageNumber <= 0 || pageNumber > totalPages) {
         // Handle invalid page - could redirect or show error
@@ -39,7 +40,7 @@
         SELECT *
         FROM read_parquet('datasets.parquet')
         ORDER BY name
-        LIMIT 200 OFFSET ${offset}
+        LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
 
       data.datasets = datasets;

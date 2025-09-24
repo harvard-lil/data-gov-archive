@@ -6,6 +6,7 @@
   import { browser } from "$app/environment";
   import { error } from "@sveltejs/kit";
   import { entities } from "$lib/entities.js";
+  import { PAGE_SIZE } from "$lib/config.js";
 
   let data = $state({
     datasets: [],
@@ -27,7 +28,7 @@
       const url = new URL($page.url);
       const pageParam = url.searchParams.get("page");
       const pageNumber = pageParam ? parseInt(pageParam) : 1;
-      const offset = (pageNumber - 1) * 200;
+      const offset = (pageNumber - 1) * PAGE_SIZE;
 
       // Find the entity configuration
       const entity = entities.find((entity) => entity.route === entityRoute);
@@ -50,7 +51,7 @@
         FROM read_parquet('datasets.parquet')
         WHERE ${entity.identifier} = $1
         ORDER BY name
-        LIMIT 200 OFFSET ${offset}
+        LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `,
         [identifier]
       );

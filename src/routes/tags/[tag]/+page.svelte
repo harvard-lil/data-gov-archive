@@ -4,6 +4,7 @@
   import { queryData } from "$lib/db.js";
   import { page } from "$app/stores";
   import { browser } from "$app/environment";
+  import { PAGE_SIZE } from "$lib/config.js";
 
   let data = $state({
     datasets: [],
@@ -25,7 +26,7 @@
       const url = new URL($page.url);
       const pageParam = url.searchParams.get("page");
       const pageNumber = pageParam ? parseInt(pageParam) : 1;
-      const offset = (pageNumber - 1) * 200;
+      const offset = (pageNumber - 1) * PAGE_SIZE;
 
       // Use aggregations.parquet for count (much faster than JOIN)
       const datasetsCount = await queryData(
@@ -37,7 +38,7 @@
         [tag]
       );
 
-      const totalPages = Math.ceil(Number(datasetsCount[0]?.count || 0) / 200);
+      const totalPages = Math.ceil(Number(datasetsCount[0]?.count || 0) / PAGE_SIZE);
 
       if (pageNumber <= 0 || pageNumber > totalPages) {
         // Handle invalid page - could redirect or show error
@@ -56,7 +57,7 @@
         INNER JOIN read_parquet('tags.parquet') tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
-        LIMIT 200 OFFSET ${offset}
+        LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `,
         [tag]
       );

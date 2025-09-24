@@ -2,6 +2,7 @@
   import { setContext } from "svelte";
   import { browser } from "$app/environment";
   import { SEARCH_CONTEXT_KEY } from "./search.js";
+  import { PAGE_SIZE } from "$lib/config.js";
 
   const { children } = $props();
 
@@ -32,7 +33,7 @@
           lower(organization_title) LIKE lower($1) OR
           lower(notes) LIKE lower($1)
         ORDER BY name
-        LIMIT 20
+        LIMIT ${PAGE_SIZE}
       `,
         [`%${query.trim()}%`]
       );
