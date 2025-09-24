@@ -347,7 +347,7 @@
       data.datasets = datasets;
       data.totalItems = Number(totalCount[0]?.count || 0);
       data.pageNumber = page;
-      data.identifier = encodeURIComponent(identifier);
+      data.identifier = identifier;
       data.label = datasets[0]?.[entity.label] || identifier;
       data.entity = entity;
       data.isLoading = false;
