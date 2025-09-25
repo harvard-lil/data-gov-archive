@@ -14,8 +14,8 @@
     <a href="https://lil.law.harvard.edu/our-work/public-data-project">Public Data Project</a>.
   </p>
   <p>
-    You can also browse the <a href="https://source.coop/repositories/harvard-lil/gov-data">
-      entire dataset on Source Cooperative
+    You can also browse the <a href="https://source.coop/harvard-lil/gov-data">
+      entire archive on Source Cooperative
     </a>.
   </p>
 
