@@ -6,6 +6,7 @@
   import FilterNav from "$lib/FilterNav.svelte";
   import Header from "$lib/Header.svelte";
   import SearchBox from "$lib/SearchBox.svelte";
+  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
 
@@ -60,7 +61,9 @@
 <Header />
 
 {#await topNFilters}
-  <p>Loading…</p>
+  <div class="loading-container">
+    <LoadingSpinner />
+  </div>
 {:then topNFilters}
   <FilterNav
     organizations={topNFilters.organizations}

@@ -4,6 +4,7 @@
   import DatasetView from "$lib/DatasetView.svelte";
   import EntityList from "$lib/EntityList.svelte";
   import PageNav from "$lib/PageNav.svelte";
+  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
   import { queryData } from "$lib/db.js";
   import { browser } from "$app/environment";
   import { page } from "$app/stores";
@@ -532,7 +533,9 @@
 
 {#if view() === "search"}
   {#if data.isLoading}
-    <p>Searching…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {:else if data.totalItems > 0}
     <h2>
       <b>Search:</b>
@@ -549,11 +552,15 @@
   {:else if searchQuery}
     <h2><b>Search:</b> {searchQuery} (0 results)</h2>
   {:else}
-    <p>Searching…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {/if}
 {:else if view() === "home"}
   {#if data.isLoading}
-    <p>Loading datasets…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {:else if data.totalItems > 0}
     <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
 
@@ -565,7 +572,9 @@
   {/if}
 {:else if view() === "datasets-list"}
   {#if data.isLoading}
-    <p>Loading…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {:else if data.totalItems > 0}
     <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type="dataset" />
 
@@ -573,19 +582,27 @@
 
     <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type="dataset" />
   {:else}
-    <p>Loading datasets…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {/if}
 {:else if view() === "dataset-detail"}
   {#if data.isLoading}
-    <p>Loading dataset…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {:else if data.dataset}
     <DatasetView dataset={data.dataset} />
   {:else}
-    <p>Loading dataset…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {/if}
 {:else if view() === "entity-list"}
   {#if data.isLoading}
-    <p>Loading…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {:else if data.entity}
     <h2><b>{data.entity.title}s</b></h2>
 
@@ -599,11 +616,15 @@
       <p>No {data.entity.title.toLowerCase()}s found.</p>
     {/if}
   {:else}
-    <p>Loading…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {/if}
 {:else if view() === "entity-detail"}
   {#if data.isLoading}
-    <p>Loading…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {:else if data.entity && data.identifier}
     <h2>
       <b>{data.entity.title}:</b>
@@ -647,7 +668,9 @@
       <p>No datasets found.</p>
     {/if}
   {:else}
-    <p>Loading…</p>
+    <div class="loading-container">
+      <LoadingSpinner />
+    </div>
   {/if}
 {/if}
 

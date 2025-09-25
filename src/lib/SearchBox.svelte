@@ -2,6 +2,7 @@
   import { browser } from "$app/environment";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
 
   let searchQuery = $state("");
   let isLoading = $state(false);
@@ -57,7 +58,11 @@
         isLoading ||
         $page.url.searchParams.get("q") === searchQuery.trim()}
     >
-      {isLoading ? "Searching..." : "Search"}
+      {#if isLoading}
+        <LoadingSpinner />
+      {:else}
+        Search
+      {/if}
     </button>
   </div>
 </div>
