@@ -16,12 +16,12 @@
 </script>
 
 <nav>
-  <h2><a href={buildEntityListUrl('organization')}>Organizations</a></h2>
+  <h2><a href={buildEntityListUrl("organization")}>Organizations</a></h2>
   <ul>
     {#each organizations as organization}
       <li>
         <a
-          href={buildEntityDetailUrl('organization', organization.organization_name)}
+          href={buildEntityDetailUrl("organization", organization.organization_title)}
           title={organization.organization_title}
         >
           {organization.organization_title}
@@ -31,12 +31,12 @@
     {/each}
   </ul>
 
-  <h2><a href={buildEntityListUrl('publisher')}>Publishers</a></h2>
+  <h2><a href={buildEntityListUrl("publisher")}>Publishers</a></h2>
   <ul>
     {#each publishers as publisher}
       <li>
         <a
-          href={buildEntityDetailUrl('publisher', publisher.publisher)}
+          href={buildEntityDetailUrl("publisher", publisher.publisher)}
           title={publisher.publisher}
         >
           {publisher.publisher}
@@ -46,25 +46,13 @@
     {/each}
   </ul>
 
-  <h2><a href={buildEntityListUrl('bureau')}>Bureaus</a></h2>
+  <h2><a href={buildEntityListUrl("bureau")}>Bureaus</a></h2>
   <ul>
     {#each bureaus as bureau}
       <li>
-        {#if bureau.bureau_name}
-          <a
-            href={buildEntityDetailUrl('bureau', bureau.bureau_code)}
-            title={bureau.bureau_name}
-          >
-            {bureau.bureau_name}
-          </a>
-        {:else}
-          <a
-            href={buildEntityDetailUrl('bureau', bureau.bureau_code)}
-            title={bureau.bureau_code}
-          >
-            {bureau.bureau_code}
-          </a>
-        {/if}
+        <a href={buildEntityDetailUrl("bureau", bureau.bureau_name)} title={bureau.bureau_name}>
+          {bureau.bureau_name}
+        </a>
         <b>{bureau.count.toLocaleString("en-US")}</b>
       </li>
     {/each}

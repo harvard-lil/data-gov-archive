@@ -17,7 +17,7 @@
     }
 
     const organizations = await queryData(`
-      SELECT identifier AS organization_name, label AS organization_title, count
+      SELECT identifier AS organization_title, count
       FROM read_parquet('aggregations.parquet')
       WHERE aggregation = 'organizations'
       ORDER BY count DESC
@@ -31,7 +31,7 @@
       LIMIT 10;
     `);
     const bureaus = await queryData(`
-      SELECT identifier AS bureau_code, label AS bureau_name, count
+      SELECT identifier AS bureau_name, count
       FROM read_parquet('aggregations.parquet')
       WHERE aggregation = 'bureaus'
       ORDER BY count DESC

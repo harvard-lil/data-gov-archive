@@ -14,7 +14,7 @@
 <article>
   <h2>{dataset.title}</h2>
   <h3>
-    <a href={`${base}/?type=organization&id=${encodeURIComponent(dataset.organization_name)}`}
+    <a href={`${base}/?type=organization&id=${encodeURIComponent(dataset.organization_title)}`}
       >{dataset.organization_title}</a
     >
   </h3>

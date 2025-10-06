@@ -279,12 +279,11 @@
       const instances = await queryData(`
         SELECT
           identifier,
-          label,
           sum(count) AS count
         FROM read_parquet('aggregations.parquet')
         WHERE aggregation = '${entity.route}'
-        GROUP BY identifier, label
-        ORDER BY label
+        GROUP BY identifier
+        ORDER BY identifier
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
 

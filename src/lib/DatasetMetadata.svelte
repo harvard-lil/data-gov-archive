@@ -17,18 +17,10 @@
       >
     </dd>
   {/if}
-  {#if dataset.bureau_code}
-    <dt>Bureau Code:</dt>
-    <dd>
-      <a href={`${base}/?type=bureau&id=${encodeURIComponent(dataset.bureau_code)}`}
-        >{dataset.bureau_code}</a
-      >
-    </dd>
-  {/if}
   {#if dataset.bureau_name}
-    <dt>Bureau Name:</dt>
+    <dt>Bureau:</dt>
     <dd>
-      <a href={`${base}/?type=bureau&id=${encodeURIComponent(dataset.bureau_code)}`}
+      <a href={`${base}/?type=bureau&id=${encodeURIComponent(dataset.bureau_name)}`}
         >{dataset.bureau_name}</a
       >
     </dd>
