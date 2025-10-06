@@ -10,6 +10,7 @@ import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data/data";
 const datasetsUrl = `${baseUrl}/datasets.parquet`;
 const datasetsPage1Url = `${baseUrl}/datasets_page_1.parquet`;
+const searchUrl = `${baseUrl}/search.parquet`;
 const tagsUrl = `${baseUrl}/tags.parquet`;
 const aggregationsUrl = `${baseUrl}/aggregations.parquet`;
 
@@ -93,6 +94,7 @@ const initializeDuckDB = async () => {
         DuckDBDataProtocol.HTTP,
         false
       );
+      await dbInstance.registerFileURL("search.parquet", searchUrl, DuckDBDataProtocol.HTTP, false);
       await dbInstance.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
       await dbInstance.registerFileURL(
         "aggregations.parquet",

@@ -169,8 +169,8 @@
       }
 
       const datasets = await queryData(`
-        SELECT name, title, notes, organization_name, organization_title
-        FROM read_parquet('datasets.parquet')
+        SELECT name, title, notes, organization_title
+        FROM read_parquet('search.parquet')
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
@@ -197,7 +197,7 @@
 
       const datasetsCount = await queryData(`
         SELECT count(*) AS count
-        FROM read_parquet('datasets.parquet')
+        FROM read_parquet('search.parquet')
       `);
 
       // Check if this request is still current
@@ -214,7 +214,7 @@
 
       const datasets = await queryData(`
         SELECT *
-        FROM read_parquet('datasets.parquet')
+        FROM read_parquet('search.parquet')
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
@@ -328,10 +328,17 @@
         return;
       }
 
+      // Use datasets.parquet for bureau and publisher (need bureau_name, publisher fields)
+      // Use search.parquet for organization and tag (only need basic fields)
+      const parquetFile =
+        entity.type === "bureau" || entity.type === "publisher"
+          ? "datasets.parquet"
+          : "search.parquet";
+
       const datasets = await queryData(
         `
         SELECT *
-        FROM read_parquet('datasets.parquet')
+        FROM read_parquet('${parquetFile}')
         WHERE ${entity.identifier} = $1
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
@@ -401,9 +408,8 @@
           datasets.name,
           title,
           notes,
-          organization_name,
           organization_title
-        FROM read_parquet('datasets.parquet') datasets
+        FROM read_parquet('search.parquet') datasets
         INNER JOIN read_parquet('tags.parquet') tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
@@ -436,7 +442,7 @@
       const countResult = await queryData(
         `
           SELECT count(*) AS count
-          FROM read_parquet('datasets.parquet')
+          FROM read_parquet('search.parquet')
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
@@ -461,7 +467,7 @@
       const datasets = await queryData(
         `
           SELECT *
-          FROM read_parquet('datasets.parquet')
+          FROM read_parquet('search.parquet')
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR

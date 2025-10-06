@@ -21,7 +21,7 @@
   <p>
     {sanitizeHtml(dataset.notes.slice(0, 320), {
       allowedTags: [],
-    })}{#if dataset.notes.length > 320}&nbsp;…{/if}
+    })}{#if dataset.notes.length >= 320}&nbsp;…{/if}
   </p>
 </li>
 
