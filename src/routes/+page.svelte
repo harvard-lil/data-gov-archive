@@ -147,13 +147,17 @@
       return;
     }
 
+    // Store previous values for comparison
+    const previousType = data.currentType;
+    const previousId = data.currentId;
+
     // Update state immediately for non-search views
     data.currentType = currentType;
     data.currentId = currentId;
     data.pageNumber = currentPage;
 
     // Only show loading on initial load or when changing view type/ID
-    const isViewChange = data.currentType !== currentType || data.currentId !== currentId;
+    const isViewChange = previousType !== currentType || previousId !== currentId;
     if (data.isInitialLoad || isViewChange) {
       data.isLoading = true;
       // Clear previous data when changing views to prevent showing wrong content
@@ -425,6 +429,7 @@
       data.entity = entity;
       data.identifier = tag;
       data.label = tag;
+      data.isLoading = true;
 
       const offset = (page - 1) * PAGE_SIZE;
 
@@ -479,6 +484,7 @@
     } catch (error) {
       console.error("Error loading tag datasets:", error);
       data.isLoading = false;
+      data.isInitialLoad = false;
     }
   }
 
