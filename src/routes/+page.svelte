@@ -13,10 +13,51 @@
   import { error } from "@sveltejs/kit";
 
   // Reactive query parameters - only available in browser
-  const type = $derived(browser ? $page.url.searchParams.get("type") : null);
-  const id = $derived(browser ? $page.url.searchParams.get("id") : null);
-  const pageNumber = $derived(browser ? parseInt($page.url.searchParams.get("page") || "1") : 1);
-  const searchQuery = $derived(browser ? $page.url.searchParams.get("q") : null);
+  let resource = $state(null);
+  let pageNumber = $state(1);
+  let searchQuery = $state(null);
+
+  $effect(() => {
+    if (browser) {
+      resource = $page.url.searchParams.get("resource");
+      pageNumber = parseInt($page.url.searchParams.get("page") || "1");
+      searchQuery = $page.url.searchParams.get("q");
+    }
+  });
+
+  // Parse resource parameter to extract type and id
+  let type = $state(null);
+  let id = $state(null);
+
+  $effect(() => {
+    if (!resource) {
+      type = null;
+      id = null;
+      return;
+    }
+
+    const parts = resource.split("/");
+    if (parts.length < 1) {
+      type = null;
+      id = null;
+      return;
+    }
+
+    const resourceType = parts[0];
+    const resourceId = parts.length > 1 ? parts.slice(1).join("/") : null;
+
+    // Map resource paths to internal types
+    const typeMap = {
+      datasets: "dataset",
+      organizations: "organization",
+      bureaus: "bureau",
+      publishers: "publisher",
+      tags: "tag",
+    };
+
+    type = typeMap[resourceType] || null;
+    id = resourceId;
+  });
 
   // Handle 404 for tag list (not supported)
   $effect(() => {
@@ -46,6 +87,13 @@
       return "entity-detail";
     if (currentType === "tag" && currentId) return "entity-detail";
     return "home";
+  });
+
+  // Debug: Log the current state
+  $effect(() => {
+    if (browser) {
+      console.log("Debug state:", { resource, type, id, view: view() });
+    }
   });
 
   let data = $state({
@@ -501,8 +549,32 @@
     if (!browser) return "#";
     const url = new URL($page.url);
     url.search = "";
+
+    // Handle resource parameter
+    if (params.type && params.id) {
+      const resourceMap = {
+        dataset: "datasets",
+        organization: "organizations",
+        bureau: "bureaus",
+        publisher: "publishers",
+        tag: "tags",
+      };
+      const resourcePath = `${resourceMap[params.type]}/${params.id}`;
+      url.searchParams.set("resource", resourcePath);
+    } else if (params.type && !params.id) {
+      const resourceMap = {
+        dataset: "datasets",
+        organization: "organizations",
+        bureau: "bureaus",
+        publisher: "publishers",
+        tag: "tags",
+      };
+      url.searchParams.set("resource", resourceMap[params.type]);
+    }
+
+    // Handle other parameters
     Object.entries(params).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "") {
+      if (key !== "type" && key !== "id" && value !== null && value !== undefined && value !== "") {
         url.searchParams.set(key, value.toString());
       }
     });
@@ -549,11 +621,11 @@
         : "s"})
     </h2>
 
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
 
     <DatasetList datasets={data.datasets} />
 
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
   {:else if searchQuery}
     <h2><b>Search:</b> {searchQuery} (0 results)</h2>
   {:else}
@@ -567,11 +639,11 @@
       <LoadingSpinner />
     </div>
   {:else if data.totalItems > 0}
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
 
     <DatasetList datasets={data.datasets} />
 
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
   {:else}
     <p>No datasets found</p>
   {/if}
@@ -581,11 +653,13 @@
       <LoadingSpinner />
     </div>
   {:else if data.totalItems > 0}
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type="dataset" />
+    <h2><b>Datasets</b></h2>
+
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
 
     <DatasetList datasets={data.datasets} />
 
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type="dataset" />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
   {:else}
     <div class="loading-container">
       <LoadingSpinner />
@@ -612,11 +686,11 @@
     <h2><b>{data.entity.title}s</b></h2>
 
     {#if data.totalItems > 0}
-      <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type={data.entity.type} />
+      <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
 
       <EntityList entity={data.entity} instances={data.entities} />
 
-      <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} type={data.entity.type} />
+      <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
     {:else}
       <p>No {data.entity.title.toLowerCase()}s found.</p>
     {/if}
@@ -652,21 +726,11 @@
     </h2>
 
     {#if data.totalItems > 0}
-      <PageNav
-        pageNumber={data.pageNumber}
-        totalItems={data.totalItems}
-        type={data.entity.type}
-        id={data.identifier}
-      />
+      <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
 
       <DatasetList datasets={data.datasets} showOrganization={data.entity?.showOrganization} />
 
-      <PageNav
-        pageNumber={data.pageNumber}
-        totalItems={data.totalItems}
-        type={data.entity.type}
-        id={data.identifier}
-      />
+      <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
     {:else if data.entity.type === "tag"}
       <p>No datasets found for this tag.</p>
     {:else}

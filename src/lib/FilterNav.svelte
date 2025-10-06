@@ -3,15 +3,27 @@
   let { organizations, publishers, bureaus, tags } = $props();
 
   function buildEntityListUrl(entityType) {
-    return `${base}/?type=${entityType}`;
+    const resourceMap = {
+      organization: "organizations",
+      bureau: "bureaus",
+      publisher: "publishers",
+      tag: "tags",
+    };
+    return `${base}/?resource=${resourceMap[entityType]}`;
   }
 
   function buildEntityDetailUrl(entityType, id) {
-    return `${base}/?type=${entityType}&id=${encodeURIComponent(id)}`;
+    const resourceMap = {
+      organization: "organizations",
+      bureau: "bureaus",
+      publisher: "publishers",
+      tag: "tags",
+    };
+    return `${base}/?resource=${resourceMap[entityType]}/${encodeURIComponent(id)}`;
   }
 
   function buildTagUrl(tag) {
-    return `${base}/?type=tag&id=${encodeURIComponent(tag)}`;
+    return `${base}/?resource=tags/${encodeURIComponent(tag)}`;
   }
 </script>
 

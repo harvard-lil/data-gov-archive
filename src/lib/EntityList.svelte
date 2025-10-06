@@ -9,7 +9,7 @@
   {#each instances as instance}
     <li>
       <h2>
-        <a href={`${base}/?type=${entity.type}&id=${encodeURIComponent(instance.identifier)}`}>
+        <a href={`${base}/?resource=${entity.route}/${encodeURIComponent(instance.identifier)}`}>
           {instance.label ? instance.label : instance.identifier}
         </a>
       </h2>

@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import { PAGE_SIZE } from "$lib/config.js";
 
-  let { pageNumber, totalItems, type = null, id = null, pageSize = PAGE_SIZE } = $props();
+  let { pageNumber, totalItems, resource = null, pageSize = PAGE_SIZE } = $props();
 
   let offset = $derived((pageNumber - 1) * pageSize);
   let totalPages = $derived(Math.ceil(totalItems / pageSize));
@@ -22,12 +22,9 @@
     // Set page parameter
     url.searchParams.set("page", page.toString());
 
-    // Add type and id if provided
-    if (type) {
-      url.searchParams.set("type", type);
-    }
-    if (id) {
-      url.searchParams.set("id", id);
+    // Add resource parameter if provided
+    if (resource) {
+      url.searchParams.set("resource", resource);
     }
 
     // Preserve search query if present

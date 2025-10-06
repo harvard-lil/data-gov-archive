@@ -8,13 +8,13 @@
   import DatasetLinks from "./DatasetLinks.svelte";
 
   let { dataset } = $props();
-  let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
+  let notes = $derived(sanitizeHtml(dataset.notes, { allowedTags: [] }));
 </script>
 
 <article>
   <h2>{dataset.title}</h2>
   <h3>
-    <a href={`${base}/?type=organization&id=${encodeURIComponent(dataset.organization_title)}`}
+    <a href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
       >{dataset.organization_title}</a
     >
   </h3>

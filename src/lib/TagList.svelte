@@ -6,7 +6,7 @@
 <ul>
   {#each tags as tag}
     <li>
-      <a href={`${base}/?type=tag&id=${encodeURIComponent(tag)}`} title={tag}>
+      <a href={`${base}/?resource=tags/${encodeURIComponent(tag)}`} title={tag}>
         {tag}
       </a>
     </li>

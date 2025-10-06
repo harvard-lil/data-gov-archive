@@ -9,11 +9,11 @@
 
 <li>
   <h2>
-    <a href={`${base}/?type=dataset&id=${encodeURIComponent(dataset.name)}`}>{dataset.title}</a>
+    <a href={`${base}/?resource=datasets/${encodeURIComponent(dataset.name)}`}>{dataset.title}</a>
   </h2>
   {#if showOrganization === true}
     <h3>
-      <a href={`${base}/?type=organization&id=${encodeURIComponent(dataset.organization_title)}`}
+      <a href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
         >{dataset.organization_title}</a
       >
     </h3>
