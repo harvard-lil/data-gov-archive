@@ -2,6 +2,7 @@
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
 
+  import { DATA_URL } from "$lib/config.js";
   import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/FilterNav.svelte";
   import Header from "$lib/Header.svelte";
@@ -18,28 +19,28 @@
 
     const organizations = await queryData(`
       SELECT identifier AS organization_title, count
-      FROM read_parquet('aggregations.parquet')
+      FROM '${DATA_URL}/aggregations.parquet'
       WHERE aggregation = 'organizations'
       ORDER BY count DESC
       LIMIT 10;
     `);
     const publishers = await queryData(`
       SELECT identifier AS publisher, count
-      FROM read_parquet('aggregations.parquet')
+      FROM '${DATA_URL}/aggregations.parquet'
       WHERE aggregation = 'publishers'
       ORDER BY count DESC
       LIMIT 10;
     `);
     const bureaus = await queryData(`
       SELECT identifier AS bureau_name, count
-      FROM read_parquet('aggregations.parquet')
+      FROM '${DATA_URL}/aggregations.parquet'
       WHERE aggregation = 'bureaus'
       ORDER BY count DESC
       LIMIT 10;
     `);
     const tags = await queryData(`
       SELECT identifier AS tag, count
-      FROM read_parquet('aggregations.parquet')
+      FROM '${DATA_URL}/aggregations.parquet'
       WHERE aggregation = 'tags'
       ORDER BY count DESC
       LIMIT 10;

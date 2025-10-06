@@ -7,7 +7,7 @@
 export const PAGE_SIZE = 25;
 
 // Database settings
-// Add other database-related config here if needed
+export const DATA_URL = "https://data.source.coop/harvard-lil/staging-gov-data/data";
 
 // UI settings
 // Add other UI-related config here if needed

@@ -6,14 +6,6 @@ import eh_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url"
 import { browser } from "$app/environment";
 import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 
-// Use remote URLs for all environments
-const baseUrl = "https://data.source.coop/harvard-lil/staging-gov-data/data";
-const datasetsUrl = `${baseUrl}/datasets.parquet`;
-const datasetsPage1Url = `${baseUrl}/datasets_page_1.parquet`;
-const searchUrl = `${baseUrl}/search.parquet`;
-const tagsUrl = `${baseUrl}/tags.parquet`;
-const aggregationsUrl = `${baseUrl}/aggregations.parquet`;
-
 // Connection pooling state
 let db = null;
 let connection = null;
@@ -75,35 +67,9 @@ const initializeDuckDB = async () => {
 
     await dbInstance.instantiate(bundle.mainModule, bundle.pthreadWorker);
 
-    // Wait for the database to be fully instantiated before registering files
+    // Wait for the database to be fully instantiated
     if (!dbInstance) {
       throw new Error("Database instance is null after instantiation");
-    }
-
-    // Register files - check if db has the method before calling
-    if (typeof dbInstance.registerFileURL === "function") {
-      await dbInstance.registerFileURL(
-        "datasets.parquet",
-        datasetsUrl,
-        DuckDBDataProtocol.HTTP,
-        false
-      );
-      await dbInstance.registerFileURL(
-        "datasets_page_1.parquet",
-        datasetsPage1Url,
-        DuckDBDataProtocol.HTTP,
-        false
-      );
-      await dbInstance.registerFileURL("search.parquet", searchUrl, DuckDBDataProtocol.HTTP, false);
-      await dbInstance.registerFileURL("tags.parquet", tagsUrl, DuckDBDataProtocol.HTTP, false);
-      await dbInstance.registerFileURL(
-        "aggregations.parquet",
-        aggregationsUrl,
-        DuckDBDataProtocol.HTTP,
-        false
-      );
-    } else {
-      throw new Error("Database instance does not have registerFileURL method");
     }
 
     // Set the global db variable

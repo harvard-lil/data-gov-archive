@@ -9,7 +9,7 @@
   import { browser } from "$app/environment";
   import { page } from "$app/stores";
   import { entities } from "$lib/entities.js";
-  import { PAGE_SIZE } from "$lib/config.js";
+  import { DATA_URL, PAGE_SIZE } from "$lib/config.js";
   import { error } from "@sveltejs/kit";
 
   // Reactive query parameters - only available in browser
@@ -211,7 +211,7 @@
 
       const datasetsCount = await queryData(`
         SELECT count
-        FROM read_parquet('aggregations.parquet')
+        FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'datasets'
       `);
 
@@ -222,7 +222,7 @@
 
       const datasets = await queryData(`
         SELECT name, title, notes, organization_title
-        FROM read_parquet('search.parquet')
+        FROM '${DATA_URL}/search.parquet'
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
@@ -249,7 +249,7 @@
 
       const datasetsCount = await queryData(`
         SELECT count(*) AS count
-        FROM read_parquet('search.parquet')
+        FROM '${DATA_URL}/search.parquet'
       `);
 
       // Check if this request is still current
@@ -266,7 +266,7 @@
 
       const datasets = await queryData(`
         SELECT *
-        FROM read_parquet('search.parquet')
+        FROM '${DATA_URL}/search.parquet'
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
@@ -291,7 +291,7 @@
       const datasets = await queryData(
         `
         SELECT *
-        FROM read_parquet('datasets.parquet')
+        FROM '${DATA_URL}/datasets.parquet'
         WHERE name = $1
         LIMIT 1
       `,
@@ -319,7 +319,7 @@
       // Get total count first
       const totalCount = await queryData(`
         SELECT count(*) AS count
-        FROM read_parquet('aggregations.parquet')
+        FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = '${entity.route}'
       `);
 
@@ -332,7 +332,7 @@
         SELECT
           identifier,
           sum(count) AS count
-        FROM read_parquet('aggregations.parquet')
+        FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = '${entity.route}'
         GROUP BY identifier
         ORDER BY identifier
@@ -370,7 +370,7 @@
       const totalCount = await queryData(
         `
         SELECT count
-        FROM read_parquet('aggregations.parquet')
+        FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = '${entity.route}' AND identifier = '${identifier}'
       `
       );
@@ -390,7 +390,7 @@
       const datasets = await queryData(
         `
         SELECT *
-        FROM read_parquet('${parquetFile}')
+        FROM '${DATA_URL}/${parquetFile}'
         WHERE ${entity.identifier} = $1
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
@@ -437,7 +437,7 @@
       const datasetsCount = await queryData(
         `
         SELECT count
-        FROM read_parquet('aggregations.parquet')
+        FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'tags' AND identifier = $1
       `,
         [tag]
@@ -462,8 +462,9 @@
           title,
           notes,
           organization_title
-        FROM read_parquet('search.parquet') datasets
-        INNER JOIN read_parquet('tags.parquet') tags ON datasets.name = tags.name
+        FROM '${DATA_URL}/search.parquet' datasets
+        INNER JOIN
+          '${DATA_URL}/tags.parquet' tags ON datasets.name = tags.name
         WHERE tags.tag = $1
         ORDER BY datasets.name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
@@ -496,7 +497,7 @@
       const countResult = await queryData(
         `
           SELECT count(*) AS count
-          FROM read_parquet('search.parquet')
+          FROM '${DATA_URL}/search.parquet'
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
@@ -521,7 +522,7 @@
       const datasets = await queryData(
         `
           SELECT *
-          FROM read_parquet('search.parquet')
+          FROM '${DATA_URL}/search.parquet'
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
