@@ -4,23 +4,23 @@
 
 <nav>
   <ul>
-    <li id="collection-archive">
+    <li class="text-sm" id="collection-archive">
       <a
         href="https://source.coop/harvard-lil/gov-data/collections/data_gov/{dataset.name}"
         target="_blank"
       >
-        Collection Archive
+        Dataset & Metadata (<code class="text-xs">.zip</code>)
       </a>
     </li>
-    <li id="metadata-archive">
+    <li class="text-sm" id="metadata-archive">
       <a
         href="https://source.coop/harvard-lil/gov-data/metadata/data_gov/{dataset.name}"
         target="_blank"
       >
-        Metadata Archive
+        Metadata Only (<code class="text-xs">.json</code>)
       </a>
     </li>
-    <li id="data-gov-source">
+    <li class="text-sm" id="data-gov-source">
       <a href="https://catalog.data.gov/dataset/{dataset.name}" target="_blank">
         Data.gov Source
       </a>
@@ -39,8 +39,6 @@
       display: inline-block;
       margin: 0.125em;
       padding: 0.75em 1em;
-      background-color: #ccc;
-      color: #333;
       border-radius: 0.25em;
       border: 1px dotted #222;
 
