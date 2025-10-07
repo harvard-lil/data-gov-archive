@@ -417,7 +417,9 @@
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
-            lower(notes) LIKE lower($1)
+            lower(notes) LIKE lower($1) OR
+            lower(publisher) LIKE lower($1) OR
+            lower(bureau_name) LIKE lower($1)
         `,
         [`%${query.trim()}%`]
       );
@@ -442,7 +444,9 @@
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
-            lower(notes) LIKE lower($1)
+            lower(notes) LIKE lower($1) OR
+            lower(publisher) LIKE lower($1) OR
+            lower(bureau_name) LIKE lower($1)
           ORDER BY name
           LIMIT ${PAGE_SIZE} OFFSET ${offset}
         `,

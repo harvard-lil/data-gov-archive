@@ -50,7 +50,7 @@
       type="text"
       bind:value={searchQuery}
       onkeydown={handleKeyDown}
-      placeholder="Search datasets by title, organization, or notes..."
+      placeholder="Search by dataset title, organization, publisher, bureau, description…"
     />
     <button
       onclick={handleSearch}
