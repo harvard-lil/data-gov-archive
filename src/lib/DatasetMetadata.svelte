@@ -7,8 +7,8 @@
 </script>
 
 <dl>
-  <dt>Metadata Modified:</dt>
-  <dd><Timestamp timestamp={dataset.metadata_modified} /></dd>
+  <!-- <dt>Metadata Modified:</dt>
+  <dd><Timestamp timestamp={dataset.metadata_modified} /></dd> -->
   {#if dataset.publisher}
     <dt>Publisher:</dt>
     <dd>
