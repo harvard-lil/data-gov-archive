@@ -70,14 +70,10 @@
 <Header />
 
 {#await topNFilters}
-  <div class="loading">
-    <LoadingSpinner />
-  </div>
+  <LoadingSpinner />
 {:then topNFilters}
   {#if $mainContentLoading}
-    <div class="loading">
-      <LoadingSpinner />
-    </div>
+    <LoadingSpinner />
   {/if}
 
   <FilterNav
@@ -116,19 +112,5 @@
 
   main {
     grid-area: c;
-  }
-
-  .loading {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(221, 221, 221, 0.8);
-    backdrop-filter: blur(2px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
   }
 </style>
