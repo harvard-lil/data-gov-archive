@@ -75,7 +75,7 @@
       <LoadingSpinner />
     {/if}
 
-    <main class="mt-12 flex flex-col gap-8 md:flex-row md:gap-12">
+    <main class="mt-8 flex flex-col gap-8 md:flex-row md:gap-12">
       <section
         class="md:sticky md:top-2 md:max-h-screen md:flex-2 md:self-start md:overflow-y-auto"
       >

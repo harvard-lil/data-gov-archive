@@ -3,7 +3,7 @@
   import SearchBox from "./SearchBox.svelte";
 </script>
 
-<header class="mb-6">
+<header class="mb-8">
   <h1 class="mb-4 text-5xl font-thin">
     <a class="text-inherit no-underline" href={`${base}/`}> Data.gov Archive Search </a>
   </h1>
