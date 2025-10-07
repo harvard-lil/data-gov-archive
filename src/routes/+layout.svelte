@@ -1,7 +1,5 @@
 <script>
   import "../app.css";
-  import "@fontsource-variable/public-sans";
-  import "@fontsource-variable/public-sans/wght-italic";
   import { DATA_URL } from "$lib/config.js";
   import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/components/FilterNav.svelte";
@@ -90,9 +88,6 @@
 
 <style lang="scss">
   :global(body) {
-    background-color: #ddd;
-    color: #222;
-
     margin: 0 auto;
     padding: 0 1.5em 1.5em;
     max-width: 54em;

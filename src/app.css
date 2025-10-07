@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+@import "@fontsource-variable/public-sans";
+@import "@fontsource-variable/public-sans/wght-italic";
+@import "@fontsource/material-icons";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+  --font-sans: "Public Sans Variable", sans-serif;
+  --font-material-icons: "Material Icons";
+}
+
+@layer components {
+  body {
+    /* Colors */
+    @apply bg-slate-100 text-slate-800;
+    @apply dark:bg-slate-800 dark:text-slate-100;
+
+    /* Typography */
+    @apply font-normal font-sans;
+    @apply text-base leading-normal;
+  }
+
+  /* Links */
+  a {
+    @apply text-blue-700 underline;
+    @apply dark:text-blue-300;
+  }
+}
