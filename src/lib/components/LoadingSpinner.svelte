@@ -25,9 +25,11 @@
   });
 </script>
 
-<div class="loading">
+<div
+  class="fixed top-0 left-0 w-[100vw] h-[100vh] bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-2xs flex justify-center items-center z-50"
+>
   {#if prefersReducedMotion}
-    <div class="loading-text">Loading…</div>
+    <div class="font-extralight text-4xl">Loading…</div>
   {:else}
     <svg width="72" height="72" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
       ><style>
@@ -41,32 +43,10 @@
           }
         }
       </style><path
-        fill="#222"
+        fill="currentColor"
         d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"
         class="spinner_6kVp"
       /></svg
     >
   {/if}
 </div>
-
-<style>
-  .loading {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(221, 221, 221, 0.8);
-    backdrop-filter: blur(2px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .loading-text {
-    color: #222;
-    font-size: 2em;
-    font-weight: 200;
-  }
-</style>
