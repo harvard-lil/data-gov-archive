@@ -220,9 +220,10 @@
         return;
       }
 
+      const datasetsFile = offset < 100 ? "datasets_first_100.parquet" : "datasets.parquet";
       const datasets = await queryData(`
         SELECT name, title, notes, organization_title
-        FROM '${DATA_URL}/datasets.parquet'
+        FROM '${DATA_URL}/${datasetsFile}'
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
