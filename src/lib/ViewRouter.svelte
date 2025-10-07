@@ -41,7 +41,7 @@
     const typeMap = {
       datasets: "dataset",
       organizations: "organization",
-      bureau: "bureau",
+      bureaus: "bureau",
       publishers: "publisher",
       tags: "tag",
     };
