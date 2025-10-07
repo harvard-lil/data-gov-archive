@@ -222,7 +222,7 @@
 
       const datasets = await queryData(`
         SELECT name, title, notes, organization_title
-        FROM '${DATA_URL}/search.parquet'
+        FROM '${DATA_URL}/datasets.parquet'
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
@@ -249,7 +249,7 @@
 
       const datasetsCount = await queryData(`
         SELECT count(*) AS count
-        FROM '${DATA_URL}/search.parquet'
+        FROM '${DATA_URL}/datasets.parquet'
       `);
 
       // Check if this request is still current
@@ -266,7 +266,7 @@
 
       const datasets = await queryData(`
         SELECT *
-        FROM '${DATA_URL}/search.parquet'
+        FROM '${DATA_URL}/datasets.parquet'
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
       `);
@@ -380,17 +380,10 @@
         return;
       }
 
-      // Use datasets.parquet for bureau and publisher (need bureau_name, publisher fields)
-      // Use search.parquet for organization and tag (only need basic fields)
-      const parquetFile =
-        entity.type === "bureau" || entity.type === "publisher"
-          ? "datasets.parquet"
-          : "search.parquet";
-
       const datasets = await queryData(
         `
         SELECT *
-        FROM '${DATA_URL}/${parquetFile}'
+        FROM '${DATA_URL}/datasets.parquet'
         WHERE ${entity.identifier} = $1
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
@@ -462,7 +455,7 @@
           title,
           notes,
           organization_title
-        FROM '${DATA_URL}/search.parquet' datasets
+        FROM '${DATA_URL}/datasets.parquet' datasets
         INNER JOIN
           '${DATA_URL}/tags.parquet' tags ON datasets.name = tags.name
         WHERE tags.tag = $1
@@ -497,7 +490,7 @@
       const countResult = await queryData(
         `
           SELECT count(*) AS count
-          FROM '${DATA_URL}/search.parquet'
+          FROM '${DATA_URL}/datasets.parquet'
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
@@ -522,7 +515,7 @@
       const datasets = await queryData(
         `
           SELECT *
-          FROM '${DATA_URL}/search.parquet'
+          FROM '${DATA_URL}/datasets.parquet'
           WHERE
             lower(title) LIKE lower($1) OR
             lower(organization_title) LIKE lower($1) OR
