@@ -290,9 +290,21 @@
     try {
       const datasets = await queryData(
         `
-        SELECT *
+        SELECT
+          datasets.name,
+          title,
+          notes,
+          metadata_modified,
+          organization_title,
+          bureau_name,
+          publisher,
+          (
+            SELECT array_agg(tag)
+            FROM '${DATA_URL}/tags.parquet' AS tags
+            WHERE tags.name = datasets.name
+          ) AS tags
         FROM '${DATA_URL}/datasets.parquet'
-        WHERE name = $1
+        WHERE datasets.name = $1
         LIMIT 1
       `,
         [datasetName]
