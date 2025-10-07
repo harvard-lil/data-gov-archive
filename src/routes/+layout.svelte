@@ -1,7 +1,7 @@
 <script>
+  import "../app.css";
   import "@fontsource-variable/public-sans";
   import "@fontsource-variable/public-sans/wght-italic";
-
   import { DATA_URL } from "$lib/config.js";
   import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/components/FilterNav.svelte";
@@ -15,43 +15,50 @@
   export const loadData = async () => {
     // Only run queries in the browser
     if (!browser) {
-      return { organizations: [], publishers: [], bureaus: [], tags: [] };
+      return {
+        organizations: [],
+        publishers: [],
+        bureaus: [],
+        tags: [],
+      };
     }
 
     const organizations = await queryData(`
-      SELECT identifier AS organization_title, count
-      FROM '${DATA_URL}/aggregations.parquet'
-      WHERE aggregation = 'organizations'
-      ORDER BY count DESC
-      LIMIT 10;
-    `);
+        SELECT identifier AS organization_title, count
+        FROM '${DATA_URL}/aggregations.parquet'
+        WHERE aggregation = 'organizations'
+        ORDER BY count DESC
+        LIMIT 10;
+      `);
+
     const publishers = await queryData(`
-      SELECT identifier AS publisher, count
-      FROM '${DATA_URL}/aggregations.parquet'
-      WHERE aggregation = 'publishers'
-      ORDER BY count DESC
-      LIMIT 10;
-    `);
+        SELECT identifier AS publisher, count
+        FROM '${DATA_URL}/aggregations.parquet'
+        WHERE aggregation = 'publishers'
+        ORDER BY count DESC
+        LIMIT 10;
+      `);
+
     const bureaus = await queryData(`
-      SELECT identifier AS bureau_name, count
-      FROM '${DATA_URL}/aggregations.parquet'
-      WHERE aggregation = 'bureaus'
-      ORDER BY count DESC
-      LIMIT 10;
-    `);
+        SELECT identifier AS bureau_name, count
+        FROM '${DATA_URL}/aggregations.parquet'
+        WHERE aggregation = 'bureaus'
+        ORDER BY count DESC
+        LIMIT 10;
+      `);
+
     const tags = await queryData(`
-      SELECT identifier AS tag, count
-      FROM '${DATA_URL}/aggregations.parquet'
-      WHERE aggregation = 'tags'
-      ORDER BY count DESC
-      LIMIT 10;
-    `);
+        SELECT identifier AS tag, count
+        FROM '${DATA_URL}/aggregations.parquet'
+        WHERE aggregation = 'tags'
+        ORDER BY count DESC
+        LIMIT 10;
+      `);
 
     return { organizations, publishers, bureaus, tags };
   };
 
   let topNFilters = loadData();
-
   const { children } = $props();
 
   // Cleanup database connections when component is destroyed
