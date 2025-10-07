@@ -744,8 +744,6 @@
       <DatasetList datasets={data.datasets} showOrganization={data.entity?.showOrganization} />
 
       <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
-    {:else if data.entity.type === "tag"}
-      <p>No datasets found for this tag.</p>
     {:else}
       <p>No datasets found.</p>
     {/if}

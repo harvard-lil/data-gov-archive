@@ -29,6 +29,6 @@ export const entities = [
     identifier: "tag",
     label: "tag",
     title: "Tag",
-    showOrganization: false,
+    showOrganization: true,
   },
 ];
