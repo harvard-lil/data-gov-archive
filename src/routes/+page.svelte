@@ -589,10 +589,10 @@
   }
 
   // Dynamic title
-  let pageTitle = $state("Archive of Data.gov");
+  let pageTitle = $state("Data.gov Archive");
 
   $effect(() => {
-    let title = "Archive of Data.gov";
+    let title = "Data.gov Archive";
     const currentView = view();
     if (currentView === "search" && data.label) {
       title += `: ${data.label}, page ${data.pageNumber}`;

@@ -4,7 +4,7 @@
 </script>
 
 <header>
-  <h1><a href={`${base}/`}>Archive of Data.gov</a></h1>
+  <h1><a href={`${base}/`}>Data.gov Archive</a></h1>
   <p>
     This is an access point to the Harvard University <a href="https://lil.law.harvard.edu">
       Library Innovation Lab
