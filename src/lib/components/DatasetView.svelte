@@ -12,16 +12,18 @@
 </script>
 
 <article>
-  <h2>{dataset.title}</h2>
-  <h3>
-    <a href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
+  <h2 class="font-bold text-2xl mb-2">{dataset.title}</h2>
+  <h3 class="font-normal text-lg mb-4">
+    <a
+      class="text-inherit no-underline hover:underline"
+      href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
       >{dataset.organization_title}</a
     >
   </h3>
 
   <DatasetLinks {dataset} />
 
-  <p>
+  <p class="italic my-4">
     {#if notes}
       {#each notes.split(/\r\n|\r|\n/) as line}
         {line}<br />
@@ -31,25 +33,3 @@
 
   <DatasetMetadata {dataset} />
 </article>
-
-<style lang="scss">
-  h2 {
-    font-weight: 700;
-  }
-
-  h3 {
-    font-weight: inherit;
-  }
-
-  article > p {
-    font-style: italic;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-</style>

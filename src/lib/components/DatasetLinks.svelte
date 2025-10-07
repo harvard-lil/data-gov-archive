@@ -2,70 +2,28 @@
   let { dataset } = $props();
 </script>
 
-<nav>
-  <ul>
-    <li class="text-sm" id="collection-archive">
-      <a
-        href="https://source.coop/harvard-lil/gov-data/collections/data_gov/{dataset.name}"
-        target="_blank"
-      >
-        Dataset & Metadata (<code class="text-xs">.zip</code>)
-      </a>
-    </li>
-    <li class="text-sm" id="metadata-archive">
-      <a
-        href="https://source.coop/harvard-lil/gov-data/metadata/data_gov/{dataset.name}"
-        target="_blank"
-      >
-        Metadata Only (<code class="text-xs">.json</code>)
-      </a>
-    </li>
-    <li class="text-sm" id="data-gov-source">
-      <a href="https://catalog.data.gov/dataset/{dataset.name}" target="_blank">
-        Data.gov Source
-      </a>
-    </li>
-  </ul>
-</nav>
+{#snippet link(icon, href, label)}
+  <li>
+    <a
+      class="block w-full text-inherit text-base no-underline border border-slate-800 rounded-md py-3 px-4 before:content-['{icon}'] before:font-material-icons before:relative before:top-0.5 before:right-1.5 before:mr-0.5 mb-1.5 text-center"
+      {href}
+      target="_blank"
+    >
+      {label}
+    </a>
+  </li>
+{/snippet}
 
-<style lang="scss">
-  ul {
-    padding: 0;
-    margin: 1em 0 1.25em;
-    list-style: none;
-    list-style-position: unset;
-
-    li {
-      display: inline-block;
-      margin: 0.125em;
-      padding: 0.75em 1em;
-      border-radius: 0.25em;
-      border: 1px dotted #222;
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    }
-
-    li:before {
-      position: relative;
-      top: 0.15em;
-      right: 0.25em;
-      font-family: "Material Icons";
-      margin-right: 0.2em;
-    }
-    li:nth-child(1):before {
-      content: "\eb2c";
-    }
-    li:nth-child(2):before {
-      content: "\ead3";
-    }
-    li:nth-child(3):before {
-      content: "\f8ef";
-    }
-  }
-</style>
+<ul class="my-4">
+  {@render link(
+    "\\eb2c",
+    `https://source.coop/harvard-lil/gov-data/collections/data_gov/${dataset.name}`,
+    "Dataset & Metadata (ZIP)"
+  )}
+  {@render link(
+    "\\ead3",
+    `https://source.coop/harvard-lil/gov-data/metadata/data_gov/${dataset.name}`,
+    "Metadata Only (JSON)"
+  )}
+  {@render link("\\f8ef", `https://catalog.data.gov/dataset/${dataset.name}`, "Data.gov Source")}
+</ul>
