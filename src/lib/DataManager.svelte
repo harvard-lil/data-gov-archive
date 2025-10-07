@@ -344,12 +344,6 @@
         return;
       }
 
-      // Set up entity data immediately to show proper loading state
-      data.entity = entity;
-      data.identifier = tag;
-      data.label = tag;
-      data.isLoading = true;
-
       const offset = (page - 1) * PAGE_SIZE;
 
       // Use aggregations.parquet for count (much faster than JOIN)
@@ -399,6 +393,9 @@
       data.datasets = datasets;
       data.totalItems = Number(datasetsCount[0]?.count || 0);
       data.pageNumber = page;
+      data.identifier = tag;
+      data.label = tag;
+      data.entity = entity;
       data.isLoading = false;
       data.isInitialLoad = false;
     } catch (error) {

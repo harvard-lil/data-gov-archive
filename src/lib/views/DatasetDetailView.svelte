@@ -4,6 +4,8 @@
   export let data;
 </script>
 
-{#if data.dataset}
+{#if data.isLoading}
+  <p>Loading dataset…</p>
+{:else if data.dataset}
   <DatasetView dataset={data.dataset} />
 {/if}

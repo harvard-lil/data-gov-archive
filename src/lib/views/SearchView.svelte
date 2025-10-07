@@ -7,7 +7,9 @@
   export let searchQuery;
 </script>
 
-{#if data.totalItems > 0}
+{#if data.isLoading}
+  <p>Loading datasets…</p>
+{:else if data.totalItems > 0}
   <h2>
     <b>Search:</b>
     {data.identifier} ({data.totalItems.toLocaleString("en-US")} result{data.totalItems === 1

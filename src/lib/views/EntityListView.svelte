@@ -9,7 +9,9 @@
 {#if data.entity}
   <h2><b>{data.entity.title}s</b></h2>
 
-  {#if data.totalItems > 0}
+  {#if data.isLoading}
+    <p>Loading {data.entity.title.toLowerCase()}s…</p>
+  {:else if data.totalItems > 0}
     <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
 
     <EntityList entity={data.entity} instances={data.entities} />

@@ -5,7 +5,9 @@
   export let data;
 </script>
 
-{#if data.totalItems > 0}
+{#if data.isLoading}
+  <p>Loading datasets…</p>
+{:else if data.totalItems > 0}
   <h2><b>Datasets</b></h2>
 
   <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
