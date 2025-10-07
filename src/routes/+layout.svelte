@@ -4,10 +4,10 @@
 
   import { DATA_URL } from "$lib/config.js";
   import { queryData, cleanup } from "$lib/db.js";
-  import FilterNav from "$lib/FilterNav.svelte";
-  import Header from "$lib/Header.svelte";
-  import SearchBox from "$lib/SearchBox.svelte";
-  import LoadingSpinner from "$lib/LoadingSpinner.svelte";
+  import FilterNav from "$lib/components/FilterNav.svelte";
+  import Header from "$lib/components/Header.svelte";
+  import SearchBox from "$lib/components/SearchBox.svelte";
+  import LoadingSpinner from "$lib/components/LoadingSpinner.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
 
