@@ -1,16 +1,11 @@
 <script>
   import DatasetList from "$lib/components/DatasetList.svelte";
   import PageNav from "$lib/components/PageNav.svelte";
-  import LoadingSpinner from "$lib/components/LoadingSpinner.svelte";
 
   export let data;
 </script>
 
-{#if data.isLoading}
-  <div class="loading-container">
-    <LoadingSpinner />
-  </div>
-{:else if data.totalItems > 0}
+{#if data.totalItems > 0}
   <h2><b>Datasets</b></h2>
 
   <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
@@ -19,9 +14,7 @@
 
   <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
 {:else}
-  <div class="loading-container">
-    <LoadingSpinner />
-  </div>
+  <p>No datasets found</p>
 {/if}
 
 <style lang="scss">

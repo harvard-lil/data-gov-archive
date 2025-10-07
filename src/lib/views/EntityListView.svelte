@@ -1,17 +1,12 @@
 <script>
   import EntityList from "$lib/components/EntityList.svelte";
   import PageNav from "$lib/components/PageNav.svelte";
-  import LoadingSpinner from "$lib/components/LoadingSpinner.svelte";
 
   export let data;
   export let resource;
 </script>
 
-{#if data.isLoading}
-  <div class="loading-container">
-    <LoadingSpinner />
-  </div>
-{:else if data.entity}
+{#if data.entity}
   <h2><b>{data.entity.title}s</b></h2>
 
   {#if data.totalItems > 0}
@@ -23,10 +18,6 @@
   {:else}
     <p>No {data.entity.title.toLowerCase()}s found.</p>
   {/if}
-{:else}
-  <div class="loading-container">
-    <LoadingSpinner />
-  </div>
 {/if}
 
 <style lang="scss">

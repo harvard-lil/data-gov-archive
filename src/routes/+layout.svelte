@@ -10,6 +10,7 @@
   import LoadingSpinner from "$lib/components/LoadingSpinner.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
+  import { mainContentLoading } from "$lib/loadingStore.js";
 
   export const loadData = async () => {
     // Only run queries in the browser
@@ -62,21 +63,27 @@
 <Header />
 
 {#await topNFilters}
-  <div class="loading-container">
+  <div class="loading">
     <LoadingSpinner />
   </div>
 {:then topNFilters}
+  {#if $mainContentLoading}
+    <div class="loading">
+      <LoadingSpinner />
+    </div>
+  {/if}
+
   <FilterNav
     organizations={topNFilters.organizations}
     publishers={topNFilters.publishers}
     bureaus={topNFilters.bureaus}
     tags={topNFilters.tags}
   />
-{/await}
 
-<main>
-  {@render children?.()}
-</main>
+  <main>
+    {@render children?.()}
+  </main>
+{/await}
 
 <style lang="scss">
   :global(body) {
@@ -102,5 +109,19 @@
 
   main {
     grid-area: c;
+  }
+
+  .loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(221, 221, 221, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
   }
 </style>
