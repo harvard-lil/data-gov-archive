@@ -1,6 +1,6 @@
 <script>
   import "../app.css";
-  import { DATA_URL } from "$lib/config.js";
+  import { AGGREGATION_COUNT, DATA_URL } from "$lib/config.js";
   import { queryData, cleanup } from "$lib/db.js";
   import FilterNav from "$lib/components/FilterNav.svelte";
   import Header from "$lib/components/Header.svelte";
@@ -26,7 +26,7 @@
         FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'organizations'
         ORDER BY count DESC
-        LIMIT 10;
+        LIMIT ${AGGREGATION_COUNT};
       `);
 
     const publishers = await queryData(`
@@ -34,7 +34,7 @@
         FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'publishers'
         ORDER BY count DESC
-        LIMIT 10;
+        LIMIT ${AGGREGATION_COUNT};
       `);
 
     const bureaus = await queryData(`
@@ -42,7 +42,7 @@
         FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'bureaus'
         ORDER BY count DESC
-        LIMIT 10;
+        LIMIT ${AGGREGATION_COUNT};
       `);
 
     const tags = await queryData(`
@@ -50,7 +50,7 @@
         FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'tags'
         ORDER BY count DESC
-        LIMIT 10;
+        LIMIT ${AGGREGATION_COUNT};
       `);
 
     return { organizations, publishers, bureaus, tags };

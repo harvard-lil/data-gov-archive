@@ -4,6 +4,7 @@
  */
 
 // Pagination settings
+export const AGGREGATION_COUNT = 5;
 export const PAGE_SIZE = 25;
 
 // Database settings
