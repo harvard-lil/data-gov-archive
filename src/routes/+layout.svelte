@@ -65,47 +65,31 @@
   });
 </script>
 
-<Header />
+<div class="mx-auto my-0 min-h-screen max-w-225 p-6">
+  <Header />
 
-{#await topNFilters}
-  <LoadingSpinner />
-{:then topNFilters}
-  {#if $mainContentLoading}
+  {#await topNFilters}
     <LoadingSpinner />
-  {/if}
+  {:then topNFilters}
+    {#if $mainContentLoading}
+      <LoadingSpinner />
+    {/if}
 
-  <FilterNav
-    organizations={topNFilters.organizations}
-    publishers={topNFilters.publishers}
-    bureaus={topNFilters.bureaus}
-    tags={topNFilters.tags}
-  />
+    <main class="mt-12 flex flex-col gap-8 md:flex-row md:gap-12">
+      <section
+        class="md:sticky md:top-2 md:max-h-screen md:flex-2 md:self-start md:overflow-y-auto"
+      >
+        <FilterNav
+          organizations={topNFilters.organizations}
+          publishers={topNFilters.publishers}
+          bureaus={topNFilters.bureaus}
+          tags={topNFilters.tags}
+        />
+      </section>
 
-  <main>
-    {@render children?.()}
-  </main>
-{/await}
-
-<style lang="scss">
-  :global(body) {
-    margin: 0 auto;
-    padding: 0 1.5em 1.5em;
-    max-width: 54em;
-
-    font-family: "Public Sans Variable", sans-serif;
-    font-weight: 400;
-
-    /* Grid system */
-    display: grid;
-    grid-template-columns: 16em 36em;
-    grid-template-rows: max-content 1fr;
-    gap: 0 2em;
-    grid-template-areas:
-      "a a"
-      "b c";
-  }
-
-  main {
-    grid-area: c;
-  }
-</style>
+      <section class="md:flex-3">
+        {@render children?.()}
+      </section>
+    </main>
+  {/await}
+</div>

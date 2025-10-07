@@ -28,7 +28,9 @@
 </script>
 
 <nav>
-  <h2><a href={buildEntityListUrl("organization")}>Organizations</a></h2>
+  <h2 class="sr-only">Filters</h2>
+
+  <h3><a href={buildEntityListUrl("organization")}>Organizations</a></h3>
   <ul>
     {#each organizations as organization}
       <li>
@@ -43,7 +45,7 @@
     {/each}
   </ul>
 
-  <h2><a href={buildEntityListUrl("publisher")}>Publishers</a></h2>
+  <h3><a href={buildEntityListUrl("publisher")}>Publishers</a></h3>
   <ul>
     {#each publishers as publisher}
       <li>
@@ -58,7 +60,7 @@
     {/each}
   </ul>
 
-  <h2><a href={buildEntityListUrl("bureau")}>Bureaus</a></h2>
+  <h3><a href={buildEntityListUrl("bureau")}>Bureaus</a></h3>
   <ul>
     {#each bureaus as bureau}
       <li>
