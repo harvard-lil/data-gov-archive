@@ -1,8 +1,11 @@
 <script>
-  import { asset } from "$app/paths";
+  import SkipLink from "./SkipLink.svelte";
 </script>
 
-<footer class="bg-slate-800 text-slate-100">
+<footer class="bg-slate-800 text-slate-100 relative">
+  <a id="footer" class="sr-only" tabindex="-1" aria-label="Footer"></a>
+  <SkipLink href="#header" label="top of page" />
+
   <div class="mx-auto max-w-225 p-6">
     <div class="max-w-200 flex-1">
       This is a project of the <a class="text-blue-200" href="https://lil.law.harvard.edu">

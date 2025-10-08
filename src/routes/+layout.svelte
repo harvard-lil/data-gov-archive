@@ -7,6 +7,7 @@
   import SearchBox from "$lib/components/SearchBox.svelte";
   import LoadingSpinner from "$lib/components/LoadingSpinner.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import SkipLink from "$lib/components/SkipLink.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
   import { mainContentLoading } from "$lib/loadingStore.js";
@@ -69,30 +70,32 @@
 <div class="mx-auto my-0 min-h-screen max-w-225 p-6">
   <Header />
 
-  {#await topNFilters}
-    <LoadingSpinner />
-  {:then topNFilters}
-    {#if $mainContentLoading}
-      <LoadingSpinner />
-    {/if}
-
-    <main class="mt-8 flex flex-col gap-8 md:flex-row md:gap-12">
-      <section
-        class="md:sticky md:top-2 md:max-h-screen md:flex-2 md:self-start md:overflow-y-auto"
-      >
+  <main class="mt-8 flex flex-col gap-8 md:flex-row md:gap-12">
+    <section
+      class="md:sticky md:top-2 md:max-h-screen md:flex-2 md:self-start md:overflow-y-auto relative"
+    >
+      <SkipLink href="#details" label="details view" />
+      {#await topNFilters}
+        <LoadingSpinner />
+      {:then topNFilters}
         <FilterNav
           organizations={topNFilters.organizations}
           publishers={topNFilters.publishers}
           bureaus={topNFilters.bureaus}
           tags={topNFilters.tags}
         />
-      </section>
+      {/await}
+    </section>
 
-      <section class="md:flex-3">
-        {@render children?.()}
-      </section>
-    </main>
-  {/await}
+    <section class="md:flex-3 relative">
+      <a id="details" class="sr-only" tabindex="-1" aria-label="Details"></a>
+      <SkipLink href="#footer" label="bottom of page" />
+      {#if $mainContentLoading}
+        <LoadingSpinner />
+      {/if}
+      {@render children?.()}
+    </section>
+  </main>
 </div>
 
 <Footer />

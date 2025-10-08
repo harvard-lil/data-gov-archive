@@ -1,5 +1,7 @@
 <script>
   import { base } from "$app/paths";
+  import SkipLink from "./SkipLink.svelte";
+
   let { organizations, publishers, bureaus, tags } = $props();
 
   function buildEntityListUrl(entityType) {
@@ -27,7 +29,7 @@
   }
 </script>
 
-<nav aria-label="Filters">
+<nav id="filters" aria-label="Filters">
   <h2 class="sr-only">Filters</h2>
 
   <h3><a href={buildEntityListUrl("organization")}>Organizations</a></h3>
