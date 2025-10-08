@@ -2,8 +2,6 @@
   import sanitizeHtml from "sanitize-html";
   import { base } from "$app/paths";
 
-  import Timestamp from "./Timestamp.svelte";
-
   let { dataset, showOrganization = true } = $props();
 </script>
 

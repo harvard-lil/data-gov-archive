@@ -1,6 +1,5 @@
 <script>
   import { base } from "$app/paths";
-  import Timestamp from "./Timestamp.svelte";
 
   let { entity, instances } = $props();
 </script>
@@ -14,8 +13,7 @@
         </a>
       </h2>
       <p>
-        {Number(instance.count[0]).toLocaleString("en-US")} dataset{#if Number(instance.count[0]) != 1}s{/if},
-        last updated <Timestamp timestamp={instance.last_updated} />
+        {Number(instance.count[0]).toLocaleString("en-US")} dataset{#if Number(instance.count[0]) != 1}s{/if}
       </p>
     </li>
   {/each}
