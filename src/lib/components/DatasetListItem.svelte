@@ -29,6 +29,8 @@
 
     h2 {
       font-weight: 700;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     h3 {
