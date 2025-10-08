@@ -1,11 +1,9 @@
 <script>
-  import "@fontsource/material-icons";
   import sanitizeHtml from "sanitize-html";
   import { base } from "$app/paths";
 
-  import DatasetMetadata from "./DatasetMetadata.svelte";
-  import TagList from "./TagList.svelte";
   import DatasetLinks from "./DatasetLinks.svelte";
+  import DatasetMetadata from "./DatasetMetadata.svelte";
 
   let { dataset } = $props();
   let notes = $derived(sanitizeHtml(dataset.notes, { allowedTags: [] }));
@@ -23,13 +21,25 @@
 
   <DatasetLinks {dataset} />
 
-  <p class="italic my-4">
-    {#if notes}
-      {#each notes.split(/\r\n|\r|\n/) as line}
-        {line}<br />
+  {#if notes}
+    {@const paragraphs = notes.split(/\n\n|\r\n\r\n/)}
+    <div class="italic my-6">
+      {#each paragraphs as paragraph}
+        {@const lines = paragraph.split(/\n|\r\n/)}
+        {#if lines[0]}
+          <p class="mb-4 last:mb-0">
+            {#if lines.length > 1}
+              {#each lines as line}
+                {line}<br />
+              {/each}
+            {:else}
+              {lines[0]}
+            {/if}
+          </p>
+        {/if}
       {/each}
-    {/if}
-  </p>
+    </div>
+  {/if}
 
   <DatasetMetadata {dataset} />
 </article>
