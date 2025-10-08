@@ -1,9 +1,78 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   // Start with reduced motion to avoid flash during SSR/hydration
   let prefersReducedMotion = true;
   let mounted = false;
+  let containerElement;
+  let focusTrap = null;
+
+  // Focus trap functionality
+  function createFocusTrap(container, fallbackElement) {
+    if (!container) {
+      console.warn("Focus trap: container element is required");
+      return null;
+    }
+
+    if (focusTrap) {
+      focusTrap.destroy();
+    }
+
+    const trap = {
+      container,
+      fallbackElement: fallbackElement || container,
+      previouslyFocusedElement: document.activeElement,
+
+      handleKeyDown: (event) => {
+        if (event.key === "Tab") {
+          event.preventDefault();
+          event.stopPropagation();
+          // Keep focus on the fallback element
+          trap.fallbackElement?.focus();
+        }
+      },
+
+      handleFocusIn: (event) => {
+        // If focus moves outside the container, bring it back
+        if (!container.contains(event.target)) {
+          event.preventDefault();
+          event.stopPropagation();
+          trap.fallbackElement?.focus();
+        }
+      },
+
+      destroy: () => {
+        container.removeEventListener("keydown", trap.handleKeyDown, true);
+        container.removeEventListener("focusin", trap.handleFocusIn, true);
+        // Restore focus to the previously focused element if it's still in the DOM
+        if (
+          trap.previouslyFocusedElement &&
+          trap.previouslyFocusedElement.focus &&
+          document.contains(trap.previouslyFocusedElement)
+        ) {
+          try {
+            trap.previouslyFocusedElement.focus();
+          } catch (e) {
+            // Element might not be focusable, ignore the error
+            console.warn("Could not restore focus to previous element:", e);
+          }
+        }
+      },
+    };
+
+    // Add event listeners with capture to ensure they run first
+    container.addEventListener("keydown", trap.handleKeyDown, true);
+    container.addEventListener("focusin", trap.handleFocusIn, true);
+
+    // Focus the fallback element
+    try {
+      trap.fallbackElement?.focus();
+    } catch (e) {
+      console.warn("Could not focus fallback element:", e);
+    }
+
+    return trap;
+  }
 
   onMount(() => {
     mounted = true;
@@ -23,10 +92,31 @@
       mediaQuery.removeEventListener("change", handleChange);
     };
   });
+
+  // Create focus trap when container element becomes available
+  $: if (containerElement && mounted) {
+    if (focusTrap) {
+      focusTrap.destroy();
+    }
+    focusTrap = createFocusTrap(containerElement, containerElement);
+  }
+
+  onDestroy(() => {
+    // Clean up focus trap when component is destroyed
+    if (focusTrap) {
+      focusTrap.destroy();
+      focusTrap = null;
+    }
+  });
 </script>
 
 <div
+  bind:this={containerElement}
   class="fixed top-0 left-0 w-[100vw] h-[100vh] bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-2xs flex justify-center items-center z-50"
+  tabindex="-1"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Loading content"
 >
   {#if prefersReducedMotion}
     <div class="font-extralight text-4xl">Loading…</div>
