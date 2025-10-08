@@ -5,25 +5,26 @@
 {#snippet link(icon, href, label)}
   <li>
     <a
-      class="block w-full text-inherit text-base no-underline border border-slate-800 rounded-md py-3 px-4 before:content-['{icon}'] before:font-material-icons before:relative before:top-0.5 before:right-1.5 before:mr-0.5 mb-1.5 text-center"
+      class="flex items-center justify-center gap-2 w-full text-inherit text-base no-underline border border-slate-800 rounded-md py-3 px-4 mb-1.5"
       {href}
       target="_blank"
     >
-      {label}
+      <span class="font-material-icons select-none relative">{icon}</span>
+      <span>{label}</span>
     </a>
   </li>
 {/snippet}
 
 <ul class="my-4">
   {@render link(
-    "\\eb2c",
+    "\ueb2c",
     `https://source.coop/harvard-lil/gov-data/collections/data_gov/${dataset.name}`,
     "Dataset & Metadata (ZIP)"
   )}
   {@render link(
-    "\\ead3",
+    "\uead3",
     `https://source.coop/harvard-lil/gov-data/metadata/data_gov/${dataset.name}`,
     "Metadata Only (JSON)"
   )}
-  {@render link("\\f8ef", `https://catalog.data.gov/dataset/${dataset.name}`, "Data.gov Source")}
+  {@render link("\uf8ef", `https://catalog.data.gov/dataset/${dataset.name}`, "Data.gov Source")}
 </ul>
