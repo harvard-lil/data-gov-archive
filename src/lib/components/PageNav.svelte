@@ -37,7 +37,7 @@
   }
 </script>
 
-<nav>
+<nav aria-label="Pagination">
   <ul>
     <li>
       {#if pageNumber > 1}

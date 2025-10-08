@@ -27,7 +27,7 @@
   }
 </script>
 
-<nav>
+<nav aria-label="Filters">
   <h2 class="sr-only">Filters</h2>
 
   <h3><a href={buildEntityListUrl("organization")}>Organizations</a></h3>
