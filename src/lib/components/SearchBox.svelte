@@ -49,6 +49,7 @@
       id="search"
       class="rounded-sm flex-1 p-4 bg-inherit border-slate-800 border-1 border-dotted focus:border-1 focus:border-solid focus:outline-2 focus:outline-slate-800/20 whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-slate-800/50"
       type="text"
+      maxLength="100"
       bind:value={searchQuery}
       onkeydown={handleKeyDown}
       placeholder="Search by dataset title, organization, publisher, bureau, description…"
