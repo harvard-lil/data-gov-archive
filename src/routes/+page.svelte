@@ -14,7 +14,7 @@
   let dataManager = $state();
 
   // Dynamic title
-  let pageTitle = $state("Data.gov Archive");
+  let pageTitle = $state("Data.gov Archive Search");
 
   // Update main content loading state based on DataManager
   $effect(() => {
@@ -26,7 +26,7 @@
   $effect(() => {
     if (!viewRouter || !dataManager) return;
 
-    let title = "Data.gov Archive";
+    let title = "Data.gov Archive Search";
     const currentView = viewRouter.view();
     const data = dataManager.data;
 
