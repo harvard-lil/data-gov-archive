@@ -9,7 +9,7 @@
       {href}
       target="_blank"
     >
-      <span class="font-material-icons select-none relative">{icon}</span>
+      <span class="font-material-icons select-none">{icon}</span>
       <span>{label}</span>
     </a>
   </li>
@@ -17,14 +17,18 @@
 
 <ul class="my-4">
   {@render link(
-    "\ueb2c",
+    "folder_zip",
     `https://source.coop/harvard-lil/gov-data/collections/data_gov/${dataset.name}`,
     "Dataset & Metadata (ZIP)"
   )}
   {@render link(
-    "\uead3",
+    "data_object",
     `https://source.coop/harvard-lil/gov-data/metadata/data_gov/${dataset.name}`,
     "Metadata Only (JSON)"
   )}
-  {@render link("\uf8ef", `https://catalog.data.gov/dataset/${dataset.name}`, "Data.gov Source")}
+  {@render link(
+    "dataset_linked",
+    `https://catalog.data.gov/dataset/${dataset.name}`,
+    "Data.gov Source"
+  )}
 </ul>
