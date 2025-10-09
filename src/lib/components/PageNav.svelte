@@ -37,71 +37,49 @@
   }
 </script>
 
-<nav aria-label="Pagination">
-  <ul>
+<nav class="first-of-type:mb-4 last-of-type:mt-4" aria-label="Pagination">
+  <ul class="flex justify-between">
     <li>
       {#if pageNumber > 1}
-        <a href={buildPageUrl(pageNumber - 1)}>Previous</a>
+        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(pageNumber - 1)}>
+          Previous
+        </a>
       {:else}
-        <span>Previous</span>
+        <span class="cursor-not-allowed invisible" aria-hidden="true">Previous</span>
       {/if}
     </li>
     <li>
       {#if pageNumber === 1 && totalPages === 1}
         Showing page {pageNumberLabel} of {totalPagesLabel}
       {:else if pageNumber < 2}
-        Showing page {pageNumberLabel} of <a href={buildPageUrl(totalPages)}>{totalPagesLabel}</a>
+        Showing page {pageNumberLabel} of
+        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(totalPages)}
+          >{totalPagesLabel}</a
+        >
       {:else if pageNumber < totalPages}
-        Showing page <a href={buildPageUrl(1)}>{pageNumberLabel}</a> of
-        <a href={buildPageUrl(totalPages)}>{totalPagesLabel}</a>
+        Showing page <a class="text-inherit no-underline hover:underline" href={buildPageUrl(1)}
+          >{pageNumberLabel}</a
+        >
+        of
+        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(totalPages)}
+          >{totalPagesLabel}</a
+        >
       {:else}
-        Showing page <a href={buildPageUrl(1)}>{pageNumberLabel}</a> of
+        Showing page <a class="text-inherit no-underline hover:underline" href={buildPageUrl(1)}
+          >{pageNumberLabel}</a
+        >
+        of
         {totalPagesLabel}
       {/if}
     </li>
     {#if pageNumber < totalPages}
-      <li><a href={buildPageUrl(pageNumber + 1)}>Next</a></li>
+      <li>
+        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(pageNumber + 1)}>
+          Next
+        </a>
+      </li>
     {:else}
-      <span>Next</span>
+      <span class="cursor-not-allowed invisible" aria-hidden="true">Next</span>
     {/if}
   </ul>
 </nav>
-
-<style lang="scss">
-  ul {
-    padding: 0;
-    list-style: none;
-    list-style-position: unset;
-
-    display: flex;
-    justify-content: space-between;
-
-    li {
-      display: inline-block;
-    }
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-
-  span {
-    cursor: not-allowed;
-  }
-
-  nav:first-of-type {
-    border-bottom: 1px dotted #222;
-    padding-bottom: 0.5em;
-    margin-bottom: 1.5em;
-  }
-
-  nav:last-of-type {
-    border-top: 1px dotted #222;
-    padding-top: 0.5em;
-    margin-top: 1.5em;
-  }
-</style>
