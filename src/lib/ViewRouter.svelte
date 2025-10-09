@@ -80,12 +80,12 @@
     return "home";
   });
 
-  // Debug: Log the current state
-  $effect(() => {
-    if (browser) {
-      console.log("Debug state:", { resource, type, id, view: view() });
-    }
-  });
+  // // Debug: Log the current state
+  // $effect(() => {
+  //   if (browser) {
+  //     console.log("Debug state:", { resource, type, id, view: view() });
+  //   }
+  // });
 
   // Helper function to build URLs
   function buildUrl(params = {}) {
