@@ -23,7 +23,7 @@
 
   {#if notes}
     {@const paragraphs = notes.split(/\n\n|\r\n\r\n/)}
-    <div class="italic my-6">
+    <div class="italic my-6 hyphens-auto">
       {#each paragraphs as paragraph}
         {@const lines = paragraph.split(/\n|\r\n/)}
         {#if lines[0]}

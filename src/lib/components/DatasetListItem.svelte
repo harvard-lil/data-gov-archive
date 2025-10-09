@@ -21,7 +21,7 @@
       >
     </div>
   {/if}
-  <p class="text-base italic">
+  <p class="text-base italic hyphens-auto">
     {sanitizeHtml(dataset.notes, { allowedTags: [] })}
   </p>
 </li>
