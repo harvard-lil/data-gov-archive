@@ -10,14 +10,14 @@
 </script>
 
 <article>
-  <h2 class="font-bold text-2xl mb-2">{dataset.title}</h2>
-  <h3 class="font-normal text-lg mb-4">
+  <h2 class="font-bold text-xl mb-2">{dataset.title}</h2>
+  <div class="font-normal text-lg mb-6">
     <a
       class="text-inherit no-underline hover:underline"
       href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
       >{dataset.organization_title}</a
     >
-  </h3>
+  </div>
 
   <DatasetLinks {dataset} />
 
