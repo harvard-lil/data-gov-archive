@@ -47,7 +47,7 @@
   <div class="align-center flex gap-4">
     <input
       id="search"
-      class="rounded-sm flex-1 p-4 bg-inherit border-slate-800 border-1 border-dotted focus:border-1 focus:border-solid focus:outline-2 focus:outline-slate-800/20 whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-slate-800/50"
+      class="rounded-sm flex-1 p-4 bg-inherit min-w-50 border-slate-800 border-1 border-dotted focus:border-1 focus:border-solid focus:outline-2 focus:outline-slate-800/20 whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-slate-800/50"
       type="text"
       maxLength="100"
       bind:value={searchQuery}
@@ -55,7 +55,7 @@
       placeholder="Search by dataset title, organization, publisher, bureau, description…"
     />
     <button
-      class="flex-none text-sm md:text-lg px-4 md:px-8 cursor-pointer text-blue-700 border-blue-700 border-solid border-1 rounded-sm disabled:cursor-not-allowed disabled:border-slate-400 disabled:border-1 disabled:border-dotted disabled:bg-slate-200 disabled:text-slate-400 focus:outline-blue-700/20 focus:outline-2"
+      class="flex-none text-lg px-8 cursor-pointer text-blue-700 border-blue-700 border-solid border-1 rounded-sm disabled:cursor-not-allowed disabled:border-slate-400 disabled:border-1 disabled:border-dotted disabled:bg-slate-200 disabled:text-slate-400 focus:outline-blue-700/20 focus:outline-2"
       onclick={handleSearch}
       disabled={!searchQuery.trim() ||
         isLoading ||
