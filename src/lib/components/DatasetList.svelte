@@ -9,11 +9,3 @@
     <DatasetListItem {dataset} {showOrganization} />
   {/each}
 </ul>
-
-<style lang="scss">
-  ul {
-    padding: 0;
-    list-style: none;
-    list-style-position: unset;
-  }
-</style>
