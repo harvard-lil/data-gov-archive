@@ -1,31 +1,13 @@
 <script>
+  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
   import DatasetList from "$lib/components/DatasetList.svelte";
   import PageNav from "$lib/components/PageNav.svelte";
 
-  export let data;
-  export let resource;
-  export let buildUrl;
+  let { data, resource, buildUrl } = $props();
 </script>
 
 {#if data.entity && data.identifier}
-  <h2>
-    <b>{data.entity.title}:</b>
-    {#if data.entity.type === "tag"}
-      <span class="tag">
-        {#if data.pageNumber > 1}
-          <a href={buildUrl({ type: data.entity.type, id: data.identifier, page: 1 })}
-            >{data.label}</a
-          >
-        {:else}
-          {data.label}
-        {/if}
-      </span>
-    {:else if data.pageNumber > 1}
-      <a href={buildUrl({ type: data.entity.type, id: data.identifier, page: 1 })}>{data.label}</a>
-    {:else}
-      {data.label}
-    {/if}
-  </h2>
+  <BreadcrumbNav {resource} searchQuery={null} {buildUrl} pageNumber={data.pageNumber} />
 
   {#if data.isLoading}
     <p>Loading datasets…</p>

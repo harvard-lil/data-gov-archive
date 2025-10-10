@@ -68,15 +68,20 @@
       data={dataManager.data}
       resource={viewRouter.resource}
       searchQuery={viewRouter.searchQuery}
+      buildUrl={viewRouter.buildUrl}
     />
   {:else if viewRouter.view() === "home"}
-    <HomeView data={dataManager.data} resource={viewRouter.resource} />
+    <HomeView data={dataManager.data} resource={viewRouter.resource} buildUrl={viewRouter.buildUrl} />
   {:else if viewRouter.view() === "datasets-list"}
-    <DatasetsListView data={dataManager.data} />
+    <DatasetsListView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
   {:else if viewRouter.view() === "dataset-detail"}
     <DatasetDetailView data={dataManager.data} />
   {:else if viewRouter.view() === "entity-list"}
-    <EntityListView data={dataManager.data} resource={viewRouter.resource} />
+    <EntityListView
+      data={dataManager.data}
+      resource={viewRouter.resource}
+      buildUrl={viewRouter.buildUrl}
+    />
   {:else if viewRouter.view() === "entity-detail"}
     <EntityDetailView
       data={dataManager.data}

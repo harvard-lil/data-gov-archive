@@ -1,13 +1,13 @@
 <script>
+  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
   import EntityList from "$lib/components/EntityList.svelte";
   import PageNav from "$lib/components/PageNav.svelte";
 
-  export let data;
-  export let resource;
+  let { data, resource, buildUrl } = $props();
 </script>
 
 {#if data.entity}
-  <h2><b>{data.entity.title}s</b></h2>
+  <BreadcrumbNav {resource} searchQuery={null} {buildUrl} pageNumber={data.pageNumber} />
 
   {#if data.isLoading}
     <p>Loading {data.entity.title.toLowerCase()}s…</p>

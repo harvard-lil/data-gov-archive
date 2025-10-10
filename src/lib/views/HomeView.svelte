@@ -2,8 +2,7 @@
   import DatasetList from "$lib/components/DatasetList.svelte";
   import PageNav from "$lib/components/PageNav.svelte";
 
-  export let data;
-  export let resource;
+  let { data, resource } = $props();
 </script>
 
 {#if data.isLoading}

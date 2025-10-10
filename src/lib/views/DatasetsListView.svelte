@@ -1,15 +1,16 @@
 <script>
+  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
   import DatasetList from "$lib/components/DatasetList.svelte";
   import PageNav from "$lib/components/PageNav.svelte";
 
-  export let data;
+  let { data, buildUrl } = $props();
 </script>
+
+<BreadcrumbNav resource="datasets" searchQuery={null} {buildUrl} pageNumber={data.pageNumber} />
 
 {#if data.isLoading}
   <p>Loading datasets…</p>
 {:else if data.totalItems > 0}
-  <h2><b>Datasets</b></h2>
-
   <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
 
   <DatasetList datasets={data.datasets} />
