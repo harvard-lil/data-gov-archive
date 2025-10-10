@@ -2,15 +2,22 @@ import duckdb_wasm from "@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm?url";
 import mvp_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js?url";
 import duckdb_wasm_eh from "@duckdb/duckdb-wasm/dist/duckdb-eh.wasm?url";
 import eh_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url";
+import { LRUCache } from "lru-cache";
 
 import { browser } from "$app/environment";
-import { DuckDBDataProtocol } from "@duckdb/duckdb-wasm";
 
 // Connection pooling state
 let db = null;
 let connection = null;
 let isInitializing = false;
 let initPromise = null;
+
+// Query cache
+const queryCache = new LRUCache({
+  max: 128,
+  // maxSize: 1024 * 1024 * 10, // 10 MB
+  ttl: 1000 * 60 * 30, // 30 minutes
+});
 
 export const instantiateDuckDB = async () => {
   if (!browser) {
@@ -149,6 +156,17 @@ export const queryData = async (query, params) => {
     throw new Error("Database queries can only be executed in the browser.");
   }
 
+  // Generate cache key
+  const paramsStr = params ? JSON.stringify(params) : "";
+  const cacheKey = `${query}|${paramsStr}`;
+
+  // Check cache first
+  const cachedResult = queryCache.get(cacheKey);
+  if (cachedResult !== undefined) {
+    // console.log(`Cache hit for query: ${query.substring(0, 50)}…`);
+    return cachedResult;
+  }
+
   // Always ensure DuckDB is initialized before running queries
   if (!db) {
     await instantiateDuckDB();
@@ -167,6 +185,14 @@ export const queryData = async (query, params) => {
     statement = await conn.prepare(query);
     const arrowResult = await statement.query(...(params || []));
     const result = arrowResult.toArray().map((row) => row.toJSON());
+
+    // Store result in cache
+    queryCache.set(cacheKey, result);
+    // console.log(
+    //   `Cache miss - stored result for query: ${query.substring(0, 50)}… (cache size: ${
+    //     queryCache.size
+    //   })`
+    // );
 
     return result;
   } catch (error) {
@@ -189,6 +215,15 @@ export const queryData = async (query, params) => {
         statement = await conn.prepare(query);
         const arrowResult = await statement.query(...(params || []));
         const result = arrowResult.toArray().map((row) => row.toJSON());
+
+        // Store result in cache after successful retry
+        queryCache.set(cacheKey, result);
+        // console.log(
+        //   `Cache miss (retry) - stored result for query: ${query.substring(0, 50)}… (cache size: ${
+        //     queryCache.size
+        //   })`
+        // );
+
         return result;
       } catch (retryError) {
         console.error("Retry failed:", retryError);
@@ -212,4 +247,5 @@ export const queryData = async (query, params) => {
 // Cleanup function for app shutdown
 export const cleanup = async () => {
   await closeConnection();
+  queryCache.clear();
 };
