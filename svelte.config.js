@@ -6,6 +6,7 @@ const config = {
   preprocess: vitePreprocess(),
 
   kit: {
+    appDir: "app",
     adapter: adapter({
       pages: "build",
       assets: "build",
@@ -15,6 +16,7 @@ const config = {
     }),
     paths: {
       base: process.env.NODE_ENV === "production" ? "/data-gov-archive" : "",
+      relative: process.env.NODE_ENV === "production" ? false : true,
     },
     prerender: {
       crawl: true,
