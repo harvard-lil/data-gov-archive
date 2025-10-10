@@ -9,7 +9,6 @@
       organization: "organizations",
       bureau: "bureaus",
       publisher: "publishers",
-      tag: "tags",
     };
     return `${base}/?resource=${resourceMap[entityType]}`;
   }
@@ -19,108 +18,42 @@
       organization: "organizations",
       bureau: "bureaus",
       publisher: "publishers",
-      tag: "tags",
     };
     return `${base}/?resource=${resourceMap[entityType]}/${encodeURIComponent(id)}`;
   }
-
-  function buildTagUrl(tag) {
-    return `${base}/?resource=tags/${encodeURIComponent(tag)}`;
-  }
 </script>
+
+{#snippet filterList(entities, entityName, entityLabel, idField)}
+  <div class="mb-1 flex justify-between">
+    <a
+      class="block text-base font-bold text-inherit no-underline hover:underline"
+      href={buildEntityListUrl(entityName)}
+    >
+      {entityLabel}
+    </a>
+  </div>
+  <ol class="text-sm mb-2">
+    {#each entities as entity}
+      <li
+        class="flex justify-between border-b-1 border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
+      >
+        <a
+          class="text-inherit no-underline hover:underline truncate"
+          href={buildEntityDetailUrl(entityName, entity[idField])}
+          title={entity[idField]}
+        >
+          {entity[idField]}
+        </a>
+        <b class="font-mono text-xs ml-1">{entity.count.toLocaleString("en-US")}</b>
+      </li>
+    {/each}
+  </ol>
+{/snippet}
 
 <nav id="filters" aria-label="Filters">
   <h2 class="sr-only">Filters</h2>
 
-  <h3><a href={buildEntityListUrl("organization")}>Organizations</a></h3>
-  <ul>
-    {#each organizations as organization}
-      <li>
-        <a
-          href={buildEntityDetailUrl("organization", organization.organization_title)}
-          title={organization.organization_title}
-        >
-          {organization.organization_title}
-        </a>
-        <b>{organization.count.toLocaleString("en-US")}</b>
-      </li>
-    {/each}
-  </ul>
-
-  <h3><a href={buildEntityListUrl("publisher")}>Publishers</a></h3>
-  <ul>
-    {#each publishers as publisher}
-      <li>
-        <a
-          href={buildEntityDetailUrl("publisher", publisher.publisher)}
-          title={publisher.publisher}
-        >
-          {publisher.publisher}
-        </a>
-        <b>{publisher.count.toLocaleString("en-US")}</b>
-      </li>
-    {/each}
-  </ul>
-
-  <h3><a href={buildEntityListUrl("bureau")}>Bureaus</a></h3>
-  <ul>
-    {#each bureaus as bureau}
-      <li>
-        <a href={buildEntityDetailUrl("bureau", bureau.bureau_name)} title={bureau.bureau_name}>
-          {bureau.bureau_name}
-        </a>
-        <b>{bureau.count.toLocaleString("en-US")}</b>
-      </li>
-    {/each}
-  </ul>
+  {@render filterList(organizations, "organization", "Organizations", "organization_title")}
+  {@render filterList(publishers, "publisher", "Publishers", "publisher")}
+  {@render filterList(bureaus, "bureau", "Bureaus", "bureau_name")}
 </nav>
-
-<style lang="scss">
-  nav {
-    grid-area: b;
-
-    h2 {
-      font-size: inherit;
-    }
-
-    ul {
-      padding: 0;
-      list-style: none;
-      list-style-position: unset;
-
-      li {
-        display: flex;
-        justify-content: space-between;
-
-        border-top: 1px dotted #222;
-        padding: 0.375em 0;
-
-        font-size: small;
-
-        a {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        b {
-          margin-left: 0.5em;
-          font-family: monospace;
-        }
-      }
-
-      li:first-of-type {
-        border-top: none;
-        padding-top: 0;
-      }
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  }
-</style>
