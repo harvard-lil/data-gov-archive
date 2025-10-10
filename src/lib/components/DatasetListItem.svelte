@@ -3,6 +3,8 @@
   import { base } from "$app/paths";
 
   let { dataset, showOrganization = true } = $props();
+
+  let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
 </script>
 
 <li class="py-6 last:border-b border-t border-dotted border-slate-800 wrap-break-word">
@@ -13,7 +15,7 @@
     >
   </div>
   {#if showOrganization === true}
-    <div class="mb-4">
+    <div class:mb-4={notes.trim() ? true : false}>
       <a
         class="text-inherit text-lg no-underline hover:underline"
         href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
@@ -22,6 +24,6 @@
     </div>
   {/if}
   <p class="text-base italic hyphens-auto">
-    {sanitizeHtml(dataset.notes, { allowedTags: [] })}
+    {notes}
   </p>
 </li>
