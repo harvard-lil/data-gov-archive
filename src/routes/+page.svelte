@@ -71,11 +71,19 @@
       buildUrl={viewRouter.buildUrl}
     />
   {:else if viewRouter.view() === "home"}
-    <HomeView data={dataManager.data} resource={viewRouter.resource} buildUrl={viewRouter.buildUrl} />
+    <HomeView
+      data={dataManager.data}
+      resource={viewRouter.resource}
+      buildUrl={viewRouter.buildUrl}
+    />
   {:else if viewRouter.view() === "datasets-list"}
     <DatasetsListView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
   {:else if viewRouter.view() === "dataset-detail"}
-    <DatasetDetailView data={dataManager.data} />
+    <DatasetDetailView
+      data={dataManager.data}
+      resource={viewRouter.resource}
+      buildUrl={viewRouter.buildUrl}
+    />
   {:else if viewRouter.view() === "entity-list"}
     <EntityListView
       data={dataManager.data}
