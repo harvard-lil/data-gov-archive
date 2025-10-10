@@ -4,5 +4,5 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
-  base: "/harvard-lil/gov-data",
+  base: "https://lil.law.harvard.edu/data-gov-archive",
 });
