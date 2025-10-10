@@ -12,7 +12,7 @@
   {#if data.isLoading}
     <p>Loading {data.entity.title.toLowerCase()}s…</p>
   {:else if data.totalItems > 0}
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} isTop={true} />
 
     <EntityList entity={data.entity} instances={data.entities} />
 

@@ -104,13 +104,10 @@
   });
 </script>
 
-<nav aria-label="Breadcrumb" class="mb-4 text-sm flex items-center min-w-0 w-full">
-  <ol class="list-none p-0 m-0 flex items-center min-w-0 flex-nowrap w-full">
+<nav aria-label="Breadcrumb" class="mb-4 text-sm flex min-w-0 w-full">
+  <ol class="list-none p-0 m-0 flex min-w-0 flex-nowrap w-full">
     {#each breadcrumbs() as crumb, index}
-      <li
-        class="flex items-center shrink-0 min-w-0"
-        class:flex-1={index === breadcrumbs().length - 1}
-      >
+      <li class="flex shrink-0 min-w-0" class:flex-1={index === breadcrumbs().length - 1}>
         {#if crumb.tagLink}
           <a
             href={crumb.url}
@@ -141,7 +138,7 @@
             title={index === breadcrumbs().length - 1 ? `Search: ${crumb.label}` : undefined}
           >
             Search:
-            <a href={crumb.url} class="text-inherit no-underline hover:underline font-mono"
+            <a href={crumb.url} class="font-light italic text-inherit no-underline hover:underline"
               >{crumb.label}</a
             >
             {#if crumb.resultCount !== null && !isLoading}
@@ -160,7 +157,7 @@
             class:w-full={index === breadcrumbs().length - 1}
             title={index === breadcrumbs().length - 1 ? `Search: ${crumb.label}` : undefined}
           >
-            Search: <span class="font-mono">{crumb.label}</span>
+            Search: <span class="font-light italic">{crumb.label}</span>
             {#if crumb.resultCount !== null && !isLoading}
               ({crumb.resultCount.toLocaleString("en-US")} result{crumb.resultCount === 1
                 ? ""
@@ -191,7 +188,7 @@
         {/if}
       </li>
       {#if index < breadcrumbs().length - 1}
-        <li class="flex items-center select-none mx-2 shrink-0" aria-hidden="true">/</li>
+        <li class="flex select-none mx-2 shrink-0" aria-hidden="true">/</li>
       {/if}
     {/each}
   </ol>

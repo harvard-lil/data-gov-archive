@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import { PAGE_SIZE } from "$lib/config.js";
 
-  let { pageNumber, totalItems, resource = null, pageSize = PAGE_SIZE } = $props();
+  let { pageNumber, totalItems, resource = null, pageSize = PAGE_SIZE, isTop = false } = $props();
 
   let offset = $derived((pageNumber - 1) * pageSize);
   let totalPages = $derived(Math.ceil(totalItems / pageSize));
@@ -37,7 +37,7 @@
   }
 </script>
 
-<nav class="first-of-type:mb-4 last-of-type:mt-4" aria-label="Pagination">
+<nav class="mt-0 mb-0" class:mb-4={isTop} class:mt-4={!isTop} aria-label="Pagination">
   <ul class="flex justify-between">
     <li>
       {#if pageNumber > 1}

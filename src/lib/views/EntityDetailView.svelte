@@ -12,7 +12,7 @@
   {#if data.isLoading}
     <p>Loading datasets…</p>
   {:else if data.totalItems > 0}
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
+    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} isTop={true} />
 
     <DatasetList datasets={data.datasets} showOrganization={data.entity?.showOrganization} />
 
