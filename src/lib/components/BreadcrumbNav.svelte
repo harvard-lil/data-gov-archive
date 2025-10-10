@@ -138,7 +138,7 @@
             title={index === breadcrumbs().length - 1 ? `Search: ${crumb.label}` : undefined}
           >
             Search:
-            <a href={crumb.url} class="font-light italic text-inherit no-underline hover:underline"
+            <a href={crumb.url} class="italic text-inherit no-underline hover:underline"
               >{crumb.label}</a
             >
             {#if crumb.resultCount !== null && !isLoading}
@@ -157,7 +157,7 @@
             class:w-full={index === breadcrumbs().length - 1}
             title={index === breadcrumbs().length - 1 ? `Search: ${crumb.label}` : undefined}
           >
-            Search: <span class="font-light italic">{crumb.label}</span>
+            Search: <span class="italic">{crumb.label}</span>
             {#if crumb.resultCount !== null && !isLoading}
               ({crumb.resultCount.toLocaleString("en-US")} result{crumb.resultCount === 1
                 ? ""

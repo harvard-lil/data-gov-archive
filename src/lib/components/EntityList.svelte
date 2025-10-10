@@ -9,7 +9,7 @@
     <li class="py-6 last:border-b border-t border-dotted border-slate-800 wrap-break-word">
       <div class="mb-2">
         <a
-          class="text-inherit text-lg font-bold no-underline hover:underline"
+          class="text-inherit text-xl font-bold no-underline hover:underline"
           href={`${base}/?resource=${entity.route}/${encodeURIComponent(instance.identifier)}`}
         >
           {instance.identifier}
