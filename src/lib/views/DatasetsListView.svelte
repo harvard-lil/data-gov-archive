@@ -24,17 +24,3 @@
 {:else}
   <p>No datasets found</p>
 {/if}
-
-<style lang="scss">
-  h2 {
-    font-weight: inherit;
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  }
-</style>

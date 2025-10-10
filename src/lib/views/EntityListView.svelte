@@ -21,17 +21,3 @@
     <p>No {data.entity.title.toLowerCase()}s found.</p>
   {/if}
 {/if}
-
-<style lang="scss">
-  h2 {
-    font-weight: inherit;
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  }
-</style>
