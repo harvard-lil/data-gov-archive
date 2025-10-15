@@ -19,43 +19,25 @@
         organizations: [],
         publishers: [],
         bureaus: [],
-        tags: [],
       };
     }
 
-    const organizations = await queryData(`
-        SELECT identifier AS organization_title, count
+    const topNPerEntity = await queryData(`
+      SELECT aggregation, identifier, count
+      FROM (
+        SELECT *, row_number() OVER (PARTITION BY aggregation ORDER BY count DESC) AS row_number
         FROM '${DATA_URL}/aggregations.parquet'
-        WHERE aggregation = 'organizations'
-        ORDER BY count DESC
-        LIMIT ${AGGREGATION_COUNT};
-      `);
+        WHERE aggregation IN ('organizations', 'publishers', 'bureaus')
+      )
+      WHERE row_number <= ${AGGREGATION_COUNT}
+      ORDER BY aggregation, count DESC;
+    `);
 
-    const publishers = await queryData(`
-        SELECT identifier AS publisher, count
-        FROM '${DATA_URL}/aggregations.parquet'
-        WHERE aggregation = 'publishers'
-        ORDER BY count DESC
-        LIMIT ${AGGREGATION_COUNT};
-      `);
+    const organizations = topNPerEntity.filter((item) => item.aggregation === "organizations");
+    const publishers = topNPerEntity.filter((item) => item.aggregation === "publishers");
+    const bureaus = topNPerEntity.filter((item) => item.aggregation === "bureaus");
 
-    const bureaus = await queryData(`
-        SELECT identifier AS bureau_name, count
-        FROM '${DATA_URL}/aggregations.parquet'
-        WHERE aggregation = 'bureaus'
-        ORDER BY count DESC
-        LIMIT ${AGGREGATION_COUNT};
-      `);
-
-    const tags = await queryData(`
-        SELECT identifier AS tag, count
-        FROM '${DATA_URL}/aggregations.parquet'
-        WHERE aggregation = 'tags'
-        ORDER BY count DESC
-        LIMIT ${AGGREGATION_COUNT};
-      `);
-
-    return { organizations, publishers, bureaus, tags };
+    return { organizations, publishers, bureaus };
   };
 
   let topNFilters = loadData();
@@ -82,7 +64,6 @@
           organizations={topNFilters.organizations}
           publishers={topNFilters.publishers}
           bureaus={topNFilters.bureaus}
-          tags={topNFilters.tags}
         />
       {/await}
     </section>

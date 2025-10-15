@@ -2,32 +2,14 @@
   import { base } from "$app/paths";
   import SkipLink from "./SkipLink.svelte";
 
-  let { organizations, publishers, bureaus, tags } = $props();
-
-  function buildEntityListUrl(entityType) {
-    const resourceMap = {
-      organization: "organizations",
-      bureau: "bureaus",
-      publisher: "publishers",
-    };
-    return `${base}/?resource=${resourceMap[entityType]}`;
-  }
-
-  function buildEntityDetailUrl(entityType, id) {
-    const resourceMap = {
-      organization: "organizations",
-      bureau: "bureaus",
-      publisher: "publishers",
-    };
-    return `${base}/?resource=${resourceMap[entityType]}/${encodeURIComponent(id)}`;
-  }
+  let { organizations, publishers, bureaus } = $props();
 </script>
 
-{#snippet filterList(entities, entityName, entityLabel, idField)}
+{#snippet filterList(entities, entityName, entityLabel)}
   <div class="mb-1 flex justify-between">
     <a
       class="block text-base font-bold text-inherit no-underline hover:underline"
-      href={buildEntityListUrl(entityName)}
+      href={`${base}/?resource=${entityName}`}
     >
       {entityLabel}
     </a>
@@ -39,10 +21,10 @@
       >
         <a
           class="text-inherit no-underline hover:underline truncate"
-          href={buildEntityDetailUrl(entityName, entity[idField])}
-          title={entity[idField]}
+          href={`${base}/?resource=${entityName}/${encodeURIComponent(entity.identifier)}`}
+          title={entity.identifier}
         >
-          {entity[idField]}
+          {entity.identifier}
         </a>
         <b class="font-mono text-xs ml-1">{entity.count.toLocaleString("en-US")}</b>
       </li>
@@ -53,7 +35,7 @@
 <nav id="filters" aria-label="Filters">
   <h2 class="sr-only">Filters</h2>
 
-  {@render filterList(organizations, "organization", "Organizations", "organization_title")}
-  {@render filterList(publishers, "publisher", "Publishers", "publisher")}
-  {@render filterList(bureaus, "bureau", "Bureaus", "bureau_name")}
+  {@render filterList(organizations, "organizations", "Organizations")}
+  {@render filterList(publishers, "publishers", "Publishers")}
+  {@render filterList(bureaus, "bureaus", "Bureaus")}
 </nav>
