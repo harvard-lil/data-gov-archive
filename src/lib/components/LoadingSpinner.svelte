@@ -112,7 +112,7 @@
 
 <div
   bind:this={containerElement}
-  class="fixed top-0 left-0 w-[100vw] h-[100vh] bg-slate-100/80 dark:bg-slate-900/80 backdrop-blur-2xs flex justify-center items-center z-50"
+  class="fixed top-0 left-0 w-[100vw] h-[100vh] bg-gray-100/80 dark:bg-gray-900/80 backdrop-blur-2xs flex justify-center items-center z-50"
   tabindex="-1"
   role="dialog"
   aria-modal="true"

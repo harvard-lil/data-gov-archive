@@ -7,7 +7,7 @@
 {#snippet link(href, label)}
   <li>
     <a
-      class="flex items-center justify-center gap-2 w-full text-inherit text-base no-underline border border-slate-800 rounded-md py-3 px-4 mb-1.5"
+      class="flex items-center justify-center gap-2 w-full text-inherit text-base no-underline border border-gray-800 rounded-md py-3 px-4 mb-1.5"
       {href}
       target="_blank"
     >

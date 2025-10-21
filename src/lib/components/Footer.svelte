@@ -2,7 +2,7 @@
   import SkipLink from "./SkipLink.svelte";
 </script>
 
-<footer class="bg-slate-800 text-slate-100 relative">
+<footer class="bg-gray-800 text-gray-100 relative">
   <a id="footer" class="sr-only" tabindex="-1" aria-label="Footer"></a>
   <SkipLink href="#header" label="top of page" />
 

@@ -7,7 +7,7 @@
   let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
 </script>
 
-<li class="py-6 last:border-b border-t border-dotted border-slate-800 wrap-break-word">
+<li class="py-6 last:border-b border-t border-dotted border-gray-800 wrap-break-word">
   <div class="mb-2">
     <a
       class="text-inherit text-xl font-bold no-underline hover:underline"
