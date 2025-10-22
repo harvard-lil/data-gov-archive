@@ -1,5 +1,8 @@
 <script>
+  import { ChevronRight } from "lucide-svelte";
+
   import DatasetDetail from "$lib/components/DatasetDetail.svelte";
+
   import { base } from "$app/paths";
 
   let { data, resource, buildUrl } = $props();
@@ -45,7 +48,14 @@
           >
         </li>
         {#if index < breadcrumbs().length - 1}
-          <li class="flex select-none mx-2 shrink-0" aria-hidden="true">/</li>
+          <li class="flex select-none mx-2 shrink-0" aria-hidden="true">
+            <ChevronRight
+              size={16}
+              strokeWidth={1}
+              absoluteStrokeWidth
+              class="inline-block relative top-0.5"
+            />
+          </li>
         {/if}
       {/each}
     </ol>
