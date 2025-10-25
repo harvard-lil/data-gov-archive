@@ -4,7 +4,7 @@
 
   let { dataset, showOrganization = true } = $props();
 
-  let notes = sanitizeHtml(dataset.notes, { allowedTags: [] });
+  let notes = $derived(sanitizeHtml(dataset.notes, { allowedTags: [] }));
 </script>
 
 <li class="py-6 last:border-b border-t border-dotted border-gray-800 wrap-break-word">
