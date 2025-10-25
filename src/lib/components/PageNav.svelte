@@ -19,9 +19,6 @@
     const url = new URL(currentUrl);
     url.search = "";
 
-    // Set page parameter
-    url.searchParams.set("page", page.toString());
-
     // Add resource parameter if provided
     if (resource) {
       url.searchParams.set("resource", resource);
@@ -32,6 +29,9 @@
     if (searchQuery) {
       url.searchParams.set("q", searchQuery);
     }
+
+    // Set page parameter
+    url.searchParams.set("page", page.toString());
 
     return url.toString();
   }
