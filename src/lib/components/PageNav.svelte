@@ -3,6 +3,8 @@
   import { page } from "$app/stores";
   import { PAGE_SIZE } from "$lib/config.js";
 
+  import { ChevronLeft, ChevronRight } from "lucide-svelte";
+
   let { pageNumber, totalItems, resource = null, pageSize = PAGE_SIZE, isTop = false } = $props();
 
   let offset = $derived((pageNumber - 1) * pageSize);
@@ -42,10 +44,14 @@
     <li>
       {#if pageNumber > 1}
         <a class="text-inherit no-underline hover:underline" href={buildPageUrl(pageNumber - 1)}>
+          <ChevronLeft class="inline-block" size={16} strokeWidth={1} absoluteStrokeWidth />
           Previous
         </a>
       {:else}
-        <span class="cursor-not-allowed invisible" aria-hidden="true">Previous</span>
+        <span class="cursor-not-allowed invisible" aria-hidden="true">
+          <ChevronLeft class="inline-block" size={16} strokeWidth={1} absoluteStrokeWidth />
+          Previous
+        </span>
       {/if}
     </li>
     <li>
@@ -76,10 +82,14 @@
       <li>
         <a class="text-inherit no-underline hover:underline" href={buildPageUrl(pageNumber + 1)}>
           Next
+          <ChevronRight class="inline-block" size={16} strokeWidth={1} absoluteStrokeWidth />
         </a>
       </li>
     {:else}
-      <span class="cursor-not-allowed invisible" aria-hidden="true">Next</span>
+      <span class="cursor-not-allowed invisible" aria-hidden="true">
+        Next
+        <ChevronRight class="inline-block" size={16} strokeWidth={1} absoluteStrokeWidth />
+      </span>
     {/if}
   </ul>
 </nav>

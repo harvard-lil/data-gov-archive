@@ -193,10 +193,10 @@
       {#if !isLastBreadcrumb}
         <li class="flex select-none mx-2 shrink-0" aria-hidden="true">
           <ChevronRight
-            size={16}
+            size={14}
             strokeWidth={1}
             absoluteStrokeWidth
-            class="inline-block relative top-0.5"
+            class="inline-block relative top-1"
           />
         </li>
       {/if}
