@@ -109,35 +109,36 @@
 <nav aria-label="Breadcrumb" class="mb-4 text-sm flex min-w-0 w-full">
   <ol class="list-none p-0 m-0 flex min-w-0 flex-nowrap w-full">
     {#each breadcrumbs() as crumb, index}
-      <li class="flex shrink-0 min-w-0" class:flex-1={index === breadcrumbs().length - 1}>
+      {@const isLastBreadcrumb = index === breadcrumbs().length - 1}
+      <li class="flex shrink-0 min-w-0" class:flex-1={isLastBreadcrumb}>
         {#if crumb.tagLink}
           <a
             href={crumb.url}
             class="text-inherit no-underline hover:underline font-mono min-w-0"
-            class:block={index === breadcrumbs().length - 1}
-            class:overflow-hidden={index === breadcrumbs().length - 1}
-            class:text-ellipsis={index === breadcrumbs().length - 1}
-            class:whitespace-nowrap={index === breadcrumbs().length - 1}
-            class:w-full={index === breadcrumbs().length - 1}
-            title={index === breadcrumbs().length - 1 ? crumb.label : undefined}>{crumb.label}</a
+            class:block={isLastBreadcrumb}
+            class:overflow-hidden={isLastBreadcrumb}
+            class:text-ellipsis={isLastBreadcrumb}
+            class:whitespace-nowrap={isLastBreadcrumb}
+            class:w-full={isLastBreadcrumb}
+            title={isLastBreadcrumb ? crumb.label : undefined}>{crumb.label}</a
           >
         {:else if crumb.isTag}
           <span
             class="font-mono min-w-0"
-            class:block={index === breadcrumbs().length - 1}
-            class:overflow-hidden={index === breadcrumbs().length - 1}
-            class:text-ellipsis={index === breadcrumbs().length - 1}
-            class:whitespace-nowrap={index === breadcrumbs().length - 1}
-            class:w-full={index === breadcrumbs().length - 1}
-            title={index === breadcrumbs().length - 1 ? crumb.label : undefined}>{crumb.label}</span
+            class:block={isLastBreadcrumb}
+            class:overflow-hidden={isLastBreadcrumb}
+            class:text-ellipsis={isLastBreadcrumb}
+            class:whitespace-nowrap={isLastBreadcrumb}
+            class:w-full={isLastBreadcrumb}
+            title={isLastBreadcrumb ? crumb.label : undefined}>{crumb.label}</span
           >
         {:else if crumb.isSearchQuery && crumb.url}
           <span
             class="min-w-0"
-            class:block={index === breadcrumbs().length - 1}
-            class:overflow-hidden={index === breadcrumbs().length - 1}
-            class:w-full={index === breadcrumbs().length - 1}
-            title={index === breadcrumbs().length - 1 ? `Search: ${crumb.label}` : undefined}
+            class:block={isLastBreadcrumb}
+            class:overflow-hidden={isLastBreadcrumb}
+            class:w-full={isLastBreadcrumb}
+            title={isLastBreadcrumb ? `Search: ${crumb.label}` : undefined}
           >
             Search:
             <a href={crumb.url} class="italic text-inherit no-underline hover:underline"
@@ -152,12 +153,12 @@
         {:else if crumb.isSearchQuery}
           <span
             class="min-w-0"
-            class:block={index === breadcrumbs().length - 1}
-            class:overflow-hidden={index === breadcrumbs().length - 1}
-            class:text-ellipsis={index === breadcrumbs().length - 1}
-            class:whitespace-nowrap={index === breadcrumbs().length - 1}
-            class:w-full={index === breadcrumbs().length - 1}
-            title={index === breadcrumbs().length - 1 ? `Search: ${crumb.label}` : undefined}
+            class:block={isLastBreadcrumb}
+            class:overflow-hidden={isLastBreadcrumb}
+            class:text-ellipsis={isLastBreadcrumb}
+            class:whitespace-nowrap={isLastBreadcrumb}
+            class:w-full={isLastBreadcrumb}
+            title={isLastBreadcrumb ? `Search: ${crumb.label}` : undefined}
           >
             Search: <span class="italic">{crumb.label}</span>
             {#if crumb.resultCount !== null && !isLoading}
@@ -170,26 +171,26 @@
           <a
             href={crumb.url}
             class="text-inherit no-underline hover:underline min-w-0"
-            class:block={index === breadcrumbs().length - 1}
-            class:overflow-hidden={index === breadcrumbs().length - 1}
-            class:text-ellipsis={index === breadcrumbs().length - 1}
-            class:whitespace-nowrap={index === breadcrumbs().length - 1}
-            class:w-full={index === breadcrumbs().length - 1}
-            title={index === breadcrumbs().length - 1 ? crumb.label : undefined}>{crumb.label}</a
+            class:block={isLastBreadcrumb}
+            class:overflow-hidden={isLastBreadcrumb}
+            class:text-ellipsis={isLastBreadcrumb}
+            class:whitespace-nowrap={isLastBreadcrumb}
+            class:w-full={isLastBreadcrumb}
+            title={isLastBreadcrumb ? crumb.label : undefined}>{crumb.label}</a
           >
         {:else}
           <span
             class="min-w-0"
-            class:block={index === breadcrumbs().length - 1}
-            class:overflow-hidden={index === breadcrumbs().length - 1}
-            class:text-ellipsis={index === breadcrumbs().length - 1}
-            class:whitespace-nowrap={index === breadcrumbs().length - 1}
-            class:w-full={index === breadcrumbs().length - 1}
-            title={index === breadcrumbs().length - 1 ? crumb.label : undefined}>{crumb.label}</span
+            class:block={isLastBreadcrumb}
+            class:overflow-hidden={isLastBreadcrumb}
+            class:text-ellipsis={isLastBreadcrumb}
+            class:whitespace-nowrap={isLastBreadcrumb}
+            class:w-full={isLastBreadcrumb}
+            title={isLastBreadcrumb ? crumb.label : undefined}>{crumb.label}</span
           >
         {/if}
       </li>
-      {#if index < breadcrumbs().length - 1}
+      {#if !isLastBreadcrumb}
         <li class="flex select-none mx-2 shrink-0" aria-hidden="true">
           <ChevronRight
             size={16}
