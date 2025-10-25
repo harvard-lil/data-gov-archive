@@ -25,7 +25,4 @@
     @apply text-blue-700 underline;
     @apply dark:text-blue-300;
   }
-  a:hover {
-    @apply no-underline;
-  }
 }
