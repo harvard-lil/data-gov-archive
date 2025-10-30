@@ -6,7 +6,7 @@
 </script>
 
 {#snippet filterList(entities, entityName, entityLabel)}
-  <div class="mb-1 flex justify-between">
+  <div class="mb-1">
     <a
       class="block text-base font-bold text-inherit no-underline hover:underline"
       href={`${base}/?resource=${entityName}`}
