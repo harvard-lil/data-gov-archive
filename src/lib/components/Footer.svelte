@@ -3,7 +3,7 @@
 </script>
 
 <footer class="bg-gray-800 text-gray-100">
-  <a id="footer" class="sr-only" tabindex="-1" aria-label="Footer"></a>
+  <a id="footer" class="sr-only" tabindex="-1">Footer</a>
 
   <div class="mx-auto max-w-225 p-6 relative">
     <SkipLink href="#header" label="top of page" />

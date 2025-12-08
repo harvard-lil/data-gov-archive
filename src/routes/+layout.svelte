@@ -70,7 +70,7 @@
     </section>
 
     <section class="md:flex-3 relative md:min-w-0">
-      <a id="details" class="sr-only" tabindex="-1" aria-label="Details"></a>
+      <a id="details" class="sr-only" tabindex="-1">Details</a>
       <SkipLink href="#footer" label="bottom of page" />
       {#if $mainContentLoading}
         <LoadingSpinner />

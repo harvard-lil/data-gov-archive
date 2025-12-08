@@ -5,7 +5,7 @@
 </script>
 
 <header class="mb-8 relative">
-  <a id="header" class="sr-only" tabindex="-1" aria-label="Header"></a>
+  <a id="header" class="sr-only" tabindex="-1">Header</a>
   <SkipLink href="#search" label="search" />
 
   <h1 class="mb-4 text-5xl font-extralight">
