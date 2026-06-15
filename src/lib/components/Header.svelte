@@ -22,8 +22,8 @@
         Library Innovation Lab
       </a>
       (LIL)'s archive of <a href="https://data.gov">Data.gov</a>
-      datasets. The collection contains 17.9 TB of data across 311,604 datasets harvested, beginning
-      in 2024, from public data cataloged at the "home of the U.S. government's open data."
+      datasets. The collection contains 17.9 TB of data across 311,604 datasets harvested, beginning in
+      2024, from public data cataloged at the "home of the U.S. government's open data."
     </p>
     <p>
       You may also browse the <a href="https://source.coop/harvard-lil/gov-data">entire archive</a>

@@ -1,5 +1,5 @@
 <script>
-  import { ChevronRight } from "lucide-svelte";
+  import { ChevronRight } from "@lucide/svelte";
 
   import DatasetDetail from "$lib/components/DatasetDetail.svelte";
 

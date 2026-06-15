@@ -3,7 +3,7 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { Search } from "lucide-svelte";
+  import { Search } from "@lucide/svelte";
 
   let searchQuery = $state("");
   let isLoading = $state(false);

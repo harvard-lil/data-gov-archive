@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import { PAGE_SIZE } from "$lib/config.js";
 
-  import { ChevronLeft, ChevronRight } from "lucide-svelte";
+  import { ChevronLeft, ChevronRight } from "@lucide/svelte";
 
   let { pageNumber, totalItems, resource = null, pageSize = PAGE_SIZE, isTop = false } = $props();
 

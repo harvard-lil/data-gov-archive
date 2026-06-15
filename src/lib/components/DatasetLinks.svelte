@@ -1,5 +1,5 @@
 <script>
-  import { ExternalLink, FileJson, FolderArchive } from "lucide-svelte";
+  import { ExternalLink, FileJson, FolderArchive } from "@lucide/svelte";
 
   let { dataset } = $props();
 </script>
