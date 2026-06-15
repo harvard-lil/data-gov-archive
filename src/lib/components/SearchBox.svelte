@@ -1,6 +1,7 @@
 <script>
   import { browser } from "$app/environment";
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { page } from "$app/stores";
 
   import { Search } from "@lucide/svelte";
@@ -26,12 +27,9 @@
     isLoading = true;
 
     try {
-      // Navigate to search results with query parameter
-      const url = new URL($page.url);
-      url.search = "";
-      url.searchParams.set("q", searchQuery.trim());
-      url.searchParams.set("page", "1"); // Reset to first page
-      await goto(url.toString());
+      // Navigate to search results with query parameter (page reset to 1)
+      const query = `q=${encodeURIComponent(searchQuery.trim())}&page=1`;
+      await goto(resolve(`/?${query}`));
     } finally {
       isLoading = false;
     }
@@ -49,7 +47,7 @@
   <div class="align-center flex">
     <input
       id="search"
-      class="rounded-l-sm flex-1 p-4 bg-inherit min-w-50 border-gray-800 border-1 border-r-0 border-dotted focus:border-1 focus:border-r-0 focus:border-solid focus:outline-2 focus:outline-gray-800/20 whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-gray-800/50"
+      class="rounded-l-sm flex-1 p-4 bg-inherit min-w-50 border-gray-800 border border-r-0 border-dotted focus:border focus:border-r-0 focus:border-solid focus:outline-2 focus:outline-gray-800/20 whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-gray-800/50"
       type="text"
       maxLength="100"
       bind:value={searchQuery}
@@ -57,7 +55,7 @@
       placeholder="Search by dataset title, organization, publisher, bureau, description…"
     />
     <button
-      class="flex-none text-lg px-8 cursor-pointer text-blue-700 border-blue-700 border-solid border-1 rounded-r-sm disabled:cursor-not-allowed disabled:border-gray-400 disabled:border-1 disabled:border-dotted disabled:bg-gray-200 disabled:text-gray-400 focus:outline-blue-700/20 focus:outline-2"
+      class="flex-none text-lg px-8 cursor-pointer text-blue-700 border-blue-700 border-solid border rounded-r-sm disabled:cursor-not-allowed disabled:border-gray-400 disabled:border disabled:border-dotted disabled:bg-gray-200 disabled:text-gray-400 focus:outline-blue-700/20 focus:outline-2"
       title="Search"
       onclick={handleSearch}
       disabled={!searchQuery.trim() ||

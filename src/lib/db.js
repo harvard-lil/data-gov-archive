@@ -99,7 +99,7 @@ const isConnectionValid = async (conn) => {
     const testStatement = await conn.prepare("SELECT 1 AS test");
     await testStatement.close();
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -118,7 +118,7 @@ const getConnection = async () => {
     if (!isValid) {
       try {
         await connection.close();
-      } catch (error) {
+      } catch {
         // Ignore close errors
       }
       const dbInstance = await instantiateDuckDB();
@@ -177,7 +177,7 @@ export const queryData = async (query, params) => {
     throw new Error("DuckDB failed to initialize");
   }
 
-  let conn = null;
+  let conn;
   let statement = null;
 
   try {

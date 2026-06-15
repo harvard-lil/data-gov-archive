@@ -89,39 +89,36 @@
 
   // Helper function to build URLs
   function buildUrl(params = {}) {
-    if (!browser) return "#";
-    const url = new URL($page.url);
-    url.search = "";
+    const resourceMap = {
+      dataset: "datasets",
+      organization: "organizations",
+      bureau: "bureaus",
+      publisher: "publishers",
+      tag: "tags",
+    };
+
+    const entries = [];
 
     // Handle resource parameter
     if (params.type && params.id) {
-      const resourceMap = {
-        dataset: "datasets",
-        organization: "organizations",
-        bureau: "bureaus",
-        publisher: "publishers",
-        tag: "tags",
-      };
-      const resourcePath = `${resourceMap[params.type]}/${params.id}`;
-      url.searchParams.set("resource", resourcePath);
+      entries.push(["resource", `${resourceMap[params.type]}/${params.id}`]);
     } else if (params.type && !params.id) {
-      const resourceMap = {
-        dataset: "datasets",
-        organization: "organizations",
-        bureau: "bureaus",
-        publisher: "publishers",
-        tag: "tags",
-      };
-      url.searchParams.set("resource", resourceMap[params.type]);
+      entries.push(["resource", resourceMap[params.type]]);
     }
 
     // Handle other parameters
     Object.entries(params).forEach(([key, value]) => {
       if (key !== "type" && key !== "id" && value !== null && value !== undefined && value !== "") {
-        url.searchParams.set(key, value.toString());
+        entries.push([key, value.toString()]);
       }
     });
-    return url.toString();
+
+    // Return a base-relative path; callers wrap this in resolve() so the
+    // configured base path is applied (see $app/paths).
+    const query = entries
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join("&");
+    return query ? `/?${query}` : "/";
   }
 
   // Dynamic title

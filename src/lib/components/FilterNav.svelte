@@ -1,6 +1,5 @@
 <script>
-  import { base } from "$app/paths";
-  import SkipLink from "./SkipLink.svelte";
+  import { resolve } from "$app/paths";
 
   let { organizations, publishers, bureaus } = $props();
 </script>
@@ -9,19 +8,19 @@
   <div class="mb-1">
     <a
       class="block text-base font-bold text-inherit no-underline hover:underline"
-      href={`${base}/?resource=${entityName}`}
+      href={resolve(`/?resource=${entityName}`)}
     >
       {entityLabel}
     </a>
   </div>
   <ol class="text-sm mb-2">
-    {#each entities as entity}
+    {#each entities as entity (entity.identifier)}
       <li
-        class="flex justify-between border-b-1 border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
+        class="flex justify-between border-b border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
       >
         <a
           class="text-inherit no-underline hover:underline truncate"
-          href={`${base}/?resource=${entityName}/${encodeURIComponent(entity.identifier)}`}
+          href={resolve(`/?resource=${entityName}/${encodeURIComponent(entity.identifier)}`)}
           title={entity.identifier}
         >
           {entity.identifier}

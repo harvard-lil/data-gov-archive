@@ -5,7 +5,7 @@
 </script>
 
 <ul>
-  {#each datasets as dataset}
+  {#each datasets as dataset (dataset.name)}
     <DatasetListItem {dataset} {showOrganization} />
   {/each}
 </ul>

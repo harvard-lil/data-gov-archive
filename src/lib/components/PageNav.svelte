@@ -1,5 +1,5 @@
 <script>
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
   import { page } from "$app/stores";
   import { PAGE_SIZE } from "$lib/config.js";
 
@@ -7,35 +7,34 @@
 
   let { pageNumber, totalItems, resource = null, pageSize = PAGE_SIZE, isTop = false } = $props();
 
-  let offset = $derived((pageNumber - 1) * pageSize);
   let totalPages = $derived(Math.ceil(totalItems / pageSize));
 
   let pageNumberLabel = $derived(pageNumber.toLocaleString("en-US"));
   let totalPagesLabel = $derived(totalPages.toLocaleString("en-US"));
 
-  // Get current URL at top level
-  const currentUrl = $page.url;
-
-  // Helper function to build URL with query parameters
-  function buildPageUrl(page) {
-    const url = new URL(currentUrl);
-    url.search = "";
+  // Build a base-relative path with query parameters. Callers wrap this in
+  // resolve() so the configured base path is applied (see $app/paths).
+  function buildPageUrl(targetPage) {
+    const entries = [];
 
     // Add resource parameter if provided
     if (resource) {
-      url.searchParams.set("resource", resource);
+      entries.push(["resource", resource]);
     }
 
     // Preserve search query if present
-    const searchQuery = currentUrl.searchParams.get("q");
+    const searchQuery = $page.url.searchParams.get("q");
     if (searchQuery) {
-      url.searchParams.set("q", searchQuery);
+      entries.push(["q", searchQuery]);
     }
 
     // Set page parameter
-    url.searchParams.set("page", page.toString());
+    entries.push(["page", targetPage.toString()]);
 
-    return url.toString();
+    const query = entries
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join("&");
+    return `/?${query}`;
   }
 </script>
 
@@ -43,7 +42,10 @@
   <ul class="flex justify-between">
     <li>
       {#if pageNumber > 1}
-        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(pageNumber - 1)}>
+        <a
+          class="text-inherit no-underline hover:underline"
+          href={resolve(buildPageUrl(pageNumber - 1))}
+        >
           <ChevronLeft class="inline-block" size={16} strokeWidth={1} absoluteStrokeWidth />
           Previous
         </a>
@@ -59,20 +61,24 @@
         Showing page {pageNumberLabel} of {totalPagesLabel}
       {:else if pageNumber < 2}
         Showing page {pageNumberLabel} of
-        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(totalPages)}
-          >{totalPagesLabel}</a
+        <a
+          class="text-inherit no-underline hover:underline"
+          href={resolve(buildPageUrl(totalPages))}>{totalPagesLabel}</a
         >
       {:else if pageNumber < totalPages}
-        Showing page <a class="text-inherit no-underline hover:underline" href={buildPageUrl(1)}
-          >{pageNumberLabel}</a
+        Showing page <a
+          class="text-inherit no-underline hover:underline"
+          href={resolve(buildPageUrl(1))}>{pageNumberLabel}</a
         >
         of
-        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(totalPages)}
-          >{totalPagesLabel}</a
+        <a
+          class="text-inherit no-underline hover:underline"
+          href={resolve(buildPageUrl(totalPages))}>{totalPagesLabel}</a
         >
       {:else}
-        Showing page <a class="text-inherit no-underline hover:underline" href={buildPageUrl(1)}
-          >{pageNumberLabel}</a
+        Showing page <a
+          class="text-inherit no-underline hover:underline"
+          href={resolve(buildPageUrl(1))}>{pageNumberLabel}</a
         >
         of
         {totalPagesLabel}
@@ -80,7 +86,10 @@
     </li>
     {#if pageNumber < totalPages}
       <li>
-        <a class="text-inherit no-underline hover:underline" href={buildPageUrl(pageNumber + 1)}>
+        <a
+          class="text-inherit no-underline hover:underline"
+          href={resolve(buildPageUrl(pageNumber + 1))}
+        >
           Next
           <ChevronRight class="inline-block" size={16} strokeWidth={1} absoluteStrokeWidth />
         </a>

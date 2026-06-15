@@ -1,5 +1,5 @@
 <script>
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
   import TagList from "./TagList.svelte";
   // import Timestamp from "./Timestamp.svelte";
 
@@ -15,7 +15,7 @@
       <dd class="inline">
         <a
           class="text-inherit no-underline hover:underline"
-          href={`${base}/?resource=publishers/${encodeURIComponent(dataset.publisher)}`}
+          href={resolve(`/?resource=publishers/${encodeURIComponent(dataset.publisher)}`)}
           >{dataset.publisher}</a
         >
       </dd>
@@ -27,7 +27,7 @@
       <dd class="inline">
         <a
           class="text-inherit no-underline hover:underline"
-          href={`${base}/?resource=bureaus/${encodeURIComponent(dataset.bureau_name)}`}
+          href={resolve(`/?resource=bureaus/${encodeURIComponent(dataset.bureau_name)}`)}
           >{dataset.bureau_name}</a
         >
       </dd>

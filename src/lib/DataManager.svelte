@@ -103,7 +103,7 @@
         if (currentType === "dataset" && !currentId) {
           await loadDatasetsList(currentPage, requestId);
         } else if (currentType === "dataset" && currentId) {
-          await loadDatasetDetail(currentId, requestId);
+          await loadDatasetDetail(currentId);
         } else if (["organization", "bureau", "publisher"].includes(currentType) && !currentId) {
           await loadEntityList(currentType, currentPage, requestId);
         } else if (["organization", "bureau", "publisher"].includes(currentType) && currentId) {
@@ -200,7 +200,7 @@
     }
   }
 
-  async function loadDatasetDetail(datasetName, requestId) {
+  async function loadDatasetDetail(datasetName) {
     try {
       const datasets = await queryData(
         `

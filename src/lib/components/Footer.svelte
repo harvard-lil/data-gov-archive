@@ -6,7 +6,7 @@
   <a id="footer" class="sr-only" tabindex="-1">Footer</a>
 
   <div class="mx-auto max-w-225 p-6 relative">
-    <SkipLink href="#header" label="top of page" />
+    <SkipLink target="header" label="top of page" />
 
     This is a project of the
     <a class="text-blue-200" href="https://lil.law.harvard.edu"> Library Innovation Lab </a>, part

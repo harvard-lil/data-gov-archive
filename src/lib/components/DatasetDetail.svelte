@@ -1,6 +1,6 @@
 <script>
   import sanitizeHtml from "sanitize-html";
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
 
   import DatasetLinks from "./DatasetLinks.svelte";
   import DatasetMetadata from "./DatasetMetadata.svelte";
@@ -14,7 +14,7 @@
   <div class="font-normal text-lg mb-6">
     <a
       class="text-inherit no-underline hover:underline"
-      href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
+      href={resolve(`/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`)}
       >{dataset.organization_title}</a
     >
   </div>
@@ -24,12 +24,12 @@
   {#if notes}
     {@const paragraphs = notes.split(/\n\n|\r\n\r\n/)}
     <div class="italic my-6 hyphens-auto">
-      {#each paragraphs as paragraph}
+      {#each paragraphs as paragraph, i (i)}
         {@const lines = paragraph.split(/\n|\r\n/)}
         {#if lines[0]}
           <p class="mb-4 last:mb-0">
             {#if lines.length > 1}
-              {#each lines as line}
+              {#each lines as line, i (i)}
                 {line}<br />
               {/each}
             {:else}

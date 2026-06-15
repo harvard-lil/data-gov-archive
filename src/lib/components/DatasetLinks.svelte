@@ -10,6 +10,7 @@
       class="flex items-center justify-center gap-2 w-full text-inherit text-base no-underline border border-gray-800 rounded-md py-3 px-4 mb-1.5"
       {href}
       target="_blank"
+      rel="external noopener"
     >
       {#if label === "Dataset & Metadata (ZIP)"}
         <FolderArchive size={16} strokeWidth={1.5} absoluteStrokeWidth />

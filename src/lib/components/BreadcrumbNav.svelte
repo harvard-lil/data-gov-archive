@@ -1,5 +1,6 @@
 <script>
   import { ChevronRight } from "@lucide/svelte";
+  import { resolve } from "$app/paths";
 
   let {
     resource,
@@ -108,12 +109,12 @@
 
 <nav aria-label="Breadcrumb" class="mb-4 text-sm flex min-w-0 w-full">
   <ol class="list-none p-0 m-0 flex min-w-0 flex-nowrap w-full">
-    {#each breadcrumbs() as crumb, index}
+    {#each breadcrumbs() as crumb, index (index)}
       {@const isLastBreadcrumb = index === breadcrumbs().length - 1}
       <li class="flex shrink-0 min-w-0" class:flex-1={isLastBreadcrumb}>
         {#if crumb.tagLink}
           <a
-            href={crumb.url}
+            href={resolve(crumb.url)}
             class="text-inherit no-underline hover:underline font-mono min-w-0"
             class:block={isLastBreadcrumb}
             class:overflow-hidden={isLastBreadcrumb}
@@ -141,7 +142,7 @@
             title={isLastBreadcrumb ? `Search: ${crumb.label}` : undefined}
           >
             Search:
-            <a href={crumb.url} class="italic text-inherit no-underline hover:underline"
+            <a href={resolve(crumb.url)} class="italic text-inherit no-underline hover:underline"
               >{crumb.label}</a
             >
             {#if crumb.resultCount !== null && !isLoading}
@@ -169,7 +170,7 @@
           </span>
         {:else if crumb.url}
           <a
-            href={crumb.url}
+            href={resolve(crumb.url)}
             class="text-inherit no-underline hover:underline min-w-0"
             class:block={isLastBreadcrumb}
             class:overflow-hidden={isLastBreadcrumb}

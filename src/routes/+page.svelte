@@ -79,11 +79,7 @@
   {:else if viewRouter.view() === "datasets-list"}
     <DatasetsListView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
   {:else if viewRouter.view() === "dataset-detail"}
-    <DatasetDetailView
-      data={dataManager.data}
-      resource={viewRouter.resource}
-      buildUrl={viewRouter.buildUrl}
-    />
+    <DatasetDetailView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
   {:else if viewRouter.view() === "entity-list"}
     <EntityListView
       data={dataManager.data}

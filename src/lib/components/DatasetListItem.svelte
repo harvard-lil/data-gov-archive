@@ -1,6 +1,6 @@
 <script>
   import sanitizeHtml from "sanitize-html";
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
 
   let { dataset, showOrganization = true } = $props();
 
@@ -11,14 +11,14 @@
   <div class="mb-2">
     <a
       class="text-inherit text-xl font-bold no-underline hover:underline"
-      href={`${base}/?resource=datasets/${encodeURIComponent(dataset.name)}`}>{dataset.title}</a
+      href={resolve(`/?resource=datasets/${encodeURIComponent(dataset.name)}`)}>{dataset.title}</a
     >
   </div>
   {#if showOrganization === true}
     <div class:mb-4={notes.trim() ? true : false}>
       <a
         class="text-inherit text-lg no-underline hover:underline"
-        href={`${base}/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`}
+        href={resolve(`/?resource=organizations/${encodeURIComponent(dataset.organization_title)}`)}
         >{dataset.organization_title}</a
       >
     </div>

@@ -3,9 +3,9 @@
 
   import DatasetDetail from "$lib/components/DatasetDetail.svelte";
 
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
 
-  let { data, resource, buildUrl } = $props();
+  let { data, buildUrl } = $props();
 
   // Create custom breadcrumbs for dataset detail view
   let breadcrumbs = $derived(() => {
@@ -34,10 +34,10 @@
   <!-- Custom breadcrumb navigation for dataset detail -->
   <nav aria-label="Breadcrumb" class="mb-4 text-sm flex min-w-0 w-full">
     <ol class="list-none p-0 m-0 flex min-w-0 flex-nowrap w-full">
-      {#each breadcrumbs() as crumb, index}
+      {#each breadcrumbs() as crumb, index (index)}
         <li class="flex shrink-0 min-w-0" class:flex-1={index === breadcrumbs().length - 1}>
           <a
-            href={crumb.url}
+            href={resolve(crumb.url)}
             class="text-inherit no-underline hover:underline min-w-0"
             class:block={index === breadcrumbs().length - 1}
             class:overflow-hidden={index === breadcrumbs().length - 1}

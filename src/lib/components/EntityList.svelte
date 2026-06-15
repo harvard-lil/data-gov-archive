@@ -1,16 +1,16 @@
 <script>
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
 
   let { entity, instances } = $props();
 </script>
 
 <ul>
-  {#each instances as instance}
+  {#each instances as instance (instance.identifier)}
     <li class="py-6 last:border-b border-t border-dotted border-gray-800 wrap-break-word">
       <div class="mb-2">
         <a
           class="text-inherit text-xl font-bold no-underline hover:underline"
-          href={`${base}/?resource=${entity.route}/${encodeURIComponent(instance.identifier)}`}
+          href={resolve(`/?resource=${entity.route}/${encodeURIComponent(instance.identifier)}`)}
         >
           {instance.identifier}
         </a>
