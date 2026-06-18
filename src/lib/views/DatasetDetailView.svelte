@@ -29,7 +29,7 @@
   });
 </script>
 
-{#if data.isLoading}
+{#if data.showSkeleton}
   <div aria-busy="true">
     <BreadcrumbNav {resource} searchQuery={null} {buildUrl} loading />
     <DatasetDetail loading />

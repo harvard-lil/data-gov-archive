@@ -11,13 +11,13 @@
   searchQuery={null}
   {buildUrl}
   pageNumber={data.pageNumber}
-  loading={data.isLoading}
+  loading={data.showSkeleton}
 />
 
 <div aria-busy={data.isLoading}>
-  {#if data.isLoading || (data.entity && data.identifier && data.totalItems > 0)}
+  {#if data.showSkeleton || (data.entity && data.identifier && data.totalItems > 0)}
     <PageNav
-      loading={data.isLoading}
+      loading={data.showSkeleton}
       pageNumber={data.pageNumber}
       totalItems={data.totalItems}
       {resource}
@@ -25,13 +25,13 @@
     />
 
     <DatasetList
-      loading={data.isLoading}
+      loading={data.showSkeleton}
       datasets={data.datasets}
       showOrganization={data.entity?.showOrganization}
     />
 
     <PageNav
-      loading={data.isLoading}
+      loading={data.showSkeleton}
       pageNumber={data.pageNumber}
       totalItems={data.totalItems}
       {resource}

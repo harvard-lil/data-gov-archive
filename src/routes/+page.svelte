@@ -26,14 +26,20 @@
       id: router.id,
       pageNumber: router.pageNumber,
       searchQuery: router.searchQuery,
+      view: router.view,
     });
   });
+
+  // The view to render. Falls back to router.view only before the first load
+  // commits a displayedView (initial paint / SSR); after that displayedView
+  // always wins so the previous view stays put during fast navigations.
+  let displayView = $derived(dataManager.data.displayedView ?? router.view);
 
   // Dynamic title
   let pageTitle = $derived.by(() => {
     let title = "Data.gov Archive Search";
-    const currentView = router.view;
     const data = dataManager.data;
+    const currentView = displayView;
 
     if (currentView === "search" && data.label) {
       title += `: ${data.label}, page ${data.pageNumber}`;
@@ -56,26 +62,27 @@
   <title>{pageTitle}</title>
 </svelte:head>
 
-<!-- Render appropriate view based on current state -->
-{#if router.view === "search"}
+<!-- Render the view that has loaded (displayedView lags router.view until the
+     new view's data is ready or the skeleton threshold elapses) -->
+{#if displayView === "search"}
   <SearchView
     data={dataManager.data}
     resource={router.resource}
     searchQuery={router.searchQuery}
     buildUrl={router.buildUrl}
   />
-{:else if router.view === "home"}
+{:else if displayView === "home"}
   <HomeView data={dataManager.data} resource={router.resource} buildUrl={router.buildUrl} />
-{:else if router.view === "datasets-list"}
+{:else if displayView === "datasets-list"}
   <DatasetsListView data={dataManager.data} buildUrl={router.buildUrl} />
-{:else if router.view === "dataset-detail"}
+{:else if displayView === "dataset-detail"}
   <DatasetDetailView
     data={dataManager.data}
     resource={router.resource}
     buildUrl={router.buildUrl}
   />
-{:else if router.view === "entity-list"}
+{:else if displayView === "entity-list"}
   <EntityListView data={dataManager.data} resource={router.resource} buildUrl={router.buildUrl} />
-{:else if router.view === "entity-detail"}
+{:else if displayView === "entity-detail"}
   <EntityDetailView data={dataManager.data} resource={router.resource} buildUrl={router.buildUrl} />
 {/if}

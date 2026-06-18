@@ -241,6 +241,11 @@ export const querySearchIndex = async (query, params) => {
   }
 };
 
+const buildCacheKey = (query, params) => `${query}|${params ? JSON.stringify(params) : ""}`;
+
+// Is this exact query (with params) already in the query cache?
+export const isQueryCached = (query, params) => queryCache.has(buildCacheKey(query, params));
+
 export const queryData = async (query, params) => {
   // Check if we're in browser environment
   if (!browser) {
@@ -248,8 +253,7 @@ export const queryData = async (query, params) => {
   }
 
   // Generate cache key
-  const paramsStr = params ? JSON.stringify(params) : "";
-  const cacheKey = `${query}|${paramsStr}`;
+  const cacheKey = buildCacheKey(query, params);
 
   // Check cache first
   const cachedResult = queryCache.get(cacheKey);

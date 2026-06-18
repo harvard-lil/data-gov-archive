@@ -1,5 +1,6 @@
 import {
   ensureSearchIndex,
+  isQueryCached,
   isSearchIndexReady,
   queryData,
   querySearchIndex,
@@ -62,6 +63,75 @@ function buildLikeSearch(searchTerm, offset) {
   };
 }
 
+// Results query builders
+const homeDatasetsResults = (offset) => `
+  SELECT name, title, notes, organization_title
+  FROM '${DATA_URL}/datasets.parquet'
+  ORDER BY name
+  LIMIT ${PAGE_SIZE} OFFSET ${offset}
+`;
+
+const datasetsListResults = (offset) => `
+  SELECT *
+  FROM '${DATA_URL}/datasets.parquet'
+  ORDER BY name
+  LIMIT ${PAGE_SIZE} OFFSET ${offset}
+`;
+
+const datasetDetailQuery = (name) => ({
+  query: `
+    SELECT
+      datasets.name,
+      title,
+      notes,
+      metadata_modified,
+      organization_title,
+      bureau_name,
+      publisher,
+      (
+        SELECT array_agg(tag)
+        FROM '${DATA_URL}/tags.parquet' AS tags
+        WHERE tags.name = datasets.name
+      ) AS tags
+    FROM '${DATA_URL}/datasets.parquet'
+    WHERE datasets.name = $1
+    LIMIT 1
+  `,
+  params: [name],
+});
+
+const entityListResults = (entity, offset) => `
+  SELECT identifier, sum(count) AS count
+  FROM '${DATA_URL}/aggregations.parquet'
+  WHERE aggregation = '${entity.route}'
+  GROUP BY identifier
+  ORDER BY identifier
+  LIMIT ${PAGE_SIZE} OFFSET ${offset}
+`;
+
+const entityDetailResults = (entity, identifier, offset) => ({
+  query: `
+    SELECT *
+    FROM '${DATA_URL}/datasets.parquet'
+    WHERE ${entity.identifier} = $1
+    ORDER BY name
+    LIMIT ${PAGE_SIZE} OFFSET ${offset}
+  `,
+  params: [identifier],
+});
+
+const tagResults = (tag, offset) => ({
+  query: `
+    SELECT datasets.name, title, notes, organization_title
+    FROM '${DATA_URL}/datasets.parquet' datasets
+    INNER JOIN '${DATA_URL}/tags.parquet' tags ON datasets.name = tags.name
+    WHERE tags.tag = $1
+    ORDER BY datasets.name
+    LIMIT ${PAGE_SIZE} OFFSET ${offset}
+  `,
+  params: [tag],
+});
+
 export function createDataManager() {
   // Data state
   const data = $state({
@@ -76,44 +146,104 @@ export function createDataManager() {
     identifier: "",
     label: "",
     isLoading: true,
+    showSkeleton: true,
     isInitialLoad: true,
+    displayedView: null,
   });
 
-  // Debouncing state
+  // Request-tracking state
   let loadingTimeout = null;
   let currentRequestId = 0;
+  let pendingView = null;
+  let lastSearchQuery = null;
+  let initLoaded = false;
+
+  // Wipe content fields when switching to a genuinely different view
+  function clearData() {
+    data.datasets = [];
+    data.entities = [];
+    data.entity = null;
+    data.dataset = null;
+    data.totalItems = 0;
+    data.identifier = "";
+    data.label = "";
+  }
+
+  function isTargetCached(type, id, page) {
+    const offset = (page - 1) * PAGE_SIZE;
+
+    if (!type) {
+      // Initial data is served from the memoized init JSON
+      return page <= 1 ? initLoaded : isQueryCached(homeDatasetsResults(offset));
+    }
+    if (type === "dataset") {
+      if (!id) return isQueryCached(datasetsListResults(offset));
+      const { query, params } = datasetDetailQuery(id);
+      return isQueryCached(query, params);
+    }
+    if (["organization", "bureau", "publisher"].includes(type)) {
+      const entity = entities.find((e) => e.type === type);
+      if (!entity) return false;
+      if (!id) return isQueryCached(entityListResults(entity, offset));
+      const { query, params } = entityDetailResults(entity, id, offset);
+      return isQueryCached(query, params);
+    }
+    if (type === "tag" && id) {
+      const { query, params } = tagResults(id, offset);
+      return isQueryCached(query, params);
+    }
+    return false;
+  }
+
+  function beginLoad({ view, isViewChange, cached }) {
+    const requestId = ++currentRequestId;
+    pendingView = view;
+
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      loadingTimeout = null;
+    }
+
+    data.isLoading = true;
+
+    if (data.isInitialLoad || (isViewChange && !cached)) {
+      data.displayedView = view;
+      clearData();
+      data.showSkeleton = true;
+    }
+
+    return requestId;
+  }
+
+  function endLoad(requestId) {
+    if (requestId !== currentRequestId) return;
+    data.displayedView = pendingView;
+    data.showSkeleton = false;
+    data.isLoading = false;
+    data.isInitialLoad = false;
+  }
 
   // Load data for the current route parameters
-  function update({ type = null, id = null, pageNumber = 1, searchQuery = null }) {
+  function update({ type = null, id = null, pageNumber = 1, searchQuery = null, view = null }) {
     if (!browser) return;
 
     const currentType = type;
     const currentId = id;
     const currentPage = pageNumber;
 
-    // Clear any existing timeout
-    if (loadingTimeout) {
-      clearTimeout(loadingTimeout);
-    }
-
-    // Generate unique request ID for this request
-    const requestId = ++currentRequestId;
-
-    // Handle search results (immediate, no debouncing)
+    // Handle search results (no debouncing)
     if (searchQuery) {
-      // For search, clear previous data immediately to prevent flashing
-      data.datasets = [];
-      data.totalItems = 0;
-      data.identifier = "";
-      data.label = "";
-      data.isLoading = true;
+      const isViewChange = pendingView !== "search" || searchQuery !== lastSearchQuery;
+      lastSearchQuery = searchQuery;
       data.currentType = currentType;
       data.currentId = currentId;
       data.pageNumber = currentPage;
 
+      const requestId = beginLoad({ view, isViewChange, cached: false });
       loadSearchResults(searchQuery, currentPage, requestId);
       return;
     }
+    lastSearchQuery = null;
 
     // Store previous values for comparison
     const previousType = data.currentType;
@@ -124,41 +254,24 @@ export function createDataManager() {
     data.currentId = currentId;
     data.pageNumber = currentPage;
 
-    // Only show loading on initial load or when changing view type/ID
-    const isViewChange = previousType !== currentType || previousId !== currentId;
-    if (data.isInitialLoad || isViewChange) {
-      data.isLoading = true;
-      // Clear previous data when changing views to prevent showing wrong content
-      if (isViewChange) {
-        data.datasets = [];
-        data.entities = [];
-        data.entity = null;
-        data.dataset = null;
-        data.totalItems = 0;
-        data.identifier = "";
-        data.label = "";
-      }
-    }
+    const isViewChange =
+      previousType !== currentType || previousId !== currentId || view !== pendingView;
+    const cached = isTargetCached(currentType, currentId, currentPage);
+    const requestId = beginLoad({ view, isViewChange, cached });
 
-    // Handle home page (immediate, no debouncing)
     if (!currentType) {
       loadHomeData(currentPage, requestId);
       return;
     }
 
-    // Debounce other data loading (entity lists, dataset details, etc.)
-    loadingTimeout = setTimeout(async () => {
-      // Check if this is still the latest request
-      if (requestId !== currentRequestId) {
-        return;
-      }
-
+    const runLoad = async () => {
+      if (requestId !== currentRequestId) return;
       try {
         // Load data based on view type
         if (currentType === "dataset" && !currentId) {
           await loadDatasetsList(currentPage, requestId);
         } else if (currentType === "dataset" && currentId) {
-          await loadDatasetDetail(currentId);
+          await loadDatasetDetail(currentId, requestId);
         } else if (["organization", "bureau", "publisher"].includes(currentType) && !currentId) {
           await loadEntityList(currentType, currentPage, requestId);
         } else if (["organization", "bureau", "publisher"].includes(currentType) && currentId) {
@@ -168,9 +281,15 @@ export function createDataManager() {
         }
       } catch (err) {
         console.error("Error loading data:", err);
-        data.isLoading = false;
+        endLoad(requestId);
       }
-    }, 150); // 150ms debounce delay
+    };
+
+    if (cached) {
+      runLoad();
+    } else {
+      loadingTimeout = setTimeout(runLoad, 150); // 150ms debounce delay
+    }
   }
 
   async function loadHomeData(page = 1, requestId) {
@@ -191,8 +310,8 @@ export function createDataManager() {
         data.datasets = initDatasets.slice(0, PAGE_SIZE);
         data.totalItems = initAggregations.datasetsCount;
         data.pageNumber = page;
-        data.isLoading = false;
-        data.isInitialLoad = false;
+        initLoaded = true;
+        endLoad(requestId);
         return;
       }
 
@@ -207,12 +326,7 @@ export function createDataManager() {
         return;
       }
 
-      const datasets = await queryData(`
-        SELECT name, title, notes, organization_title
-        FROM '${DATA_URL}/datasets.parquet'
-        ORDER BY name
-        LIMIT ${PAGE_SIZE} OFFSET ${offset}
-      `);
+      const datasets = await queryData(homeDatasetsResults(offset));
 
       // Check again before updating state
       if (requestId !== currentRequestId) {
@@ -222,11 +336,10 @@ export function createDataManager() {
       data.datasets = datasets;
       data.totalItems = Number(datasetsCount[0].count);
       data.pageNumber = page;
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
     } catch (error) {
       console.error("Error loading home data:", error);
-      data.isLoading = false;
+      endLoad(requestId);
     }
   }
 
@@ -247,16 +360,11 @@ export function createDataManager() {
       const totalPages = Math.ceil(Number(datasetsCount[0].count) / PAGE_SIZE);
 
       if (page <= 0 || page > totalPages) {
-        data.isLoading = false;
+        endLoad(requestId);
         return;
       }
 
-      const datasets = await queryData(`
-        SELECT *
-        FROM '${DATA_URL}/datasets.parquet'
-        ORDER BY name
-        LIMIT ${PAGE_SIZE} OFFSET ${offset}
-      `);
+      const datasets = await queryData(datasetsListResults(offset));
 
       // Check again before updating state
       if (requestId !== currentRequestId) {
@@ -265,43 +373,23 @@ export function createDataManager() {
 
       data.datasets = datasets;
       data.totalItems = Number(datasetsCount[0].count);
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
     } catch (error) {
       console.error("Error loading datasets list:", error);
-      data.isLoading = false;
+      endLoad(requestId);
     }
   }
 
-  async function loadDatasetDetail(datasetName) {
+  async function loadDatasetDetail(datasetName, requestId) {
     try {
-      const datasets = await queryData(
-        `
-        SELECT
-          datasets.name,
-          title,
-          notes,
-          metadata_modified,
-          organization_title,
-          bureau_name,
-          publisher,
-          (
-            SELECT array_agg(tag)
-            FROM '${DATA_URL}/tags.parquet' AS tags
-            WHERE tags.name = datasets.name
-          ) AS tags
-        FROM '${DATA_URL}/datasets.parquet'
-        WHERE datasets.name = $1
-        LIMIT 1
-        `,
-        [datasetName]
-      );
+      const { query, params } = datasetDetailQuery(datasetName);
+      const datasets = await queryData(query, params);
 
       data.dataset = datasets[0] || null;
-      data.isLoading = false;
+      endLoad(requestId);
     } catch (error) {
       console.error("Error loading dataset detail:", error);
-      data.isLoading = false;
+      endLoad(requestId);
     }
   }
 
@@ -327,16 +415,7 @@ export function createDataManager() {
         return;
       }
 
-      const instances = await queryData(`
-        SELECT
-          identifier,
-          sum(count) AS count
-        FROM '${DATA_URL}/aggregations.parquet'
-        WHERE aggregation = '${entity.route}'
-        GROUP BY identifier
-        ORDER BY identifier
-        LIMIT ${PAGE_SIZE} OFFSET ${offset}
-      `);
+      const instances = await queryData(entityListResults(entity, offset));
 
       // Check again before updating state
       if (requestId !== currentRequestId) {
@@ -347,11 +426,10 @@ export function createDataManager() {
       data.entities = instances;
       data.totalItems = Number(totalCount[0].count);
       data.pageNumber = page;
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
     } catch (error) {
       console.error("Error loading entity list:", error);
-      data.isLoading = false;
+      endLoad(requestId);
     }
   }
 
@@ -379,16 +457,8 @@ export function createDataManager() {
         return;
       }
 
-      const datasets = await queryData(
-        `
-        SELECT *
-        FROM '${DATA_URL}/datasets.parquet'
-        WHERE ${entity.identifier} = $1
-        ORDER BY name
-        LIMIT ${PAGE_SIZE} OFFSET ${offset}
-        `,
-        [identifier]
-      );
+      const { query, params } = entityDetailResults(entity, identifier, offset);
+      const datasets = await queryData(query, params);
 
       // Check again before updating state
       if (requestId !== currentRequestId) {
@@ -401,11 +471,10 @@ export function createDataManager() {
       data.identifier = identifier;
       data.label = datasets[0]?.[entity.label] || identifier;
       data.entity = entity;
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
     } catch (error) {
       console.error("Error loading entity detail:", error);
-      data.isLoading = false;
+      endLoad(requestId);
     }
   }
 
@@ -437,26 +506,12 @@ export function createDataManager() {
       const totalPages = Math.ceil(Number(datasetsCount[0]?.count || 0) / PAGE_SIZE);
 
       if (page <= 0 || page > totalPages) {
-        data.isLoading = false;
+        endLoad(requestId);
         return;
       }
 
-      const datasets = await queryData(
-        `
-        SELECT
-          datasets.name,
-          title,
-          notes,
-          organization_title
-        FROM '${DATA_URL}/datasets.parquet' datasets
-        INNER JOIN
-          '${DATA_URL}/tags.parquet' tags ON datasets.name = tags.name
-        WHERE tags.tag = $1
-        ORDER BY datasets.name
-        LIMIT ${PAGE_SIZE} OFFSET ${offset}
-        `,
-        [tag]
-      );
+      const { query, params } = tagResults(tag, offset);
+      const datasets = await queryData(query, params);
 
       // Check again before updating state
       if (requestId !== currentRequestId) {
@@ -469,12 +524,10 @@ export function createDataManager() {
       data.identifier = tag;
       data.label = tag;
       data.entity = entity;
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
     } catch (error) {
       console.error("Error loading tag datasets:", error);
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
     }
   }
 
@@ -504,7 +557,7 @@ export function createDataManager() {
       const totalPages = Math.ceil(Number(countResult[0]?.count || 0) / PAGE_SIZE);
 
       if (page <= 0 || page > totalPages) {
-        data.isLoading = false;
+        endLoad(requestId);
         return;
       }
 
@@ -521,8 +574,7 @@ export function createDataManager() {
       data.pageNumber = page;
       data.identifier = query;
       data.label = `Search results for "${query}"`;
-      data.isLoading = false;
-      data.isInitialLoad = false;
+      endLoad(requestId);
 
       // If we previously served LIKE fallback results, silently upgrade to BM25 results when ready
       if (!useFts && allowUpgrade) {
@@ -536,7 +588,7 @@ export function createDataManager() {
       }
     } catch (error) {
       console.error("Error loading search results:", error);
-      data.isLoading = false;
+      endLoad(requestId);
     }
   }
 

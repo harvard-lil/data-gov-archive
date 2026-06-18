@@ -11,23 +11,23 @@
   searchQuery={null}
   {buildUrl}
   pageNumber={data.pageNumber}
-  loading={data.isLoading}
+  loading={data.showSkeleton}
 />
 
 <div aria-busy={data.isLoading}>
-  {#if data.isLoading || (data.entity && data.totalItems > 0)}
+  {#if data.showSkeleton || (data.entity && data.totalItems > 0)}
     <PageNav
-      loading={data.isLoading}
+      loading={data.showSkeleton}
       pageNumber={data.pageNumber}
       totalItems={data.totalItems}
       {resource}
       isTop={true}
     />
 
-    <EntityList loading={data.isLoading} entity={data.entity} instances={data.entities} />
+    <EntityList loading={data.showSkeleton} entity={data.entity} instances={data.entities} />
 
     <PageNav
-      loading={data.isLoading}
+      loading={data.showSkeleton}
       pageNumber={data.pageNumber}
       totalItems={data.totalItems}
       {resource}
