@@ -201,8 +201,8 @@
       {#if !isLastBreadcrumb}
         <li
           class="flex select-none mx-2 shrink-0"
-          class:text-gray-300={loading}
-          class:dark:text-gray-700={loading}
+          class:text-slate-300={loading}
+          class:dark:text-slate-700={loading}
           aria-hidden="true"
         >
           <ChevronRight
