@@ -1,10 +1,11 @@
+import { browser } from "$app/environment";
 import { page } from "$app/state";
 
 export function createViewRouter() {
   // Reactive query parameters
-  const resource = $derived(page.url.searchParams.get("resource"));
-  const pageNumber = $derived(parseInt(page.url.searchParams.get("page") || "1"));
-  const searchQuery = $derived(page.url.searchParams.get("q"));
+  const resource = $derived(browser ? page.url.searchParams.get("resource") : null);
+  const pageNumber = $derived(browser ? parseInt(page.url.searchParams.get("page") || "1") : 1);
+  const searchQuery = $derived(browser ? page.url.searchParams.get("q") : null);
 
   // Parse the resource parameter into an internal type + id
   const parsed = $derived.by(() => {
