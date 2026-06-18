@@ -4,6 +4,18 @@
   import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   let { organizations = [], publishers = [], bureaus = [], loading = false } = $props();
+
+  // Varied width for skeleton labels
+  const skeletonWidths = [
+    "w-3/4",
+    "w-1/2",
+    "w-5/6",
+    "w-2/3",
+    "w-7/12",
+    "w-4/5",
+    "w-1/2",
+    "w-11/12",
+  ];
 </script>
 
 {#snippet filterList(entities, entityName, entityLabel)}
@@ -40,7 +52,7 @@
       <li
         class="flex justify-between border-b border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
       >
-        <Skeleton class="h-4 w-2/3" />
+        <Skeleton class="h-4 {skeletonWidths[i % skeletonWidths.length]}" />
         <Skeleton class="h-4 w-8 ml-1" />
       </li>
     {/each}
