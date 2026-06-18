@@ -2,18 +2,18 @@
   import { browser } from "$app/environment";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { Search } from "@lucide/svelte";
 
   let searchQuery = $state("");
   let isLoading = $state(false);
+  let currentQuery = $derived(browser ? page.url.searchParams.get("q") : null);
 
   // Initialize search query from URL
   $effect(() => {
     if (browser) {
-      const urlQuery = $page.url.searchParams.get("q");
-      searchQuery = urlQuery || "";
+      searchQuery = currentQuery || "";
     }
   });
 
@@ -21,7 +21,6 @@
     if (!searchQuery.trim() || !browser || isLoading) return;
 
     // Check if the search query is already the same as the current URL parameter
-    const currentQuery = $page.url.searchParams.get("q");
     if (currentQuery === searchQuery.trim()) return;
 
     isLoading = true;
@@ -58,9 +57,7 @@
       class="flex-none text-lg px-8 cursor-pointer text-blue-700 border-blue-700 border-solid border rounded-r-sm disabled:cursor-not-allowed disabled:border-gray-400 disabled:border disabled:border-dotted disabled:bg-gray-200 disabled:text-gray-400 focus:outline-blue-700/20 focus:outline-2"
       title="Search"
       onclick={handleSearch}
-      disabled={!searchQuery.trim() ||
-        isLoading ||
-        $page.url.searchParams.get("q") === searchQuery.trim()}
+      disabled={!searchQuery.trim() || isLoading || currentQuery === searchQuery.trim()}
     >
       <Search size={24} strokeWidth={2} absoluteStrokeWidth />
     </button>

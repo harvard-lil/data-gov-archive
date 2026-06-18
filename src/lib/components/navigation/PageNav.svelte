@@ -1,6 +1,6 @@
 <script>
   import { resolve } from "$app/paths";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { PAGE_SIZE } from "$lib/data/config.js";
   import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
@@ -30,7 +30,7 @@
     }
 
     // Preserve search query if present
-    const searchQuery = $page.url.searchParams.get("q");
+    const searchQuery = page.url.searchParams.get("q");
     if (searchQuery) {
       entries.push(["q", searchQuery]);
     }
