@@ -1,11 +1,11 @@
 <script>
   import "../app.css";
-  import { cleanup, instantiateDuckDB } from "$lib/db.js";
-  import { loadInitAggregations } from "$lib/initData.js";
-  import FilterNav from "$lib/components/FilterNav.svelte";
-  import Header from "$lib/components/Header.svelte";
-  import Footer from "$lib/components/Footer.svelte";
-  import SkipLink from "$lib/components/SkipLink.svelte";
+  import { cleanup, instantiateDuckDB } from "$lib/data/db.js";
+  import { loadInitAggregations } from "$lib/data/initData.js";
+  import FilterNav from "$lib/components/navigation/FilterNav.svelte";
+  import Header from "$lib/components/layout/Header.svelte";
+  import Footer from "$lib/components/layout/Footer.svelte";
+  import SkipLink from "$lib/components/layout/SkipLink.svelte";
   import { onDestroy } from "svelte";
   import { browser } from "$app/environment";
 

@@ -1,7 +1,7 @@
 <script>
   import { resolve } from "$app/paths";
-  import { AGGREGATION_COUNT } from "$lib/config.js";
-  import Skeleton from "./Skeleton.svelte";
+  import { AGGREGATION_COUNT } from "$lib/data/config.js";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   let { organizations = [], publishers = [], bureaus = [], loading = false } = $props();
 </script>

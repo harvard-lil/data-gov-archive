@@ -1,14 +1,11 @@
 <script>
   import { resolve } from "$app/paths";
   import TagList from "./TagList.svelte";
-  // import Timestamp from "./Timestamp.svelte";
 
   let { dataset } = $props();
 </script>
 
 <dl>
-  <!-- <dt>Metadata Modified:</dt>
-  <dd><Timestamp timestamp={dataset.metadata_modified} /></dd> -->
   {#if dataset.publisher}
     <div class="block mb-0.5">
       <dt class="font-bold inline">Publisher:</dt>

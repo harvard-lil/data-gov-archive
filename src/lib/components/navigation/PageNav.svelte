@@ -1,8 +1,8 @@
 <script>
   import { resolve } from "$app/paths";
   import { page } from "$app/stores";
-  import { PAGE_SIZE } from "$lib/config.js";
-  import Skeleton from "./Skeleton.svelte";
+  import { PAGE_SIZE } from "$lib/data/config.js";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   import { ChevronLeft, ChevronRight } from "@lucide/svelte";
 

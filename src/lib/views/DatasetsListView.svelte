@@ -1,7 +1,7 @@
 <script>
-  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
-  import DatasetList from "$lib/components/DatasetList.svelte";
-  import PageNav from "$lib/components/PageNav.svelte";
+  import BreadcrumbNav from "$lib/components/navigation/BreadcrumbNav.svelte";
+  import DatasetList from "$lib/components/listing/DatasetList.svelte";
+  import PageNav from "$lib/components/navigation/PageNav.svelte";
 
   let { data, buildUrl } = $props();
 </script>

@@ -1,7 +1,7 @@
 <script>
   import { ChevronRight } from "@lucide/svelte";
   import { resolve } from "$app/paths";
-  import Skeleton from "./Skeleton.svelte";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   let {
     resource,

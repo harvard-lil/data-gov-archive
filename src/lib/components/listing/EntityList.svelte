@@ -1,6 +1,6 @@
 <script>
   import { resolve } from "$app/paths";
-  import Skeleton from "./Skeleton.svelte";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   let { entity, instances = [], loading = false, count = 8 } = $props();
 </script>

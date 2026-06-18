@@ -1,4 +1,4 @@
-import { AGGREGATIONS_INIT_URL, DATASETS_INIT_URL, AGGREGATION_COUNT } from "$lib/config.js";
+import { AGGREGATIONS_INIT_URL, DATASETS_INIT_URL, AGGREGATION_COUNT } from "$lib/data/config.js";
 
 let aggregationsPromise = null;
 let datasetsPromise = null;

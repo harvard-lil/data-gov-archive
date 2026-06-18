@@ -4,7 +4,7 @@
 
   import DatasetLinks from "./DatasetLinks.svelte";
   import DatasetMetadata from "./DatasetMetadata.svelte";
-  import Skeleton from "./Skeleton.svelte";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   let { dataset = null, loading = false } = $props();
   let notes = $derived(loading ? "" : sanitizeHtml(dataset.notes, { allowedTags: [] }));

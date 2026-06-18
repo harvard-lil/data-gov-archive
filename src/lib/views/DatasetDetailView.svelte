@@ -1,8 +1,8 @@
 <script>
   import { ChevronRight } from "@lucide/svelte";
 
-  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
-  import DatasetDetail from "$lib/components/DatasetDetail.svelte";
+  import BreadcrumbNav from "$lib/components/navigation/BreadcrumbNav.svelte";
+  import DatasetDetail from "$lib/components/dataset/DatasetDetail.svelte";
 
   import { resolve } from "$app/paths";
 

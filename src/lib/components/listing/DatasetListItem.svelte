@@ -1,7 +1,7 @@
 <script>
   import sanitizeHtml from "sanitize-html";
   import { resolve } from "$app/paths";
-  import Skeleton from "./Skeleton.svelte";
+  import Skeleton from "$lib/components/ui/Skeleton.svelte";
 
   let { dataset = null, showOrganization = true, loading = false } = $props();
 

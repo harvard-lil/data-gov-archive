@@ -1,39 +1,18 @@
-<script>
-  import { browser } from "$app/environment";
-  import { page } from "$app/stores";
-  import { error } from "@sveltejs/kit";
+import { page } from "$app/state";
 
-  // Reactive query parameters (only available in browser)
-  let resource = $state(null);
-  let pageNumber = $state(1);
-  let searchQuery = $state(null);
+export function createViewRouter() {
+  // Reactive query parameters
+  const resource = $derived(page.url.searchParams.get("resource"));
+  const pageNumber = $derived(parseInt(page.url.searchParams.get("page") || "1"));
+  const searchQuery = $derived(page.url.searchParams.get("q"));
 
-  $effect(() => {
-    if (browser) {
-      resource = $page.url.searchParams.get("resource");
-      pageNumber = parseInt($page.url.searchParams.get("page") || "1");
-      searchQuery = $page.url.searchParams.get("q");
-    }
-  });
-
-  // Parse resource parameter to extract type and id
-  let type = $state(null);
-  let id = $state(null);
-
-  $effect(() => {
+  // Parse the resource parameter into an internal type + id
+  const parsed = $derived.by(() => {
     if (!resource) {
-      type = null;
-      id = null;
-      return;
+      return { type: null, id: null };
     }
 
     const parts = resource.split("/");
-    if (parts.length < 1) {
-      type = null;
-      id = null;
-      return;
-    }
-
     const resourceType = parts[0];
     const resourceId = parts.length > 1 ? parts.slice(1).join("/") : null;
 
@@ -46,21 +25,13 @@
       tags: "tag",
     };
 
-    type = typeMap[resourceType] || null;
-    id = resourceId;
+    return { type: typeMap[resourceType] || null, id: resourceId };
   });
 
-  // Handle 404 for tag list (not supported)
-  $effect(() => {
-    if (type === "tag" && !id) {
-      error(404, "Tag list not available");
-    }
-  });
-
-  // Determine view based on type and search
-  const view = $derived(() => {
-    const currentType = type;
-    const currentId = id;
+  // Determine the current view based on type and search
+  const view = $derived.by(() => {
+    const currentType = parsed.type;
+    const currentId = parsed.id;
 
     // If there's a search query, show search results
     if (searchQuery) {
@@ -80,14 +51,7 @@
     return "home";
   });
 
-  // // Debug: Log the current state
-  // $effect(() => {
-  //   if (browser) {
-  //     console.log("Debug state:", { resource, type, id, view: view() });
-  //   }
-  // });
-
-  // Helper function to build URLs
+  // Build a base-relative URL with query parameters
   function buildUrl(params = {}) {
     const resourceMap = {
       dataset: "datasets",
@@ -113,18 +77,31 @@
       }
     });
 
-    // Return a base-relative path
     const query = entries
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join("&");
     return query ? `/?${query}` : "/";
   }
 
-  // Dynamic title
-  let pageTitle = $state("Data.gov Archive");
-
-  // Export reactive values for child components
-  export { resource, pageNumber, searchQuery, type, id, view, buildUrl, pageTitle };
-</script>
-
-<!-- This component doesn't render anything, it just manages state -->
+  return {
+    get resource() {
+      return resource;
+    },
+    get pageNumber() {
+      return pageNumber;
+    },
+    get searchQuery() {
+      return searchQuery;
+    },
+    get type() {
+      return parsed.type;
+    },
+    get id() {
+      return parsed.id;
+    },
+    get view() {
+      return view;
+    },
+    buildUrl,
+  };
+}

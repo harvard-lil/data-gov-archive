@@ -1,6 +1,6 @@
 <script>
-  import DatasetList from "$lib/components/DatasetList.svelte";
-  import PageNav from "$lib/components/PageNav.svelte";
+  import DatasetList from "$lib/components/listing/DatasetList.svelte";
+  import PageNav from "$lib/components/navigation/PageNav.svelte";
 
   let { data, resource } = $props();
 </script>

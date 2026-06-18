@@ -1,16 +1,25 @@
-<script>
-  import { queryData } from "$lib/db.js";
-  import { browser } from "$app/environment";
-  import { entities } from "$lib/entities.js";
-  import { DATA_URL, PAGE_SIZE } from "$lib/config.js";
-  import { loadInitAggregations, loadInitDatasets } from "$lib/initData.js";
-  import { error } from "@sveltejs/kit";
+import { queryData } from "$lib/data/db.js";
+import { browser } from "$app/environment";
+import { entities } from "$lib/data/entities.js";
+import { DATA_URL, PAGE_SIZE } from "$lib/data/config.js";
+import { loadInitAggregations, loadInitDatasets } from "$lib/data/initData.js";
+import { error } from "@sveltejs/kit";
 
-  // Props
-  let { type = null, id = null, pageNumber = 1, searchQuery = null } = $props();
-
+/**
+ * Reactive data manager. Holds the current view's `data` (deeply reactive
+ * `$state`) and an `update()` method that loads data for a given set of route
+ * parameters. Call `createDataManager()` once during component initialization
+ * and drive it from an effect:
+ *
+ *   const dataManager = createDataManager();
+ *   $effect(() => dataManager.update({ type, id, pageNumber, searchQuery }));
+ *
+ * The initial page (page 1, no search) is served from lightweight JSON so it
+ * renders without waiting for DuckDB-Wasm; everything else queries DuckDB.
+ */
+export function createDataManager() {
   // Data state
-  let data = $state({
+  const data = $state({
     datasets: [],
     entities: [],
     entity: null,
@@ -29,8 +38,10 @@
   let loadingTimeout = null;
   let currentRequestId = 0;
 
-  // Load data when parameters change
-  $effect(async () => {
+  // Load data for the current route parameters. Invoked from a reactive effect
+  // in the consuming component, which reads the params synchronously so they're
+  // tracked before this kicks off async work.
+  function update({ type = null, id = null, pageNumber = 1, searchQuery = null }) {
     if (!browser) return;
 
     const currentType = type;
@@ -57,7 +68,7 @@
       data.currentId = currentId;
       data.pageNumber = currentPage;
 
-      await loadSearchResults(searchQuery, currentPage, requestId);
+      loadSearchResults(searchQuery, currentPage, requestId);
       return;
     }
 
@@ -88,7 +99,7 @@
 
     // Handle home page (immediate, no debouncing)
     if (!currentType) {
-      await loadHomeData(currentPage, requestId);
+      loadHomeData(currentPage, requestId);
       return;
     }
 
@@ -117,7 +128,7 @@
         data.isLoading = false;
       }
     }, 150); // 150ms debounce delay
-  });
+  }
 
   async function loadHomeData(page = 1, requestId) {
     try {
@@ -491,8 +502,5 @@
     }
   }
 
-  // Export data for child components
-  export { data };
-</script>
-
-<!-- This component doesn't render anything, it just manages data -->
+  return { data, update };
+}

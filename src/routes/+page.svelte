@@ -1,6 +1,7 @@
 <script>
-  import ViewRouter from "$lib/ViewRouter.svelte";
-  import DataManager from "$lib/DataManager.svelte";
+  import { error } from "@sveltejs/kit";
+  import { createViewRouter } from "$lib/state/ViewRouter.svelte.js";
+  import { createDataManager } from "$lib/state/DataManager.svelte.js";
   import HomeView from "$lib/views/HomeView.svelte";
   import SearchView from "$lib/views/SearchView.svelte";
   import DatasetsListView from "$lib/views/DatasetsListView.svelte";
@@ -8,18 +9,30 @@
   import EntityListView from "$lib/views/EntityListView.svelte";
   import EntityDetailView from "$lib/views/EntityDetailView.svelte";
 
-  // Create instances of the router and data manager
-  let viewRouter = $state();
-  let dataManager = $state();
+  const router = createViewRouter();
+  const dataManager = createDataManager();
+
+  // Tag list has no view
+  $effect(() => {
+    if (router.type === "tag" && !router.id) {
+      error(404, "Tag list not available");
+    }
+  });
+
+  // Load data whenever the route parameters change
+  $effect(() => {
+    dataManager.update({
+      type: router.type,
+      id: router.id,
+      pageNumber: router.pageNumber,
+      searchQuery: router.searchQuery,
+    });
+  });
 
   // Dynamic title
-  let pageTitle = $state("Data.gov Archive Search");
-
-  $effect(() => {
-    if (!viewRouter || !dataManager) return;
-
+  let pageTitle = $derived.by(() => {
     let title = "Data.gov Archive Search";
-    const currentView = viewRouter.view();
+    const currentView = router.view;
     const data = dataManager.data;
 
     if (currentView === "search" && data.label) {
@@ -35,7 +48,7 @@
     } else if (currentView === "entity-detail" && data.identifier) {
       title += `: ${data.identifier}`;
     }
-    pageTitle = title;
+    return title;
   });
 </script>
 
@@ -43,50 +56,26 @@
   <title>{pageTitle}</title>
 </svelte:head>
 
-<!-- View Router and Data Manager -->
-<ViewRouter bind:this={viewRouter} />
-<DataManager
-  bind:this={dataManager}
-  type={viewRouter?.type}
-  id={viewRouter?.id}
-  pageNumber={viewRouter?.pageNumber}
-  searchQuery={viewRouter?.searchQuery}
-/>
-
 <!-- Render appropriate view based on current state -->
-{#if viewRouter && dataManager}
-  {#if viewRouter.view() === "search"}
-    <SearchView
-      data={dataManager.data}
-      resource={viewRouter.resource}
-      searchQuery={viewRouter.searchQuery}
-      buildUrl={viewRouter.buildUrl}
-    />
-  {:else if viewRouter.view() === "home"}
-    <HomeView
-      data={dataManager.data}
-      resource={viewRouter.resource}
-      buildUrl={viewRouter.buildUrl}
-    />
-  {:else if viewRouter.view() === "datasets-list"}
-    <DatasetsListView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
-  {:else if viewRouter.view() === "dataset-detail"}
-    <DatasetDetailView
-      data={dataManager.data}
-      resource={viewRouter.resource}
-      buildUrl={viewRouter.buildUrl}
-    />
-  {:else if viewRouter.view() === "entity-list"}
-    <EntityListView
-      data={dataManager.data}
-      resource={viewRouter.resource}
-      buildUrl={viewRouter.buildUrl}
-    />
-  {:else if viewRouter.view() === "entity-detail"}
-    <EntityDetailView
-      data={dataManager.data}
-      resource={viewRouter.resource}
-      buildUrl={viewRouter.buildUrl}
-    />
-  {/if}
+{#if router.view === "search"}
+  <SearchView
+    data={dataManager.data}
+    resource={router.resource}
+    searchQuery={router.searchQuery}
+    buildUrl={router.buildUrl}
+  />
+{:else if router.view === "home"}
+  <HomeView data={dataManager.data} resource={router.resource} buildUrl={router.buildUrl} />
+{:else if router.view === "datasets-list"}
+  <DatasetsListView data={dataManager.data} buildUrl={router.buildUrl} />
+{:else if router.view === "dataset-detail"}
+  <DatasetDetailView
+    data={dataManager.data}
+    resource={router.resource}
+    buildUrl={router.buildUrl}
+  />
+{:else if router.view === "entity-list"}
+  <EntityListView data={dataManager.data} resource={router.resource} buildUrl={router.buildUrl} />
+{:else if router.view === "entity-detail"}
+  <EntityDetailView data={dataManager.data} resource={router.resource} buildUrl={router.buildUrl} />
 {/if}
