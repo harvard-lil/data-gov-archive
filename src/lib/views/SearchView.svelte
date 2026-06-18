@@ -12,17 +12,28 @@
   {buildUrl}
   pageNumber={data.pageNumber}
   totalItems={data.totalItems}
-  isLoading={data.isLoading}
+  loading={data.isLoading}
 />
 
-{#if data.isLoading}
-  <p>Loading datasets…</p>
-{:else if data.totalItems > 0}
-  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} isTop={true} />
+<div aria-busy={data.isLoading}>
+  {#if data.isLoading || data.totalItems > 0}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      {resource}
+      isTop={true}
+    />
 
-  <DatasetList datasets={data.datasets} />
+    <DatasetList loading={data.isLoading} datasets={data.datasets} />
 
-  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
-{:else if searchQuery}
-  <p>0 results</p>
-{/if}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      {resource}
+    />
+  {:else if searchQuery}
+    <p>0 results</p>
+  {/if}
+</div>

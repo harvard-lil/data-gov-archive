@@ -3,6 +3,7 @@
   import { browser } from "$app/environment";
   import { entities } from "$lib/entities.js";
   import { DATA_URL, PAGE_SIZE } from "$lib/config.js";
+  import { loadInitAggregations, loadInitDatasets } from "$lib/initData.js";
   import { error } from "@sveltejs/kit";
 
   // Props
@@ -121,6 +122,25 @@
   async function loadHomeData(page = 1, requestId) {
     try {
       const offset = (page - 1) * PAGE_SIZE;
+
+      // Initial load: serve from JSON files
+      if (offset === 0) {
+        const [initDatasets, initAggregations] = await Promise.all([
+          loadInitDatasets(),
+          loadInitAggregations(),
+        ]);
+
+        if (requestId !== currentRequestId) {
+          return;
+        }
+
+        data.datasets = initDatasets.slice(0, PAGE_SIZE);
+        data.totalItems = initAggregations.datasetsCount;
+        data.pageNumber = page;
+        data.isLoading = false;
+        data.isInitialLoad = false;
+        return;
+      }
 
       const datasetsCount = await queryData(`
         SELECT count

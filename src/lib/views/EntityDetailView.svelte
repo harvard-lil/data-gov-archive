@@ -6,18 +6,37 @@
   let { data, resource, buildUrl } = $props();
 </script>
 
-{#if data.entity && data.identifier}
-  <BreadcrumbNav {resource} searchQuery={null} {buildUrl} pageNumber={data.pageNumber} />
+<BreadcrumbNav
+  {resource}
+  searchQuery={null}
+  {buildUrl}
+  pageNumber={data.pageNumber}
+  loading={data.isLoading}
+/>
 
-  {#if data.isLoading}
-    <p>Loading datasets…</p>
-  {:else if data.totalItems > 0}
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} isTop={true} />
+<div aria-busy={data.isLoading}>
+  {#if data.isLoading || (data.entity && data.identifier && data.totalItems > 0)}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      {resource}
+      isTop={true}
+    />
 
-    <DatasetList datasets={data.datasets} showOrganization={data.entity?.showOrganization} />
+    <DatasetList
+      loading={data.isLoading}
+      datasets={data.datasets}
+      showOrganization={data.entity?.showOrganization}
+    />
 
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
-  {:else}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      {resource}
+    />
+  {:else if data.entity && data.identifier}
     <p>No datasets found.</p>
   {/if}
-{/if}
+</div>

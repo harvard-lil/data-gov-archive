@@ -1,7 +1,9 @@
 <script>
   import { resolve } from "$app/paths";
+  import { AGGREGATION_COUNT } from "$lib/config.js";
+  import Skeleton from "./Skeleton.svelte";
 
-  let { organizations, publishers, bureaus } = $props();
+  let { organizations = [], publishers = [], bureaus = [], loading = false } = $props();
 </script>
 
 {#snippet filterList(entities, entityName, entityLabel)}
@@ -31,10 +33,32 @@
   </ol>
 {/snippet}
 
-<nav id="filters" aria-label="Filters">
+{#snippet loadingList()}
+  <Skeleton class="h-5 w-32 mb-2" />
+  <ol class="text-sm mb-2">
+    {#each Array.from({ length: AGGREGATION_COUNT }, (_, i) => i) as i (i)}
+      <li
+        class="flex justify-between border-b border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
+      >
+        <Skeleton class="h-4 w-2/3" />
+        <Skeleton class="h-4 w-8 ml-1" />
+      </li>
+    {/each}
+  </ol>
+{/snippet}
+
+<nav id="filters" aria-label="Filters" aria-busy={loading ? "true" : undefined}>
   <h2 class="sr-only">Filters</h2>
 
-  {@render filterList(organizations, "organizations", "Organizations")}
-  {@render filterList(publishers, "publishers", "Publishers")}
-  {@render filterList(bureaus, "bureaus", "Bureaus")}
+  {#if loading}
+    <div aria-hidden="true">
+      {@render loadingList()}
+      {@render loadingList()}
+      {@render loadingList()}
+    </div>
+  {:else}
+    {@render filterList(organizations, "organizations", "Organizations")}
+    {@render filterList(publishers, "publishers", "Publishers")}
+    {@render filterList(bureaus, "bureaus", "Bureaus")}
+  {/if}
 </nav>

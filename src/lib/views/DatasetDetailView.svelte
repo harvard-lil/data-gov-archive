@@ -1,11 +1,12 @@
 <script>
   import { ChevronRight } from "@lucide/svelte";
 
+  import BreadcrumbNav from "$lib/components/BreadcrumbNav.svelte";
   import DatasetDetail from "$lib/components/DatasetDetail.svelte";
 
   import { resolve } from "$app/paths";
 
-  let { data, buildUrl } = $props();
+  let { data, resource, buildUrl } = $props();
 
   // Create custom breadcrumbs for dataset detail view
   let breadcrumbs = $derived(() => {
@@ -29,7 +30,10 @@
 </script>
 
 {#if data.isLoading}
-  <p>Loading dataset…</p>
+  <div aria-busy="true">
+    <BreadcrumbNav {resource} searchQuery={null} {buildUrl} loading />
+    <DatasetDetail loading />
+  </div>
 {:else if data.dataset}
   <!-- Custom breadcrumb navigation for dataset detail -->
   <nav aria-label="Breadcrumb" class="mb-4 text-sm flex min-w-0 w-full">

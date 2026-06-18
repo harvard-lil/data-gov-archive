@@ -6,18 +6,33 @@
   let { data, resource, buildUrl } = $props();
 </script>
 
-{#if data.entity}
-  <BreadcrumbNav {resource} searchQuery={null} {buildUrl} pageNumber={data.pageNumber} />
+<BreadcrumbNav
+  {resource}
+  searchQuery={null}
+  {buildUrl}
+  pageNumber={data.pageNumber}
+  loading={data.isLoading}
+/>
 
-  {#if data.isLoading}
-    <p>Loading {data.entity.title.toLowerCase()}s…</p>
-  {:else if data.totalItems > 0}
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} isTop={true} />
+<div aria-busy={data.isLoading}>
+  {#if data.isLoading || (data.entity && data.totalItems > 0)}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      {resource}
+      isTop={true}
+    />
 
-    <EntityList entity={data.entity} instances={data.entities} />
+    <EntityList loading={data.isLoading} entity={data.entity} instances={data.entities} />
 
-    <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} {resource} />
-  {:else}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      {resource}
+    />
+  {:else if data.entity}
     <p>No {data.entity.title.toLowerCase()}s found.</p>
   {/if}
-{/if}
+</div>

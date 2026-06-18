@@ -6,21 +6,33 @@
   let { data, buildUrl } = $props();
 </script>
 
-<BreadcrumbNav resource="datasets" searchQuery={null} {buildUrl} pageNumber={data.pageNumber} />
+<BreadcrumbNav
+  resource="datasets"
+  searchQuery={null}
+  {buildUrl}
+  pageNumber={data.pageNumber}
+  loading={data.isLoading}
+/>
 
-{#if data.isLoading}
-  <p>Loading datasets…</p>
-{:else if data.totalItems > 0}
-  <PageNav
-    pageNumber={data.pageNumber}
-    totalItems={data.totalItems}
-    resource="datasets"
-    isTop={true}
-  />
+<div aria-busy={data.isLoading}>
+  {#if data.isLoading || data.totalItems > 0}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      resource="datasets"
+      isTop={true}
+    />
 
-  <DatasetList datasets={data.datasets} />
+    <DatasetList loading={data.isLoading} datasets={data.datasets} />
 
-  <PageNav pageNumber={data.pageNumber} totalItems={data.totalItems} resource="datasets" />
-{:else}
-  <p>No datasets found</p>
-{/if}
+    <PageNav
+      loading={data.isLoading}
+      pageNumber={data.pageNumber}
+      totalItems={data.totalItems}
+      resource="datasets"
+    />
+  {:else}
+    <p>No datasets found</p>
+  {/if}
+</div>

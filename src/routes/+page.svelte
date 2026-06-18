@@ -7,7 +7,6 @@
   import DatasetDetailView from "$lib/views/DatasetDetailView.svelte";
   import EntityListView from "$lib/views/EntityListView.svelte";
   import EntityDetailView from "$lib/views/EntityDetailView.svelte";
-  import { mainContentLoading } from "$lib/loadingStore.js";
 
   // Create instances of the router and data manager
   let viewRouter = $state();
@@ -15,13 +14,6 @@
 
   // Dynamic title
   let pageTitle = $state("Data.gov Archive Search");
-
-  // Update main content loading state based on DataManager
-  $effect(() => {
-    if (dataManager) {
-      mainContentLoading.set(dataManager.data.isLoading);
-    }
-  });
 
   $effect(() => {
     if (!viewRouter || !dataManager) return;
@@ -79,7 +71,11 @@
   {:else if viewRouter.view() === "datasets-list"}
     <DatasetsListView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
   {:else if viewRouter.view() === "dataset-detail"}
-    <DatasetDetailView data={dataManager.data} buildUrl={viewRouter.buildUrl} />
+    <DatasetDetailView
+      data={dataManager.data}
+      resource={viewRouter.resource}
+      buildUrl={viewRouter.buildUrl}
+    />
   {:else if viewRouter.view() === "entity-list"}
     <EntityListView
       data={dataManager.data}

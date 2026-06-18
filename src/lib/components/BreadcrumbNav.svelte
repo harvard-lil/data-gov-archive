@@ -1,6 +1,7 @@
 <script>
   import { ChevronRight } from "@lucide/svelte";
   import { resolve } from "$app/paths";
+  import Skeleton from "./Skeleton.svelte";
 
   let {
     resource,
@@ -8,7 +9,7 @@
     buildUrl,
     pageNumber = 1,
     totalItems = null,
-    isLoading = false,
+    loading = false,
   } = $props();
 
   // Parse the resource to determine breadcrumb structure
@@ -107,12 +108,18 @@
   });
 </script>
 
-<nav aria-label="Breadcrumb" class="mb-4 text-sm flex min-w-0 w-full">
+<nav
+  aria-label="Breadcrumb"
+  class="mb-4 text-sm flex min-w-0 w-full"
+  aria-hidden={loading ? "true" : undefined}
+>
   <ol class="list-none p-0 m-0 flex min-w-0 flex-nowrap w-full">
     {#each breadcrumbs() as crumb, index (index)}
       {@const isLastBreadcrumb = index === breadcrumbs().length - 1}
       <li class="flex shrink-0 min-w-0" class:flex-1={isLastBreadcrumb}>
-        {#if crumb.tagLink}
+        {#if loading}
+          <Skeleton class="h-4 {index === 0 ? 'w-12' : 'w-24'}" />
+        {:else if crumb.tagLink}
           <a
             href={resolve(crumb.url)}
             class="text-inherit no-underline hover:underline font-mono min-w-0"
@@ -145,7 +152,7 @@
             <a href={resolve(crumb.url)} class="italic text-inherit no-underline hover:underline"
               >{crumb.label}</a
             >
-            {#if crumb.resultCount !== null && !isLoading}
+            {#if crumb.resultCount !== null && !loading}
               ({crumb.resultCount.toLocaleString("en-US")} result{crumb.resultCount === 1
                 ? ""
                 : "s"})
@@ -162,7 +169,7 @@
             title={isLastBreadcrumb ? `Search: ${crumb.label}` : undefined}
           >
             Search: <span class="italic">{crumb.label}</span>
-            {#if crumb.resultCount !== null && !isLoading}
+            {#if crumb.resultCount !== null && !loading}
               ({crumb.resultCount.toLocaleString("en-US")} result{crumb.resultCount === 1
                 ? ""
                 : "s"})
@@ -192,7 +199,12 @@
         {/if}
       </li>
       {#if !isLastBreadcrumb}
-        <li class="flex select-none mx-2 shrink-0" aria-hidden="true">
+        <li
+          class="flex select-none mx-2 shrink-0"
+          class:text-gray-300={loading}
+          class:dark:text-gray-700={loading}
+          aria-hidden="true"
+        >
           <ChevronRight
             size={14}
             strokeWidth={1}

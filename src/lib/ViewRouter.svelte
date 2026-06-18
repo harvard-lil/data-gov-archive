@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import { error } from "@sveltejs/kit";
 
-  // Reactive query parameters - only available in browser
+  // Reactive query parameters (only available in browser)
   let resource = $state(null);
   let pageNumber = $state(1);
   let searchQuery = $state(null);
@@ -113,8 +113,7 @@
       }
     });
 
-    // Return a base-relative path; callers wrap this in resolve() so the
-    // configured base path is applied (see $app/paths).
+    // Return a base-relative path
     const query = entries
       .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join("&");
