@@ -5,12 +5,35 @@ import eh_worker from "@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js?url"
 import { LRUCache } from "lru-cache";
 
 import { browser } from "$app/environment";
+import { DATA_URL } from "$lib/data/config.js";
 
 // Connection pooling state
 let db = null;
 let connection = null;
 let isInitializing = false;
 let initPromise = null;
+
+// Full-text search index state
+let searchWorker = null;
+let searchConnection = null;
+let searchIndexPromise = null;
+let searchIndexReady = false;
+
+// Has the FTS index finished building?
+export const isSearchIndexReady = () => searchIndexReady;
+
+// Get (or lazily create) connection to a dedicated search instance
+const getSearchConnection = async () => {
+  if (!browser) {
+    throw new Error("Can only instantiate DuckDB from browser.");
+  }
+  if (!searchConnection) {
+    const { instance, worker } = await createInstance();
+    searchWorker = worker;
+    searchConnection = await instance.connect();
+  }
+  return searchConnection;
+};
 
 // Query cache
 const queryCache = new LRUCache({
@@ -50,38 +73,43 @@ export const instantiateDuckDB = async () => {
   }
 };
 
+// Instantiate a fresh DuckDB instance in its own web worker
+const createInstance = async () => {
+  const duckdb = await import("@duckdb/duckdb-wasm");
+  const bundles = {
+    mvp: {
+      mainModule: duckdb_wasm,
+      mainWorker: mvp_worker,
+    },
+    eh: {
+      mainModule: duckdb_wasm_eh,
+      mainWorker: eh_worker,
+    },
+  };
+
+  // Select a bundle based on browser checks
+  const bundle = await duckdb.selectBundle(bundles);
+
+  // Instantiate the async version of DuckDB-Wasm
+  const worker = new Worker(bundle.mainWorker);
+  const logger = new duckdb.ConsoleLogger();
+  const instance = new duckdb.AsyncDuckDB(logger, worker);
+
+  await instance.instantiate(bundle.mainModule, bundle.pthreadWorker);
+
+  if (!instance) {
+    throw new Error("Database instance is null after instantiation");
+  }
+
+  return { instance, worker };
+};
+
 const initializeDuckDB = async () => {
   try {
-    const duckdb = await import("@duckdb/duckdb-wasm");
-    const bundles = {
-      mvp: {
-        mainModule: duckdb_wasm,
-        mainWorker: mvp_worker,
-      },
-      eh: {
-        mainModule: duckdb_wasm_eh,
-        mainWorker: eh_worker,
-      },
-    };
-
-    // Select a bundle based on browser checks
-    const bundle = await duckdb.selectBundle(bundles);
-
-    // Instantiate the async version of DuckDB-Wasm
-    const worker = new Worker(bundle.mainWorker);
-    const logger = new duckdb.ConsoleLogger();
-    const dbInstance = new duckdb.AsyncDuckDB(logger, worker);
-
-    await dbInstance.instantiate(bundle.mainModule, bundle.pthreadWorker);
-
-    // Wait for the database to be fully instantiated
-    if (!dbInstance) {
-      throw new Error("Database instance is null after instantiation");
-    }
-
+    const { instance } = await createInstance();
     // Set the global db variable
-    db = dbInstance;
-    return dbInstance;
+    db = instance;
+    return instance;
   } catch (error) {
     console.error("Failed to initialize DuckDB:", error);
     // Reset global state on error
@@ -148,6 +176,69 @@ export const closeConnection = async () => {
 export const resetConnection = async () => {
   await closeConnection();
   // Connection will be recreated on next query
+};
+
+// Build full-text search index
+export const ensureSearchIndex = async () => {
+  if (!browser) {
+    throw new Error("FTS index can only be built in the browser");
+  }
+  if (searchIndexPromise) {
+    return searchIndexPromise;
+  }
+
+  searchIndexPromise = (async () => {
+    // Build index on the dedicated search instance to prevent blocking
+    const conn = await getSearchConnection();
+    await conn.query("INSTALL fts; LOAD fts;");
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS search_docs AS
+      SELECT name, title, organization_title, notes, publisher, bureau_name
+      FROM '${DATA_URL}/datasets.parquet'
+    `);
+    await conn.query(`
+      PRAGMA create_fts_index(
+        'search_docs', 'name',
+        'title', 'organization_title', 'notes', 'publisher', 'bureau_name',
+        overwrite = 1
+      )
+    `);
+    searchIndexReady = true;
+  })().catch((err) => {
+    // Reset so a later search can retry the build
+    searchIndexPromise = null;
+    throw err;
+  });
+
+  return searchIndexPromise;
+};
+
+// Run a query against the dedicated search instance
+export const querySearchIndex = async (query, params) => {
+  if (!browser) {
+    throw new Error("Database queries can only be executed in the browser.");
+  }
+
+  const cacheKey = `search:${query}|${params ? JSON.stringify(params) : ""}`;
+  const cachedResult = queryCache.get(cacheKey);
+  if (cachedResult !== undefined) {
+    return cachedResult;
+  }
+
+  const conn = await getSearchConnection();
+  const statement = await conn.prepare(query);
+  try {
+    const arrowResult = await statement.query(...(params || []));
+    const result = arrowResult.toArray().map((row) => row.toJSON());
+    queryCache.set(cacheKey, result);
+    return result;
+  } finally {
+    try {
+      await statement.close();
+    } catch (error) {
+      console.error("Error closing statement:", error);
+    }
+  }
 };
 
 export const queryData = async (query, params) => {
@@ -244,8 +335,27 @@ export const queryData = async (query, params) => {
   }
 };
 
+// Tear down the dedicated search instance and its web worker
+const closeSearchInstance = async () => {
+  if (searchConnection) {
+    try {
+      await searchConnection.close();
+    } catch (error) {
+      console.error("Error closing search connection:", error);
+    }
+  }
+  if (searchWorker) {
+    searchWorker.terminate();
+  }
+  searchConnection = null;
+  searchWorker = null;
+  searchIndexPromise = null;
+  searchIndexReady = false;
+};
+
 // Cleanup function for app shutdown
 export const cleanup = async () => {
   await closeConnection();
+  await closeSearchInstance();
   queryCache.clear();
 };

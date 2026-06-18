@@ -1,22 +1,67 @@
-import { queryData } from "$lib/data/db.js";
+import {
+  ensureSearchIndex,
+  isSearchIndexReady,
+  queryData,
+  querySearchIndex,
+} from "$lib/data/db.js";
 import { browser } from "$app/environment";
 import { entities } from "$lib/data/entities.js";
 import { DATA_URL, PAGE_SIZE } from "$lib/data/config.js";
 import { loadInitAggregations, loadInitDatasets } from "$lib/data/initData.js";
 import { error } from "@sveltejs/kit";
 
-/**
- * Reactive data manager. Holds the current view's `data` (deeply reactive
- * `$state`) and an `update()` method that loads data for a given set of route
- * parameters. Call `createDataManager()` once during component initialization
- * and drive it from an effect:
- *
- *   const dataManager = createDataManager();
- *   $effect(() => dataManager.update({ type, id, pageNumber, searchQuery }));
- *
- * The initial page (page 1, no search) is served from lightweight JSON so it
- * renders without waiting for DuckDB-Wasm; everything else queries DuckDB.
- */
+// Full-text search
+function buildFtsSearch(searchTerm, offset) {
+  return {
+    params: [searchTerm],
+    countQuery: `
+      SELECT count(*) AS count FROM (
+        SELECT fts_main_search_docs.match_bm25(name, $1, conjunctive := 1) AS score
+        FROM search_docs
+      ) WHERE score IS NOT NULL
+    `,
+    resultsQuery: `
+      SELECT name, title, notes, organization_title FROM (
+        SELECT
+          name,
+          title,
+          notes,
+          organization_title,
+          fts_main_search_docs.match_bm25(name, $1, conjunctive := 1) AS score
+        FROM search_docs
+      ) WHERE score IS NOT NULL
+      ORDER BY score DESC
+      LIMIT ${PAGE_SIZE} OFFSET ${offset}
+    `,
+  };
+}
+
+// Match substrings as a fallback option if FTS index is still loading
+function buildLikeSearch(searchTerm, offset) {
+  const where = `
+    lower(title) LIKE lower($1) OR
+    lower(organization_title) LIKE lower($1) OR
+    lower(notes) LIKE lower($1) OR
+    lower(publisher) LIKE lower($1) OR
+    lower(bureau_name) LIKE lower($1)
+  `;
+  return {
+    params: [`%${searchTerm}%`],
+    countQuery: `
+      SELECT count(*) AS count
+      FROM '${DATA_URL}/datasets.parquet'
+      WHERE ${where}
+    `,
+    resultsQuery: `
+      SELECT name, title, notes, organization_title
+      FROM '${DATA_URL}/datasets.parquet'
+      WHERE ${where}
+      ORDER BY name
+      LIMIT ${PAGE_SIZE} OFFSET ${offset}
+    `,
+  };
+}
+
 export function createDataManager() {
   // Data state
   const data = $state({
@@ -38,9 +83,7 @@ export function createDataManager() {
   let loadingTimeout = null;
   let currentRequestId = 0;
 
-  // Load data for the current route parameters. Invoked from a reactive effect
-  // in the consuming component, which reads the params synchronously so they're
-  // tracked before this kicks off async work.
+  // Load data for the current route parameters
   function update({ type = null, id = null, pageNumber = 1, searchQuery = null }) {
     if (!browser) return;
 
@@ -107,7 +150,7 @@ export function createDataManager() {
     loadingTimeout = setTimeout(async () => {
       // Check if this is still the latest request
       if (requestId !== currentRequestId) {
-        return; // Ignore this request as it's outdated
+        return;
       }
 
       try {
@@ -250,7 +293,7 @@ export function createDataManager() {
         FROM '${DATA_URL}/datasets.parquet'
         WHERE datasets.name = $1
         LIMIT 1
-      `,
+        `,
         [datasetName]
       );
 
@@ -328,7 +371,7 @@ export function createDataManager() {
         SELECT count
         FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = '${entity.route}' AND identifier = '${identifier}'
-      `
+        `
       );
 
       // Check if this request is still current
@@ -343,7 +386,7 @@ export function createDataManager() {
         WHERE ${entity.identifier} = $1
         ORDER BY name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
-      `,
+        `,
         [identifier]
       );
 
@@ -382,7 +425,7 @@ export function createDataManager() {
         SELECT count
         FROM '${DATA_URL}/aggregations.parquet'
         WHERE aggregation = 'tags' AND identifier = $1
-      `,
+        `,
         [tag]
       );
 
@@ -411,7 +454,7 @@ export function createDataManager() {
         WHERE tags.tag = $1
         ORDER BY datasets.name
         LIMIT ${PAGE_SIZE} OFFSET ${offset}
-      `,
+        `,
         [tag]
       );
 
@@ -435,24 +478,23 @@ export function createDataManager() {
     }
   }
 
-  async function loadSearchResults(query, page, requestId) {
+  async function loadSearchResults(query, page, requestId, allowUpgrade = true) {
     try {
       const offset = (page - 1) * PAGE_SIZE;
+      const searchTerm = query.trim();
+
+      // Start building FTS index
+      ensureSearchIndex().catch(() => {});
+
+      // When index is ready, use it for search; if not, fall back to LIKE substring match
+      const useFts = isSearchIndexReady();
+      const { countQuery, resultsQuery, params } = useFts
+        ? buildFtsSearch(searchTerm, offset)
+        : buildLikeSearch(searchTerm, offset);
+      const run = useFts ? querySearchIndex : queryData;
 
       // First get the total count
-      const countResult = await queryData(
-        `
-          SELECT count(*) AS count
-          FROM '${DATA_URL}/datasets.parquet'
-          WHERE
-            lower(title) LIKE lower($1) OR
-            lower(organization_title) LIKE lower($1) OR
-            lower(notes) LIKE lower($1) OR
-            lower(publisher) LIKE lower($1) OR
-            lower(bureau_name) LIKE lower($1)
-        `,
-        [`%${query.trim()}%`]
-      );
+      const countResult = await run(countQuery, params);
 
       // Check if this request is still current
       if (requestId !== currentRequestId) {
@@ -467,21 +509,7 @@ export function createDataManager() {
       }
 
       // Then get the actual results
-      const datasets = await queryData(
-        `
-          SELECT *
-          FROM '${DATA_URL}/datasets.parquet'
-          WHERE
-            lower(title) LIKE lower($1) OR
-            lower(organization_title) LIKE lower($1) OR
-            lower(notes) LIKE lower($1) OR
-            lower(publisher) LIKE lower($1) OR
-            lower(bureau_name) LIKE lower($1)
-          ORDER BY name
-          LIMIT ${PAGE_SIZE} OFFSET ${offset}
-        `,
-        [`%${query.trim()}%`]
-      );
+      const datasets = await run(resultsQuery, params);
 
       // Check again before updating state
       if (requestId !== currentRequestId) {
@@ -495,6 +523,17 @@ export function createDataManager() {
       data.label = `Search results for "${query}"`;
       data.isLoading = false;
       data.isInitialLoad = false;
+
+      // If we previously served LIKE fallback results, silently upgrade to BM25 results when ready
+      if (!useFts && allowUpgrade) {
+        ensureSearchIndex()
+          .then(() => {
+            if (requestId === currentRequestId) {
+              loadSearchResults(query, page, requestId, false);
+            }
+          })
+          .catch(() => {});
+      }
     } catch (error) {
       console.error("Error loading search results:", error);
       data.isLoading = false;

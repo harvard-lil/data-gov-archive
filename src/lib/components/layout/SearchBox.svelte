@@ -51,7 +51,7 @@
       maxLength="100"
       bind:value={searchQuery}
       onkeydown={handleKeyDown}
-      placeholder="Search by dataset title, organization, publisher, bureau, description…"
+      placeholder="Search datasets…"
     />
     <button
       class="flex-none text-lg px-8 cursor-pointer text-blue-700 border-blue-700 border-solid border rounded-r-sm disabled:cursor-not-allowed disabled:border-gray-400 disabled:border disabled:border-dotted disabled:bg-gray-200 disabled:text-gray-400 focus:outline-blue-700/20 focus:outline-2"

@@ -1,6 +1,6 @@
 <script>
   import "../app.css";
-  import { cleanup, instantiateDuckDB } from "$lib/data/db.js";
+  import { cleanup, ensureSearchIndex, instantiateDuckDB } from "$lib/data/db.js";
   import { loadInitAggregations } from "$lib/data/initData.js";
   import FilterNav from "$lib/components/navigation/FilterNav.svelte";
   import Header from "$lib/components/layout/Header.svelte";
@@ -16,9 +16,11 @@
 
   const { children } = $props();
 
-  // Warm up DuckDB without blocking rendering
+  // Warm up DuckDB and build the search index without blocking rendering
   if (browser) {
-    instantiateDuckDB().catch(() => {});
+    instantiateDuckDB()
+      .then(() => ensureSearchIndex())
+      .catch(() => {});
   }
 
   // Clean up database connections when component is destroyed
