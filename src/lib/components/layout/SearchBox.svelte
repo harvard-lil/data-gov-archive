@@ -46,7 +46,7 @@
   <div class="align-center flex">
     <input
       id="search"
-      class="rounded-l-sm flex-1 p-4 bg-inherit min-w-50 border-slate-800 border border-r-0 focus:border-r whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-slate-500 focus:z-10"
+      class="rounded-l-sm flex-1 p-4 bg-inherit min-w-50 border-gray-800 dark:border-gray-200 border border-r-0 focus:border-r whitespace-nowrap overflow-hidden text-ellipsis placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:z-10"
       type="text"
       maxLength="100"
       bind:value={searchQuery}
@@ -54,7 +54,7 @@
       placeholder="Search datasets…"
     />
     <button
-      class="flex-none text-lg px-8 bg-slate-200 text-slate-900 cursor-pointer border border-solid rounded-r-sm disabled:cursor-not-allowed disabled:text-slate-400"
+      class="flex-none text-lg px-8 bg-gray-200 text-gray-900 dark:bg-gray-300 dark:text-gray-900 dark:border-gray-200 cursor-pointer border border-solid rounded-r-sm disabled:cursor-not-allowed disabled:text-gray-400 dark:disabled:border-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-500"
       title="Search"
       onclick={handleSearch}
       disabled={!searchQuery.trim() || isLoading}

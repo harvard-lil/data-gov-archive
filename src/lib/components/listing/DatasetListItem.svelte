@@ -8,7 +8,7 @@
   let notes = $derived(loading ? "" : sanitizeHtml(dataset.notes, { allowedTags: [] }));
 </script>
 
-<li class="py-6 last:border-b border-t border-dotted border-slate-800 wrap-break-word">
+<li class="py-6 last:border-b border-t border-dotted border-gray-800 dark:border-gray-200 wrap-break-word">
   {#if loading}
     <div class="mb-2"><Skeleton class="h-6 w-3/4" /></div>
     {#if showOrganization === true}

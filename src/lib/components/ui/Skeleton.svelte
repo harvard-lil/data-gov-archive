@@ -3,6 +3,6 @@
 </script>
 
 <div
-  class="animate-pulse motion-reduce:animate-none rounded bg-slate-300 dark:bg-slate-700 {className}"
+  class="animate-pulse motion-reduce:animate-none rounded bg-gray-300 dark:bg-gray-700 {className}"
   aria-hidden="true"
 ></div>

@@ -3,7 +3,7 @@
   import SkipLink from "./SkipLink.svelte";
 </script>
 
-<footer class="bg-slate-300 text-slate-900">
+<footer class="bg-gray-300 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
   <a id="footer" class="sr-only" tabindex="-1">Footer</a>
 
   <div class="mx-auto max-w-225 p-8 relative">

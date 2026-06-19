@@ -8,14 +8,14 @@
 <ul aria-hidden={loading ? "true" : undefined}>
   {#if loading}
     {#each Array.from({ length: count }, (_, i) => i) as i (i)}
-      <li class="py-6 last:border-b border-t border-dotted border-slate-800">
+      <li class="py-6 last:border-b border-t border-dotted border-gray-800 dark:border-gray-200">
         <Skeleton class="h-6 w-2/3 mb-2" />
         <Skeleton class="h-4 w-32" />
       </li>
     {/each}
   {:else}
     {#each instances as instance (instance.identifier)}
-      <li class="py-6 last:border-b border-t border-dotted border-slate-800 wrap-break-word">
+      <li class="py-6 last:border-b border-t border-dotted border-gray-800 dark:border-gray-200 wrap-break-word">
         <div class="mb-2">
           <a
             class="text-inherit text-xl font-bold no-underline hover:underline"

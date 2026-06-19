@@ -30,7 +30,7 @@
   <ol class="text-sm mb-2">
     {#each entities as entity (entity.identifier)}
       <li
-        class="flex justify-between border-b border-dotted border-slate-800 py-1 last:border-none dark:border-slate-200"
+        class="flex justify-between border-b border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
       >
         <a
           class="text-inherit no-underline hover:underline truncate"
@@ -50,7 +50,7 @@
   <ol class="text-sm mb-2">
     {#each Array.from({ length: AGGREGATION_COUNT }, (_, i) => i) as i (i)}
       <li
-        class="flex justify-between border-b border-dotted border-slate-800 py-1 last:border-none dark:border-slate-200"
+        class="flex justify-between border-b border-dotted border-gray-800 py-1 last:border-none dark:border-gray-200"
       >
         <Skeleton class="h-4 {skeletonWidths[i % skeletonWidths.length]}" />
         <Skeleton class="h-4 w-8 ml-1" />
