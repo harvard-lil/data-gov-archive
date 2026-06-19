@@ -12,16 +12,16 @@
     <div class="text-xl hyphens-auto">
       <p class="mb-4">
         This interface supports searching the
-        <a class="text-slate-900" href="https://source.coop/harvard-lil/gov-data">
+        <a href="https://source.coop/harvard-lil/gov-data">
           Data.gov Archive
         </a>, a collection of 311,604 datasets (approximately 17.9 TB) harvested between November
         2024 and January 2025.
       </p>
       <p>
         Data.gov Archive Search is a project of the
-        <a class="text-slate-900" href="https://lil.law.harvard.edu">Library Innovation Lab</a>
+        <a href="https://lil.law.harvard.edu">Library Innovation Lab</a>
         (LIL) at Harvard Law School. For more information on our work, see LIL's
-        <a class="text-slate-900" href="https://lil.law.harvard.edu/our-work/public-data-project">
+        <a href="https://lil.law.harvard.edu/our-work/public-data-project">
           Public Data Project
         </a>.
       </p>

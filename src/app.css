@@ -22,7 +22,6 @@
 
   /* Links */
   a {
-    @apply text-blue-700 underline;
-    @apply dark:text-blue-300;
+    @apply text-inherit underline;
   }
 }
