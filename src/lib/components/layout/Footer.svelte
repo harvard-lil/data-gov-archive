@@ -12,10 +12,9 @@
     <div class="text-xl hyphens-auto">
       <p class="mb-4">
         This interface supports searching the
-        <a href="https://source.coop/harvard-lil/gov-data">
-          Data.gov Archive
-        </a>, a collection of 311,604 datasets (approximately 17.9 TB) harvested between November
-        2024 and January 2025.
+        <a href="https://source.coop/harvard-lil/gov-data">Data.gov Archive</a>, a collection of
+        more than 311,000 datasets (approximately 23.6 TB) harvested between November 2024 and
+        January 2025.
       </p>
       <p>
         Data.gov Archive Search is a project of the
